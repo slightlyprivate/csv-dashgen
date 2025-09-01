@@ -1,0 +1,5 @@
+# Placeholder for upload.png
+# This should show the file upload interface
+# with drag-and-drop zone and file selection
+# Recommended size: 1200x800
+# Capture the initial upload screen

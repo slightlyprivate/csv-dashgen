@@ -1,0 +1,5 @@
+# Placeholder for dashboard.png
+# This should be a screenshot of the main dashboard interface
+# showing charts, statistics, and data visualization
+# Recommended size: 1920x1080
+# Capture after loading sample data (e.g., samples/sales.csv)
