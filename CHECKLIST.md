@@ -12,16 +12,16 @@
 - [x] Add issue templates & PR template in `.github/`
 
 ## 🗂️ Project Architecture
-- [ ] Define folder structure
-- [ ] Define TypeScript types: `ColumnType`, `Dataset`, `Row`, `KPI`, `ChartKind`, `FieldStats`
-- [ ] Centralize constants: supported chart types, max file size, CSV delimiters
+- [x] Define folder structure
+- [x] Define TypeScript types: `ColumnType`, `Dataset`, `Row`, `KPI`, `ChartKind`, `FieldStats`
+- [x] Centralize constants: supported chart types, max file size, CSV delimiters
 
 ## 📥 CSV Ingestion & Validation (MVP)
-- [ ] Drag-and-drop + file input (accept `.csv`, `.tsv`)
-- [ ] Parse with Papaparse (header row, dynamic typing disabled initially)
-- [ ] Validation: file type, size limit, row count limit, empty cells handling
-- [ ] Error states: invalid headers, mixed-type columns, malformed CSV
-- [ ] Data preview table (first 50 rows) with column type badges
+- [x] Drag-and-drop + file input (accept `.csv`, `.tsv`)
+- [x] Parse with Papaparse (header row, dynamic typing disabled initially)
+- [x] Validation: file type, size limit, row count limit, empty cells handling
+- [x] Error states: invalid headers, mixed-type columns, malformed CSV
+- [x] Data preview table (first 50 rows) with column type badges
 
 ## 🔎 Column Type Inference
 - [ ] Heuristics to classify columns: numeric, categorical, datetime, boolean
