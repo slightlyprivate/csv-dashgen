@@ -1,0 +1,46 @@
+# Node.js dependencies
+node_modules/
+dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Vite cache
+.vite/
+
+# Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*.bak
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python backend (optional)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+
+# Test coverage
+coverage/
+*.lcov
+
+# Build artifacts
+build/
+out/
+
+# Documentation
+docs/screenshots/
