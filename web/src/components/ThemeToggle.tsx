@@ -41,9 +41,7 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
       <span className="text-lg" aria-hidden="true">
         {getThemeIcon()}
       </span>
-      <span className="sr-only">
-        {getThemeLabel()}
-      </span>
+      <span className="sr-only">{getThemeLabel()}</span>
     </button>
   )
 }

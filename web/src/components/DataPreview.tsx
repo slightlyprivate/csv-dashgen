@@ -12,7 +12,7 @@ const COLUMN_TYPE_COLORS: Record<ColumnType, string> = {
   number: 'bg-blue-100 text-blue-800',
   date: 'bg-green-100 text-green-800',
   boolean: 'bg-purple-100 text-purple-800',
-  unknown: 'bg-red-100 text-red-800'
+  unknown: 'bg-red-100 text-red-800',
 }
 
 const COLUMN_TYPE_LABELS: Record<ColumnType, string> = {
@@ -20,10 +20,14 @@ const COLUMN_TYPE_LABELS: Record<ColumnType, string> = {
   number: 'Number',
   date: 'Date',
   boolean: 'Boolean',
-  unknown: 'Unknown'
+  unknown: 'Unknown',
 }
 
-export default function DataPreview({ dataset, onColumnTypeChange, maxRows = 50 }: DataPreviewProps) {
+export default function DataPreview({
+  dataset,
+  onColumnTypeChange,
+  maxRows = 50,
+}: DataPreviewProps) {
   const displayRows = dataset.rows.slice(0, maxRows)
   const hasMoreRows = dataset.rows.length > maxRows
 
@@ -52,7 +56,9 @@ export default function DataPreview({ dataset, onColumnTypeChange, maxRows = 50 
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
                   <div className="flex flex-col space-y-1">
-                    <span className="font-semibold text-gray-900">{header}</span>
+                    <span className="font-semibold text-gray-900">
+                      {header}
+                    </span>
                     <div className="flex items-center space-x-2">
                       {onColumnTypeChange ? (
                         <ColumnTypeEditor
@@ -61,10 +67,12 @@ export default function DataPreview({ dataset, onColumnTypeChange, maxRows = 50 
                           onTypeChange={onColumnTypeChange}
                         />
                       ) : (
-                        <span className={`
+                        <span
+                          className={`
                           inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
                           ${COLUMN_TYPE_COLORS[dataset.columnTypes[header]]}
-                        `}>
+                        `}
+                        >
                           {COLUMN_TYPE_LABELS[dataset.columnTypes[header]]}
                         </span>
                       )}

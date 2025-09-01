@@ -8,7 +8,13 @@ interface SettingsProps {
 }
 
 export default function Settings({ isOpen, onClose }: SettingsProps) {
-  const { config, updateLimits, updatePrivacy, resetToDefaults, getCurrentUsage } = useConfig()
+  const {
+    config,
+    updateLimits,
+    updatePrivacy,
+    resetToDefaults,
+    getCurrentUsage,
+  } = useConfig()
   const [activeTab, setActiveTab] = useState<'limits' | 'privacy'>('limits')
 
   const usage = getCurrentUsage()
@@ -17,7 +23,10 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
     updateLimits({ [key]: value })
   }
 
-  const handlePrivacyChange = (key: keyof PrivacySettings, value: boolean | number) => {
+  const handlePrivacyChange = (
+    key: keyof PrivacySettings,
+    value: boolean | number
+  ) => {
     updatePrivacy({ [key]: value })
   }
 
@@ -32,10 +41,18 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="settings-title"
+    >
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden">
         <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 id="settings-title" className="text-xl font-semibold text-gray-900 dark:text-white">
+          <h2
+            id="settings-title"
+            className="text-xl font-semibold text-gray-900 dark:text-white"
+          >
             Settings
           </h2>
           <button
@@ -43,8 +60,18 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
             className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
             aria-label="Close settings"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -91,7 +118,12 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
                         max="524288000" // 500MB
                         step="1024000" // 1MB steps
                         value={config.limits.maxFileSize}
-                        onChange={(e) => handleLimitChange('maxFileSize', parseInt(e.target.value))}
+                        onChange={(e) =>
+                          handleLimitChange(
+                            'maxFileSize',
+                            parseInt(e.target.value)
+                          )
+                        }
                         className="flex-1"
                       />
                       <span className="text-sm text-gray-600 dark:text-gray-400 min-w-[80px]">
@@ -114,7 +146,9 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
                         max="1000000"
                         step="1000"
                         value={config.limits.maxRows}
-                        onChange={(e) => handleLimitChange('maxRows', parseInt(e.target.value))}
+                        onChange={(e) =>
+                          handleLimitChange('maxRows', parseInt(e.target.value))
+                        }
                         className="flex-1"
                       />
                       <span className="text-sm text-gray-600 dark:text-gray-400 min-w-[80px]">
@@ -137,7 +171,12 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
                         max="200"
                         step="5"
                         value={config.limits.maxColumns}
-                        onChange={(e) => handleLimitChange('maxColumns', parseInt(e.target.value))}
+                        onChange={(e) =>
+                          handleLimitChange(
+                            'maxColumns',
+                            parseInt(e.target.value)
+                          )
+                        }
                         className="flex-1"
                       />
                       <span className="text-sm text-gray-600 dark:text-gray-400 min-w-[80px]">
@@ -160,7 +199,12 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
                         max="50"
                         step="1"
                         value={config.limits.maxCharts}
-                        onChange={(e) => handleLimitChange('maxCharts', parseInt(e.target.value))}
+                        onChange={(e) =>
+                          handleLimitChange(
+                            'maxCharts',
+                            parseInt(e.target.value)
+                          )
+                        }
                         className="flex-1"
                       />
                       <span className="text-sm text-gray-600 dark:text-gray-400 min-w-[80px]">
@@ -185,14 +229,20 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
                         Enable Data Persistence
                       </label>
                       <p className="text-xs text-gray-500">
-                        Save your datasets and settings locally for future sessions
+                        Save your datasets and settings locally for future
+                        sessions
                       </p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         checked={config.limits.enableDataPersistence}
-                        onChange={(e) => handleLimitChange('enableDataPersistence', e.target.checked)}
+                        onChange={(e) =>
+                          handleLimitChange(
+                            'enableDataPersistence',
+                            e.target.checked
+                          )
+                        }
                         className="sr-only peer"
                       />
                       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -205,14 +255,17 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
                         Enable Analytics
                       </label>
                       <p className="text-xs text-gray-500">
-                        Help improve the app by sharing anonymous usage statistics
+                        Help improve the app by sharing anonymous usage
+                        statistics
                       </p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input
                         type="checkbox"
                         checked={config.limits.enableAnalytics}
-                        onChange={(e) => handleLimitChange('enableAnalytics', e.target.checked)}
+                        onChange={(e) =>
+                          handleLimitChange('enableAnalytics', e.target.checked)
+                        }
                         className="sr-only peer"
                       />
                       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -243,7 +296,12 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
                       <input
                         type="checkbox"
                         checked={config.privacy.allowDataCollection}
-                        onChange={(e) => handlePrivacyChange('allowDataCollection', e.target.checked)}
+                        onChange={(e) =>
+                          handlePrivacyChange(
+                            'allowDataCollection',
+                            e.target.checked
+                          )
+                        }
                         className="sr-only peer"
                       />
                       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -263,7 +321,12 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
                       <input
                         type="checkbox"
                         checked={config.privacy.allowErrorReporting}
-                        onChange={(e) => handlePrivacyChange('allowErrorReporting', e.target.checked)}
+                        onChange={(e) =>
+                          handlePrivacyChange(
+                            'allowErrorReporting',
+                            e.target.checked
+                          )
+                        }
                         className="sr-only peer"
                       />
                       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -283,7 +346,12 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
                       <input
                         type="checkbox"
                         checked={config.privacy.allowUsageAnalytics}
-                        onChange={(e) => handlePrivacyChange('allowUsageAnalytics', e.target.checked)}
+                        onChange={(e) =>
+                          handlePrivacyChange(
+                            'allowUsageAnalytics',
+                            e.target.checked
+                          )
+                        }
                         className="sr-only peer"
                       />
                       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -301,7 +369,12 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
                         max="365"
                         step="1"
                         value={config.privacy.dataRetentionDays}
-                        onChange={(e) => handlePrivacyChange('dataRetentionDays', parseInt(e.target.value))}
+                        onChange={(e) =>
+                          handlePrivacyChange(
+                            'dataRetentionDays',
+                            parseInt(e.target.value)
+                          )
+                        }
                         className="flex-1"
                       />
                       <span className="text-sm text-gray-600 dark:text-gray-400 min-w-[80px]">
@@ -321,7 +394,9 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
                 </h4>
                 <div className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
                   <p>• All data processing happens locally in your browser</p>
-                  <p>• No data is sent to external servers without your consent</p>
+                  <p>
+                    • No data is sent to external servers without your consent
+                  </p>
                   <p>• You can delete all stored data at any time</p>
                   <p>• Settings are saved locally and never shared</p>
                 </div>

@@ -19,7 +19,7 @@ interface ThemeProviderProps {
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
-  storageKey = 'csv-dashgen-theme'
+  storageKey = 'csv-dashgen-theme',
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme)
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light')
@@ -40,7 +40,10 @@ export function ThemeProvider({
   useEffect(() => {
     const updateResolvedTheme = () => {
       if (theme === 'system') {
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
+          .matches
+          ? 'dark'
+          : 'light'
         setResolvedTheme(systemTheme)
       } else {
         setResolvedTheme(theme)
@@ -82,7 +85,7 @@ export function ThemeProvider({
       value={{
         theme,
         setTheme: handleSetTheme,
-        resolvedTheme
+        resolvedTheme,
       }}
     >
       {children}

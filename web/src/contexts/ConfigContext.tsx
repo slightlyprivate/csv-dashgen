@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react'
 
 export interface AppLimits {
   maxFileSize: number // in bytes
@@ -27,19 +33,19 @@ const DEFAULT_LIMITS: AppLimits = {
   maxColumns: 50,
   maxCharts: 10,
   enableDataPersistence: true,
-  enableAnalytics: false
+  enableAnalytics: false,
 }
 
 const DEFAULT_PRIVACY: PrivacySettings = {
   allowDataCollection: false,
   allowErrorReporting: false,
   allowUsageAnalytics: false,
-  dataRetentionDays: 30
+  dataRetentionDays: 30,
 }
 
 const DEFAULT_CONFIG: AppConfig = {
   limits: DEFAULT_LIMITS,
-  privacy: DEFAULT_PRIVACY
+  privacy: DEFAULT_PRIVACY,
 }
 
 interface ConfigContextType {
@@ -71,7 +77,7 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
         // Merge with defaults to handle new config options
         setConfig({
           limits: { ...DEFAULT_LIMITS, ...parsedConfig.limits },
-          privacy: { ...DEFAULT_PRIVACY, ...parsedConfig.privacy }
+          privacy: { ...DEFAULT_PRIVACY, ...parsedConfig.privacy },
         })
       }
     } catch (error) {
@@ -89,16 +95,16 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
   }, [config])
 
   const updateLimits = (limits: Partial<AppLimits>) => {
-    setConfig(prev => ({
+    setConfig((prev) => ({
       ...prev,
-      limits: { ...prev.limits, ...limits }
+      limits: { ...prev.limits, ...limits },
     }))
   }
 
   const updatePrivacy = (privacy: Partial<PrivacySettings>) => {
-    setConfig(prev => ({
+    setConfig((prev) => ({
       ...prev,
-      privacy: { ...prev.privacy, ...privacy }
+      privacy: { ...prev.privacy, ...privacy },
     }))
   }
 
@@ -112,18 +118,20 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
       fileSize: 0,
       rowCount: 0,
       columnCount: 0,
-      chartCount: 0
+      chartCount: 0,
     }
   }
 
   return (
-    <ConfigContext.Provider value={{
-      config,
-      updateLimits,
-      updatePrivacy,
-      resetToDefaults,
-      getCurrentUsage
-    }}>
+    <ConfigContext.Provider
+      value={{
+        config,
+        updateLimits,
+        updatePrivacy,
+        resetToDefaults,
+        getCurrentUsage,
+      }}
+    >
       {children}
     </ConfigContext.Provider>
   )

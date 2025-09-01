@@ -9,14 +9,19 @@ import Settings from './components/Settings'
 import PrivacyNotice from './components/PrivacyNotice'
 import { Dataset, ColumnType } from './types'
 import { calculateDatasetStats } from './utils/statistics'
-import { usePersistentDataset, usePersistentColumnTypes, useSessionManager } from './hooks/usePersistentState'
+import {
+  usePersistentDataset,
+  usePersistentColumnTypes,
+  useSessionManager,
+} from './hooks/usePersistentState'
 
 function App() {
   const [error, setError] = useState<string | null>(null)
   const [showSettings, setShowSettings] = useState(false)
   const [showPrivacyNotice, setShowPrivacyNotice] = useState(false)
   const { dataset, updateDataset, clearDataset } = usePersistentDataset()
-  const { columnTypes, updateColumnType, clearColumnTypes } = usePersistentColumnTypes(dataset?.filename || '')
+  const { columnTypes, updateColumnType, clearColumnTypes } =
+    usePersistentColumnTypes(dataset?.filename || '')
   const { clearSession, hasSessionData } = useSessionManager()
 
   // Check if privacy notice should be shown on first load
@@ -32,14 +37,20 @@ function App() {
     if (!dataset) return null
     return {
       ...dataset,
-      columnTypes: { ...dataset.columnTypes, ...columnTypes } as Record<string, ColumnType>
+      columnTypes: { ...dataset.columnTypes, ...columnTypes } as Record<
+        string,
+        ColumnType
+      >,
     }
   }, [dataset, columnTypes])
 
   // Calculate statistics when dataset changes
   const stats = useMemo(() => {
     if (!datasetWithTypes) return []
-    return calculateDatasetStats(datasetWithTypes.rows, datasetWithTypes.columnTypes)
+    return calculateDatasetStats(
+      datasetWithTypes.rows,
+      datasetWithTypes.columnTypes
+    )
   }, [datasetWithTypes])
 
   const handleDatasetLoaded = (newDataset: Dataset) => {
@@ -118,12 +129,22 @@ function App() {
 
           {error && (
             <div className="max-w-2xl mx-auto">
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4" role="alert" aria-live="polite">
+              <div
+                className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4"
+                role="alert"
+                aria-live="polite"
+              >
                 <div className="flex">
-                  <div className="text-red-400" aria-hidden="true">⚠️</div>
+                  <div className="text-red-400" aria-hidden="true">
+                    ⚠️
+                  </div>
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800 dark:text-red-200">Error</h3>
-                    <p className="text-sm text-red-700 dark:text-red-300 mt-1">{error}</p>
+                    <h3 className="text-sm font-medium text-red-800 dark:text-red-200">
+                      Error
+                    </h3>
+                    <p className="text-sm text-red-700 dark:text-red-300 mt-1">
+                      {error}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -132,14 +153,22 @@ function App() {
         </div>
       ) : (
         <div className="space-y-6">
-          <section className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6" aria-labelledby="dataset-info">
+          <section
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
+            aria-labelledby="dataset-info"
+          >
             <div className="flex items-center justify-between">
               <div>
-                <h2 id="dataset-info" className="text-xl font-semibold text-gray-900 dark:text-white">
+                <h2
+                  id="dataset-info"
+                  className="text-xl font-semibold text-gray-900 dark:text-white"
+                >
                   Dataset: {datasetWithTypes.filename}
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  {(datasetWithTypes.size / 1024).toFixed(1)} KB • {datasetWithTypes.rows.length} rows • {datasetWithTypes.headers.length} columns
+                  {(datasetWithTypes.size / 1024).toFixed(1)} KB •{' '}
+                  {datasetWithTypes.rows.length} rows •{' '}
+                  {datasetWithTypes.headers.length} columns
                 </p>
               </div>
               <div className="flex space-x-2">
@@ -150,7 +179,9 @@ function App() {
                 >
                   Upload New File
                 </button>
-                <div id="upload-new-help" className="sr-only">Upload a different CSV file to replace the current dataset</div>
+                <div id="upload-new-help" className="sr-only">
+                  Upload a different CSV file to replace the current dataset
+                </div>
                 {hasSessionData && (
                   <button
                     onClick={handleClearSession}
@@ -160,14 +191,18 @@ function App() {
                     Clear Session
                   </button>
                 )}
-                <div id="clear-session-help" className="sr-only">Clear all stored data and start fresh</div>
+                <div id="clear-session-help" className="sr-only">
+                  Clear all stored data and start fresh
+                </div>
               </div>
             </div>
           </section>
 
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <section className="xl:col-span-2" aria-labelledby="data-preview">
-              <h3 id="data-preview" className="sr-only">Data Preview</h3>
+              <h3 id="data-preview" className="sr-only">
+                Data Preview
+              </h3>
               <DataPreview
                 dataset={datasetWithTypes}
                 onColumnTypeChange={handleColumnTypeChange}
@@ -176,7 +211,9 @@ function App() {
           </div>
 
           <section aria-labelledby="chart-section">
-            <h3 id="chart-section" className="sr-only">Chart Visualization</h3>
+            <h3 id="chart-section" className="sr-only">
+              Chart Visualization
+            </h3>
             <ChartContainer dataset={datasetWithTypes} />
           </section>
         </div>
@@ -192,10 +229,7 @@ function App() {
         main={mainContent}
       />
 
-      <Settings
-        isOpen={showSettings}
-        onClose={() => setShowSettings(false)}
-      />
+      <Settings isOpen={showSettings} onClose={() => setShowSettings(false)} />
 
       <PrivacyNotice
         isOpen={showPrivacyNotice}

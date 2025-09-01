@@ -14,14 +14,15 @@ interface ChartSelectorProps {
 export const ChartSelector: React.FC<ChartSelectorProps> = ({
   dataset,
   onConfigChange,
-  currentConfig
+  currentConfig,
 }) => {
   const [config, setConfig] = useState<ChartConfig>(
-    currentConfig || suggestChartConfig(dataset) || {
-      type: 'bar',
-      xField: dataset.headers[0] || '',
-      yField: dataset.headers[1] || '',
-    }
+    currentConfig ||
+      suggestChartConfig(dataset) || {
+        type: 'bar',
+        xField: dataset.headers[0] || '',
+        yField: dataset.headers[1] || '',
+      }
   )
 
   useEffect(() => {
@@ -40,7 +41,10 @@ export const ChartSelector: React.FC<ChartSelectorProps> = ({
     onConfigChange(newConfig)
   }
 
-  const handleFieldChange = (field: 'xField' | 'yField' | 'seriesField', value: string) => {
+  const handleFieldChange = (
+    field: 'xField' | 'yField' | 'seriesField',
+    value: string
+  ) => {
     const newConfig = { ...config, [field]: value || undefined }
     setConfig(newConfig)
     onConfigChange(newConfig)
@@ -52,18 +56,35 @@ export const ChartSelector: React.FC<ChartSelectorProps> = ({
     onConfigChange(newConfig)
   }
 
-  const chartTypes: { value: ChartKind; label: string; description: string }[] = [
-    { value: 'bar', label: 'Bar Chart', description: 'Compare values across categories' },
-    { value: 'line', label: 'Line Chart', description: 'Show trends over time or ordered categories' },
-    { value: 'pie', label: 'Pie Chart', description: 'Show proportions of a whole' },
-    { value: 'scatter', label: 'Scatter Plot', description: 'Show relationship between two numeric variables' },
-  ]
+  const chartTypes: { value: ChartKind; label: string; description: string }[] =
+    [
+      {
+        value: 'bar',
+        label: 'Bar Chart',
+        description: 'Compare values across categories',
+      },
+      {
+        value: 'line',
+        label: 'Line Chart',
+        description: 'Show trends over time or ordered categories',
+      },
+      {
+        value: 'pie',
+        label: 'Pie Chart',
+        description: 'Show proportions of a whole',
+      },
+      {
+        value: 'scatter',
+        label: 'Scatter Plot',
+        description: 'Show relationship between two numeric variables',
+      },
+    ]
 
   const getFieldOptions = () => {
-    return dataset.headers.map(header => ({
+    return dataset.headers.map((header) => ({
       value: header,
       label: header,
-      type: dataset.columnTypes[header]
+      type: dataset.columnTypes[header],
     }))
   }
 
@@ -71,14 +92,23 @@ export const ChartSelector: React.FC<ChartSelectorProps> = ({
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Chart Configuration</h3>
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        Chart Configuration
+      </h3>
 
       {/* Chart Type Selection */}
       <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2" id="chart-type-label">
+        <label
+          className="block text-sm font-medium text-gray-700 mb-2"
+          id="chart-type-label"
+        >
           Chart Type
         </label>
-        <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-labelledby="chart-type-label">
+        <div
+          className="grid grid-cols-2 gap-3"
+          role="radiogroup"
+          aria-labelledby="chart-type-label"
+        >
           {chartTypes.map(({ value, label, description }) => (
             <button
               key={value}
@@ -93,7 +123,12 @@ export const ChartSelector: React.FC<ChartSelectorProps> = ({
               aria-describedby={`${value}-description`}
             >
               <div className="font-medium text-sm">{label}</div>
-              <div className="text-xs text-gray-500 mt-1" id={`${value}-description`}>{description}</div>
+              <div
+                className="text-xs text-gray-500 mt-1"
+                id={`${value}-description`}
+              >
+                {description}
+              </div>
             </button>
           ))}
         </div>
@@ -103,7 +138,10 @@ export const ChartSelector: React.FC<ChartSelectorProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         {/* X-Axis Field */}
         <div>
-          <label htmlFor="x-axis-select" className="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            htmlFor="x-axis-select"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
             X-Axis Field
           </label>
           <select
@@ -119,12 +157,17 @@ export const ChartSelector: React.FC<ChartSelectorProps> = ({
               </option>
             ))}
           </select>
-          <div id="x-axis-help" className="sr-only">Select the field to use for the X-axis of your chart</div>
+          <div id="x-axis-help" className="sr-only">
+            Select the field to use for the X-axis of your chart
+          </div>
         </div>
 
         {/* Y-Axis Field */}
         <div>
-          <label htmlFor="y-axis-select" className="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            htmlFor="y-axis-select"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
             Y-Axis Field
           </label>
           <select
@@ -140,15 +183,22 @@ export const ChartSelector: React.FC<ChartSelectorProps> = ({
               </option>
             ))}
           </select>
-          <div id="y-axis-help" className="sr-only">Select the field to use for the Y-axis of your chart</div>
+          <div id="y-axis-help" className="sr-only">
+            Select the field to use for the Y-axis of your chart
+          </div>
         </div>
       </div>
 
       {/* Series Field (optional) */}
       <div className="mb-6">
-        <label htmlFor="series-select" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="series-select"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Series Field (Optional)
-          <span className="text-xs text-gray-500 ml-2">Group data by this field</span>
+          <span className="text-xs text-gray-500 ml-2">
+            Group data by this field
+          </span>
         </label>
         <select
           id="series-select"
@@ -166,12 +216,17 @@ export const ChartSelector: React.FC<ChartSelectorProps> = ({
               </option>
             ))}
         </select>
-        <div id="series-help" className="sr-only">Optional field to group chart data by categories</div>
+        <div id="series-help" className="sr-only">
+          Optional field to group chart data by categories
+        </div>
       </div>
 
       {/* Chart Title */}
       <div>
-        <label htmlFor="chart-title-input" className="block text-sm font-medium text-gray-700 mb-2">
+        <label
+          htmlFor="chart-title-input"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
           Chart Title (Optional)
         </label>
         <input
@@ -183,7 +238,9 @@ export const ChartSelector: React.FC<ChartSelectorProps> = ({
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           aria-describedby="title-help"
         />
-        <div id="title-help" className="sr-only">Optional title to display above your chart</div>
+        <div id="title-help" className="sr-only">
+          Optional title to display above your chart
+        </div>
       </div>
     </div>
   )
