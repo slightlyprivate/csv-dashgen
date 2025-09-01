@@ -1,0 +1,29 @@
+{
+  "name": "csv-dashgen",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Upload any CSV and auto-generate charts and summary stats.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --ext ts,tsx",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "papaparse": "^5.4.1",
+    "chart.js": "^4.4.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.2",
+    "eslint": "^9.0.0",
+    "typescript": "^5.4.3",
+    "vite": "^5.2.7",
+    "vitest": "^1.4.0"
+  },
+  "license": "MIT"
+}
