@@ -1,0 +1,61 @@
+Date,Page_URL,Page_Title,Page_Views,Sessions,Unique_Visitors,Bounce_Rate,Avg_Session_Duration,Top_Referrer,Device_Type,Browser,Country,Traffic_Source,Conversion_Rate,Revenue
+2024-01-15,/home,Home Page,1250,980,890,0.35,185,/google,Desktop,Chrome,United States,Organic Search,0.025,1250.00
+2024-01-15,/products,Products,890,720,650,0.42,142,/home,Mobile,Safari,United States,Direct,0.018,890.00
+2024-01-15,/about,About Us,340,280,250,0.28,98,/home,Desktop,Firefox,United States,Direct,0.012,340.00
+2024-01-15,/contact,Contact,180,150,135,0.45,67,/about,Mobile,Chrome,United States,Direct,0.008,180.00
+2024-01-15,/blog/tech-trends,Tech Trends Blog,420,380,340,0.38,156,/google,Desktop,Chrome,United States,Organic Search,0.015,420.00
+2024-01-15,/pricing,Pricing,290,240,210,0.32,134,/products,Mobile,Safari,United States,Direct,0.022,290.00
+2024-01-15,/docs/getting-started,Getting Started,560,480,420,0.41,178,/google,Desktop,Edge,United States,Organic Search,0.019,560.00
+2024-01-15,/support,Support,120,95,85,0.52,89,/contact,Mobile,Chrome,United States,Direct,0.006,120.00
+2024-01-15,/blog/data-analysis,Data Analysis Blog,380,340,300,0.39,145,/google,Desktop,Chrome,United States,Organic Search,0.014,380.00
+2024-01-15,/dashboard,Dashboard,450,380,330,0.36,167,/products,Desktop,Firefox,United States,Direct,0.028,450.00
+2024-01-16,/home,Home Page,1180,920,830,0.34,192,/google,Desktop,Chrome,United States,Organic Search,0.024,1180.00
+2024-01-16,/products,Products,945,760,680,0.40,138,/home,Mobile,Safari,United States,Direct,0.020,945.00
+2024-01-16,/about,About Us,365,300,265,0.29,105,/home,Desktop,Firefox,United States,Direct,0.011,365.00
+2024-01-16,/contact,Contact,195,160,145,0.43,72,/about,Mobile,Chrome,United States,Direct,0.009,195.00
+2024-01-16,/blog/ai-ml,AI & ML Blog,480,430,380,0.37,162,/google,Desktop,Chrome,United States,Organic Search,0.016,480.00
+2024-01-16,/pricing,Pricing,315,260,225,0.31,129,/products,Mobile,Safari,United States,Direct,0.025,315.00
+2024-01-16,/docs/api-reference,API Reference,620,530,460,0.38,185,/google,Desktop,Edge,United States,Organic Search,0.021,620.00
+2024-01-16,/support,Support,135,105,95,0.49,94,/contact,Mobile,Chrome,United States,Direct,0.007,135.00
+2024-01-16,/blog/visualization,Data Visualization Blog,420,375,330,0.40,152,/google,Desktop,Chrome,United States,Organic Search,0.013,420.00
+2024-01-16,/dashboard,Dashboard,485,410,355,0.35,173,/products,Desktop,Firefox,United States,Direct,0.030,485.00
+2024-01-17,/home,Home Page,1320,1030,925,0.33,198,/google,Desktop,Chrome,United States,Organic Search,0.026,1320.00
+2024-01-17,/products,Products,1010,810,720,0.38,145,/home,Mobile,Safari,United States,Direct,0.022,1010.00
+2024-01-17,/about,About Us,390,320,280,0.27,112,/home,Desktop,Firefox,United States,Direct,0.013,390.00
+2024-01-17,/contact,Contact,210,175,155,0.41,78,/about,Mobile,Chrome,United States,Direct,0.010,210.00
+2024-01-17,/blog/cloud-computing,Cloud Computing Blog,520,465,405,0.36,168,/google,Desktop,Chrome,United States,Organic Search,0.017,520.00
+2024-01-17,/pricing,Pricing,340,280,240,0.30,141,/products,Mobile,Safari,United States,Direct,0.027,340.00
+2024-01-17,/docs/tutorials,Tutorials,680,580,500,0.37,192,/google,Desktop,Edge,United States,Organic Search,0.023,680.00
+2024-01-17,/support,Support,150,115,105,0.47,101,/contact,Mobile,Chrome,United States,Direct,0.008,150.00
+2024-01-17,/blog/analytics,Analytics Blog,460,410,360,0.38,158,/google,Desktop,Chrome,United States,Organic Search,0.015,460.00
+2024-01-17,/dashboard,Dashboard,520,440,380,0.34,179,/products,Desktop,Firefox,United States,Direct,0.032,520.00
+2024-01-18,/home,Home Page,1150,895,805,0.36,178,/google,Desktop,Chrome,United States,Organic Search,0.023,1150.00
+2024-01-18,/products,Products,875,705,630,0.43,135,/home,Mobile,Safari,United States,Direct,0.019,875.00
+2024-01-18,/about,About Us,325,265,235,0.30,92,/home,Desktop,Firefox,United States,Direct,0.010,325.00
+2024-01-18,/contact,Contact,165,135,120,0.47,64,/about,Mobile,Chrome,United States,Direct,0.007,165.00
+2024-01-18,/blog/security,Security Blog,395,355,310,0.39,149,/google,Desktop,Chrome,United States,Organic Search,0.014,395.00
+2024-01-18,/pricing,Pricing,275,225,195,0.33,127,/products,Mobile,Safari,United States,Direct,0.024,275.00
+2024-01-18,/docs/faq,FAQ,540,460,395,0.40,171,/google,Desktop,Edge,United States,Organic Search,0.018,540.00
+2024-01-18,/support,Support,110,85,75,0.54,86,/contact,Mobile,Chrome,United States,Direct,0.005,110.00
+2024-01-18,/blog/machine-learning,Machine Learning Blog,405,360,315,0.41,154,/google,Desktop,Chrome,United States,Organic Search,0.012,405.00
+2024-01-18,/dashboard,Dashboard,430,365,315,0.37,165,/products,Desktop,Firefox,United States,Direct,0.029,430.00
+2024-01-19,/home,Home Page,1280,995,895,0.35,187,/google,Desktop,Chrome,United States,Organic Search,0.025,1280.00
+2024-01-19,/products,Products,960,770,685,0.41,140,/home,Mobile,Safari,United States,Direct,0.021,960.00
+2024-01-19,/about,About Us,355,290,255,0.28,99,/home,Desktop,Firefox,United States,Direct,0.011,355.00
+2024-01-19,/contact,Contact,185,155,140,0.44,69,/about,Mobile,Chrome,United States,Direct,0.008,185.00
+2024-01-19,/blog/blockchain,Blockchain Blog,445,400,350,0.37,159,/google,Desktop,Chrome,United States,Organic Search,0.016,445.00
+2024-01-19,/pricing,Pricing,305,250,215,0.31,132,/products,Mobile,Safari,United States,Direct,0.026,305.00
+2024-01-19,/docs/integration,Integration Guide,600,510,440,0.39,182,/google,Desktop,Edge,United States,Organic Search,0.020,600.00
+2024-01-19,/support,Support,125,100,90,0.51,91,/contact,Mobile,Chrome,United States,Direct,0.006,125.00
+2024-01-19,/blog/automation,Automation Blog,435,385,335,0.39,151,/google,Desktop,Chrome,United States,Organic Search,0.014,435.00
+2024-01-19,/dashboard,Dashboard,475,400,345,0.35,171,/products,Desktop,Firefox,United States,Direct,0.031,475.00
+2024-01-20,/home,Home Page,1220,950,855,0.34,183,/google,Desktop,Chrome,United States,Organic Search,0.024,1220.00
+2024-01-20,/products,Products,915,735,655,0.40,137,/home,Mobile,Safari,United States,Direct,0.020,915.00
+2024-01-20,/about,About Us,345,285,250,0.29,96,/home,Desktop,Firefox,United States,Direct,0.010,345.00
+2024-01-20,/contact,Contact,175,145,130,0.46,66,/about,Mobile,Chrome,United States,Direct,0.007,175.00
+2024-01-20,/blog/iot,IoT Blog,410,370,325,0.38,148,/google,Desktop,Chrome,United States,Organic Search,0.015,410.00
+2024-01-20,/pricing,Pricing,295,245,210,0.32,128,/products,Mobile,Safari,United States,Direct,0.025,295.00
+2024-01-20,/docs/webhooks,Webhooks Guide,580,495,425,0.38,176,/google,Desktop,Edge,United States,Organic Search,0.019,580.00
+2024-01-20,/support,Support,130,105,95,0.50,88,/contact,Mobile,Chrome,United States,Direct,0.006,130.00
+2024-01-20,/blog/devops,DevOps Blog,400,355,310,0.40,153,/google,Desktop,Chrome,United States,Organic Search,0.013,400.00
+2024-01-20,/dashboard,Dashboard,455,385,330,0.36,168,/products,Desktop,Firefox,United States,Direct,0.030,455.00

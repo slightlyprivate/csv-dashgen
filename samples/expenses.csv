@@ -1,0 +1,51 @@
+Date,Category,Subcategory,Description,Amount,Currency,Payment_Method,Vendor,Tax_Rate,Receipt_Number
+2024-01-15,Office Supplies,Pens & Markers,Blue ballpoint pens,45.99,USD,Credit Card,Office Depot,0.08,REC-2024-001
+2024-01-16,Travel,Airfare,Flight to Chicago,425.50,USD,Credit Card,United Airlines,0.00,REC-2024-002
+2024-01-17,Meals & Entertainment,Client Lunch,Lunch with ABC Corp,89.99,USD,Cash,Local Restaurant,0.08,REC-2024-003
+2024-01-18,Office Supplies,Paper,Letterhead paper,67.50,USD,Company Card,Staples,0.08,REC-2024-004
+2024-01-19,Software,Annual License,Adobe Creative Suite,599.99,USD,Credit Card,Adobe,0.08,REC-2024-005
+2024-01-20,Travel,Hotel,Hotel in Chicago,289.99,USD,Credit Card,Hilton,0.12,REC-2024-006
+2024-01-21,Office Supplies,Printer Ink,Color ink cartridges,129.99,USD,Company Card,HP Store,0.08,REC-2024-007
+2024-01-22,Meals & Entertainment,Team Building,Pizza party,156.75,USD,Cash,Dominos,0.08,REC-2024-008
+2024-01-23,Utilities,Electricity,Monthly electricity bill,234.50,USD,ACH,Local Utility,0.00,REC-2024-009
+2024-01-24,Office Supplies,Cleaning Supplies,Janitorial supplies,78.99,USD,Credit Card,Cleaning Co,0.08,REC-2024-010
+2024-01-25,Travel,Mileage,Business mileage reimbursement,67.20,USD,Check,N/A,0.00,REC-2024-011
+2024-01-26,Software,Cloud Services,AWS monthly hosting,145.99,USD,Credit Card,Amazon,0.08,REC-2024-012
+2024-01-27,Meals & Entertainment,Coffee,Coffee and pastries,23.45,USD,Cash,Starbucks,0.08,REC-2024-013
+2024-01-28,Office Supplies,Furniture,Desk chair,349.99,USD,Company Card,Office Furniture Co,0.08,REC-2024-014
+2024-01-29,Travel,Parking,Parking fees,45.00,USD,Cash,Downtown Parking,0.00,REC-2024-015
+2024-01-30,Marketing,Advertising,Google Ads campaign,299.99,USD,Credit Card,Google,0.08,REC-2024-016
+2024-01-31,Utilities,Internet,Monthly internet bill,89.99,USD,ACH,ISP Provider,0.00,REC-2024-017
+2024-02-01,Office Supplies,Printer Paper,20lb bond paper,34.99,USD,Company Card,Office Depot,0.08,REC-2024-018
+2024-02-02,Travel,Airfare,Flight to New York,512.75,USD,Credit Card,Delta Airlines,0.00,REC-2024-019
+2024-02-03,Meals & Entertainment,Business Dinner,Dinner with client,145.99,USD,Credit Card,Fine Dining,0.08,REC-2024-020
+2024-02-04,Office Supplies,Computer Accessories,USB drives,67.50,USD,Cash,Electronics Store,0.08,REC-2024-021
+2024-02-05,Software,Security,Antivirus software,89.99,USD,Credit Card,Security Corp,0.08,REC-2024-022
+2024-02-06,Travel,Hotel,Hotel in New York,345.99,USD,Credit Card,Marriott,0.12,REC-2024-023
+2024-02-07,Office Supplies,Postage,Postage stamps,23.45,USD,Cash,Post Office,0.00,REC-2024-024
+2024-02-08,Meals & Entertainment,Catering,Team lunch catering,234.99,USD,Company Card,Catering Co,0.08,REC-2024-025
+2024-02-09,Utilities,Phone,Monthly phone bill,156.75,USD,ACH,Phone Company,0.00,REC-2024-026
+2024-02-10,Office Supplies,Plants,Office plants,89.99,USD,Credit Card,Garden Center,0.08,REC-2024-027
+2024-02-11,Travel,Taxi,Taxi to airport,28.50,USD,Cash,Taxi Service,0.00,REC-2024-028
+2024-02-12,Software,Development Tools,Code editor license,129.99,USD,Credit Card,Dev Tools Inc,0.08,REC-2024-029
+2024-02-13,Meals & Entertainment,Coffee,Coffee meeting,18.75,USD,Cash,Coffee Shop,0.08,REC-2024-030
+2024-02-14,Office Supplies,Whiteboard,Whiteboard markers,12.99,USD,Cash,Office Store,0.08,REC-2024-031
+2024-02-15,Travel,Parking,Airport parking,35.00,USD,Credit Card,Airport Parking,0.00,REC-2024-032
+2024-02-16,Marketing,Website,Domain renewal,24.99,USD,Credit Card,Domain Registrar,0.08,REC-2024-033
+2024-02-17,Utilities,Water,Monthly water bill,67.50,USD,ACH,Water Company,0.00,REC-2024-034
+2024-02-18,Office Supplies,Labels,Address labels,15.99,USD,Company Card,Label Co,0.08,REC-2024-035
+2024-02-19,Travel,Airfare,Flight to Boston,398.75,USD,Credit Card,JetBlue,0.00,REC-2024-036
+2024-02-20,Meals & Entertainment,Conference,Conference registration,299.99,USD,Credit Card,Conference Co,0.08,REC-2024-037
+2024-02-21,Office Supplies,Binders,Report binders,45.99,USD,Cash,Office Depot,0.08,REC-2024-038
+2024-02-22,Software,Backup,Cloud backup service,79.99,USD,Credit Card,Backup Inc,0.08,REC-2024-039
+2024-02-23,Travel,Hotel,Hotel in Boston,278.99,USD,Credit Card,Hyatt,0.12,REC-2024-040
+2024-02-24,Office Supplies,Envelopes,Business envelopes,19.99,USD,Company Card,Envelope Co,0.08,REC-2024-041
+2024-02-25,Meals & Entertainment,Team Outing,Bowling outing,123.45,USD,Cash,Bowling Alley,0.08,REC-2024-042
+2024-02-26,Utilities,Gas,Monthly gas bill,145.99,USD,ACH,Gas Company,0.00,REC-2024-043
+2024-02-27,Office Supplies,Calendars,Wall calendars,34.99,USD,Credit Card,Calendar Co,0.08,REC-2024-044
+2024-02-28,Travel,Mileage,Business mileage,89.10,USD,Check,N/A,0.00,REC-2024-045
+2024-02-29,Software,Training,Online course,149.99,USD,Credit Card,Training Platform,0.08,REC-2024-046
+2024-03-01,Meals & Entertainment,Coffee,Coffee and donuts,31.25,USD,Cash,Coffee Shop,0.08,REC-2024-047
+2024-03-02,Office Supplies,Notebooks,Legal pads,23.99,USD,Cash,Office Store,0.08,REC-2024-048
+2024-03-03,Travel,Taxi,Taxi from airport,32.50,USD,Credit Card,Taxi Service,0.00,REC-2024-049
+2024-03-04,Marketing,Social Media,Social media ads,189.99,USD,Credit Card,Social Platform,0.08,REC-2024-050

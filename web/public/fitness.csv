@@ -1,0 +1,62 @@
+Date,Exercise_Type,Duration_Minutes,Calories_Burned,Heart_Rate_Avg,Heart_Rate_Max,Distance_KM,Steps,Workout_Intensity,Weather_Temp_C,Weather_Condition,Notes
+2024-01-15,Running,45,520,145,165,6.2,8200,High,8,Sunny,Great run in the park
+2024-01-16,Weight Training,60,380,120,140,,0,Medium,12,Cloudy,Upper body focus
+2024-01-17,Cycling,30,280,135,155,12.5,0,Medium,10,Rainy,Indoor cycling session
+2024-01-18,Yoga,45,180,95,110,,0,Low,15,Sunny,Relaxing session
+2024-01-19,Swimming,40,350,130,150,1.6,0,Medium,18,Sunny,Lap swimming
+2024-01-20,Running,35,410,140,160,4.8,6400,Medium,6,Cloudy,Morning run
+2024-01-21,HIIT,25,320,155,175,,0,High,14,Sunny,Intense workout
+2024-01-22,Walking,60,240,105,125,4.2,5600,Low,9,Cloudy,Evening walk
+2024-01-23,Weight Training,55,340,118,138,,0,Medium,11,Rainy,Lower body focus
+2024-01-24,Cycling,50,420,138,158,18.0,0,High,13,Sunny,Long bike ride
+2024-01-25,Yoga,30,120,90,105,,0,Low,16,Sunny,Quick session
+2024-01-26,Swimming,35,310,128,148,1.4,0,Medium,19,Sunny,Freestyle laps
+2024-01-27,Running,42,485,142,162,5.6,7400,High,7,Cloudy,Hill training
+2024-01-28,HIIT,20,260,158,178,,0,High,15,Sunny,Tabata workout
+2024-01-29,Walking,45,180,100,120,3.2,4200,Low,10,Rainy,Light walk
+2024-01-30,Weight Training,65,400,122,142,,0,Medium,12,Cloudy,Full body workout
+2024-01-31,Cycling,25,220,132,152,9.0,0,Medium,14,Sunny,Commute to work
+2024-02-01,Yoga,50,200,92,107,,0,Low,17,Sunny,Meditation focus
+2024-02-02,Swimming,45,390,133,153,1.8,0,Medium,20,Sunny,Mixed strokes
+2024-02-03,Running,38,445,139,159,5.1,6700,Medium,8,Cloudy,Interval training
+2024-02-04,HIIT,30,380,152,172,,0,High,16,Sunny,Circuit training
+2024-02-05,Walking,55,220,102,122,3.9,5100,Low,11,Rainy,Brisk walk
+2024-02-06,Weight Training,50,310,115,135,,0,Medium,13,Cloudy,Core focus
+2024-02-07,Cycling,40,340,136,156,15.2,0,Medium,15,Sunny,Trail ride
+2024-02-08,Yoga,40,160,88,103,,0,Low,18,Sunny,Flexibility work
+2024-02-09,Swimming,30,265,126,146,1.2,0,Medium,21,Sunny,Backstroke
+2024-02-10,Running,48,560,147,167,6.4,8500,High,9,Cloudy,Long run
+2024-02-11,HIIT,22,285,160,180,,0,High,17,Sunny,AMRAP workout
+2024-02-12,Walking,40,160,98,118,2.8,3700,Low,12,Rainy,Casual walk
+2024-02-13,Weight Training,58,365,119,139,,0,Medium,14,Cloudy,Push/pull split
+2024-02-14,Cycling,35,300,134,154,13.5,0,Medium,16,Sunny,Mountain biking
+2024-02-15,Yoga,35,140,85,100,,0,Low,19,Sunny,Breathing exercises
+2024-02-16,Swimming,42,365,131,151,1.7,0,Medium,22,Sunny,IM training
+2024-02-17,Running,33,385,137,157,4.4,5800,Medium,10,Cloudy,Recovery run
+2024-02-18,HIIT,28,350,154,174,,0,High,18,Sunny,EMOM workout
+2024-02-19,Walking,50,200,104,124,3.5,4600,Low,13,Rainy,Nature walk
+2024-02-20,Weight Training,62,385,121,141,,0,Medium,15,Cloudy,Leg day
+2024-02-21,Cycling,45,380,139,159,16.8,0,High,17,Sunny,Group ride
+2024-02-22,Yoga,48,190,91,106,,0,Low,20,Sunny,Restorative yoga
+2024-02-23,Swimming,38,330,129,149,1.5,0,Medium,23,Sunny,Distance swim
+2024-02-24,Running,41,475,144,164,5.5,7200,High,11,Cloudy,Tempo run
+2024-02-25,HIIT,26,325,157,177,,0,High,19,Sunny,Functional training
+2024-02-26,Walking,48,190,101,121,3.4,4400,Low,14,Rainy,Urban walk
+2024-02-27,Weight Training,55,345,117,137,,0,Medium,16,Cloudy,Upper body
+2024-02-28,Cycling,32,275,133,153,11.2,0,Medium,18,Sunny,Evening ride
+2024-02-29,Yoga,42,170,87,102,,0,Low,21,Sunny,Vinyasa flow
+2024-03-01,Swimming,36,315,127,147,1.4,0,Medium,24,Sunny,Sprint sets
+2024-03-02,Running,37,430,141,161,4.9,6500,Medium,12,Cloudy,Easy run
+2024-03-03,HIIT,24,305,159,179,,0,High,20,Sunny,Burpee challenge
+2024-03-04,Walking,52,205,103,123,3.7,4800,Low,15,Rainy,Scenic walk
+2024-03-05,Weight Training,59,370,120,140,,0,Medium,17,Cloudy,Full body
+2024-03-06,Cycling,38,325,137,157,14.1,0,Medium,19,Sunny,Road cycling
+2024-03-07,Yoga,46,185,89,104,,0,Low,22,Sunny,Hatha yoga
+2024-03-08,Swimming,44,380,132,152,1.8,0,Medium,25,Sunny,Endurance swim
+2024-03-09,Running,46,535,146,166,6.1,8100,High,13,Cloudy,Progressive run
+2024-03-10,HIIT,29,365,156,176,,0,High,21,Sunny,Strength circuit
+2024-03-11,Walking,43,170,99,119,3.0,3900,Low,16,Rainy,Beach walk
+2024-03-12,Weight Training,61,380,122,142,,0,Medium,18,Cloudy,Olympic lifts
+2024-03-13,Cycling,41,350,138,158,15.4,0,High,20,Sunny,Time trial
+2024-03-14,Yoga,39,155,86,101,,0,Low,23,Sunny,Power yoga
+2024-03-15,Swimming,33,290,125,145,1.3,0,Medium,26,Sunny,Recovery swim

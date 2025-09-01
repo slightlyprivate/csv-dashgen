@@ -1,0 +1,16 @@
+product_id,name,category,price,stock_quantity,rating,release_date,is_available
+1,Laptop A,Electronics,999.99,50,4.5,2023-01-15,true
+2,Mouse B,Accessories,29.99,200,4.2,2023-02-20,true
+3,Keyboard C,Accessories,79.99,150,4.7,2023-03-10,true
+4,Monitor D,Electronics,299.99,75,4.8,2023-04-05,true
+5,Headphones E,Audio,149.99,100,4.3,2023-05-12,false
+6,Tablet F,Electronics,599.99,30,4.6,2023-06-18,true
+7,Phone Case G,Accessories,19.99,300,4.1,2023-07-22,true
+8,Webcam H,Electronics,89.99,80,4.4,2023-08-30,false
+9,Speaker I,Audio,199.99,60,4.9,2023-09-14,true
+10,Charger J,Accessories,39.99,250,4.0,2023-10-08,true
+11,Laptop K,Electronics,1299.99,25,4.7,2023-11-20,true
+12,Mouse L,Accessories,49.99,180,4.3,2023-12-05,false
+13,Keyboard M,Accessories,99.99,120,4.6,2024-01-10,true
+14,Monitor N,Electronics,399.99,40,4.8,2024-02-14,true
+15,Headphones O,Audio,249.99,90,4.5,2024-03-22,true
