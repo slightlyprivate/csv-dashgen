@@ -36,12 +36,12 @@ export interface ChartConfig {
   yField: string
   seriesField?: string
   title?: string
-  options?: any
+  options?: unknown
 }
 
 export interface ChartData {
   labels: string[]
-  datasets: any[]
+  datasets: unknown[]
 }
 
 /**
@@ -85,7 +85,7 @@ function generateLineBarData(dataset: Dataset, config: ChartConfig): ChartData {
 
   if (seriesField && dataset.columnTypes[seriesField] === 'string') {
     // Grouped chart with series
-    const seriesMap = new Map<string, any[]>()
+    const seriesMap = new Map<string, unknown[]>()
 
     dataset.rows.forEach((row) => {
       const seriesValue = String(row[seriesField] || 'Other')
@@ -187,7 +187,7 @@ function generateScatterData(dataset: Dataset, config: ChartConfig): ChartData {
 
   if (seriesField && dataset.columnTypes[seriesField] === 'string') {
     // Scatter plot with series
-    const seriesMap = new Map<string, any[]>()
+    const seriesMap = new Map<string, unknown[]>()
 
     dataset.rows.forEach((row) => {
       const seriesValue = String(row[seriesField] || 'Other')

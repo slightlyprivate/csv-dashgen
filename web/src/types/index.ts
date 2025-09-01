@@ -41,7 +41,7 @@ export interface ChartConfig {
   yField: string
   seriesField?: string
   title?: string
-  options?: Record<string, any>
+  options?: Record<string, unknown>
 }
 
 export interface ParsedCSV {

@@ -71,7 +71,7 @@ export function calculateDatasetStats(
 /**
  * Calculate statistics for numeric columns
  */
-function calculateNumericStats(values: any[]): NumericStats {
+function calculateNumericStats(values: unknown[]): NumericStats {
   // Filter out null, undefined, and non-numeric values
   const numericValues = values
     .filter((val) => val !== null && val !== undefined && val !== '')
@@ -133,7 +133,7 @@ function calculateNumericStats(values: any[]): NumericStats {
 /**
  * Calculate statistics for categorical columns
  */
-function calculateCategoricalStats(values: any[]): CategoricalStats {
+function calculateCategoricalStats(values: unknown[]): CategoricalStats {
   // Filter out null and undefined values
   const validValues = values.filter(
     (val) => val !== null && val !== undefined && val !== ''

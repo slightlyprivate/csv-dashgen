@@ -58,7 +58,7 @@ export function inferColumnType(
 /**
  * Check if column contains boolean values
  */
-function isBooleanColumn(values: any[], threshold: number): boolean {
+function isBooleanColumn(values: unknown[], threshold: number): boolean {
   const booleanPatterns = [
     /^true$/i,
     /^false$/i,
@@ -86,7 +86,7 @@ function isBooleanColumn(values: any[], threshold: number): boolean {
 /**
  * Check if column contains numeric values
  */
-function isNumericColumn(values: any[], threshold: number): boolean {
+function isNumericColumn(values: unknown[], threshold: number): boolean {
   const numericCount = values.filter((val) => {
     if (typeof val === 'number') return true
     if (typeof val === 'string') {
@@ -103,7 +103,7 @@ function isNumericColumn(values: any[], threshold: number): boolean {
 /**
  * Check if column contains date values
  */
-function isDateColumn(values: any[], threshold: number): boolean {
+function isDateColumn(values: unknown[], threshold: number): boolean {
   const dateCount = values.filter((val) => {
     if (val instanceof Date) return true
     if (typeof val === 'string') {
@@ -118,7 +118,7 @@ function isDateColumn(values: any[], threshold: number): boolean {
 /**
  * Check if column is categorical (limited unique values)
  */
-function isCategoricalColumn(values: any[], maxUnique: number): boolean {
+function isCategoricalColumn(values: unknown[], maxUnique: number): boolean {
   const uniqueValues = new Set(values.map((val) => String(val).toLowerCase()))
   return uniqueValues.size <= maxUnique && uniqueValues.size > 1
 }

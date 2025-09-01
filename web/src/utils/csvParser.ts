@@ -45,12 +45,12 @@ export function validateFile(
  */
 export function parseCSV(file: File): Promise<ParsedCSV> {
   return new Promise((resolve, reject) => {
-    Papa.parse(file as any, {
+    Papa.parse(file as unknown, {
       header: true,
       skipEmptyLines: true,
       dynamicTyping: false, // We'll handle typing manually
       transformHeader: (header: string) => header.trim(),
-      complete: (results: Papa.ParseResult<any>) => {
+      complete: (results: Papa.ParseResult<unknown>) => {
         if (results.errors && results.errors.length > 0) {
           reject(
             new Error(
@@ -60,12 +60,12 @@ export function parseCSV(file: File): Promise<ParsedCSV> {
           return
         }
         resolve({
-          data: results.data as any[],
+          data: results.data as unknown[],
           errors: [],
           meta: results.meta,
         })
       },
-      error: (error: any) => {
+      error: (error: unknown) => {
         reject(
           new Error(`CSV parsing failed: ${error.message || 'Unknown error'}`)
         )
@@ -78,7 +78,7 @@ export function parseCSV(file: File): Promise<ParsedCSV> {
  * Validates parsed CSV data
  */
 export function validateCSVData(
-  data: any[],
+  data: unknown[],
   headers: string[],
   maxRows: number,
   maxColumns: number
@@ -127,7 +127,7 @@ export function createDataset(
   fileSize: number
 ): Dataset {
   const headers = Object.keys(parsedData.data[0] || {})
-  const rows: Row[] = parsedData.data.map((row: any) => {
+  const rows: Row[] = parsedData.data.map((row: unknown) => {
     const processedRow: Row = {}
     headers.forEach((header) => {
       const value = row[header]
