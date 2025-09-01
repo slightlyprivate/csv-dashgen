@@ -1,15 +1,15 @@
 # CSV → Dashboard Generator – Build Checklist
 
 ## 🔧 Repo & Tooling Setup
-- [ ] Create repo `csv-dashgen` with standard Node `.gitignore`
-- [ ] Initialize Vite + React + TypeScript (`/web`)
-- [ ] Add Tailwind CSS (PostCSS + autoprefixer) and base theme
-- [ ] Configure ESLint + Prettier + `lint-staged` + `husky` pre-commit
-- [ ] Add Vitest + React Testing Library; set up `test` and `coverage` scripts
-- [ ] Add CI (GitHub Actions): lint → build → tests on push/PR
-- [ ] Add `LICENSE` (MIT) and basic `CODE_OF_CONDUCT.md`
-- [ ] Create `/docs` (screenshots), `/samples` (CSV fixtures)
-- [ ] Add issue templates & PR template in `.github/`
+- [x] Create repo `csv-dashgen` with standard Node `.gitignore`
+- [x] Initialize Vite + React + TypeScript (`/web`)
+- [x] Add Tailwind CSS (PostCSS + autoprefixer) and base theme
+- [x] Configure ESLint + Prettier + `lint-staged` + `husky` pre-commit
+- [x] Add Vitest + React Testing Library; set up `test` and `coverage` scripts
+- [x] Add CI (GitHub Actions): lint → build → tests on push/PR
+- [x] Add `LICENSE` (MIT) and basic `CODE_OF_CONDUCT.md`
+- [x] Create `/docs` (screenshots), `/samples` (CSV fixtures)
+- [x] Add issue templates & PR template in `.github/`
 
 ## 🗂️ Project Architecture
 - [ ] Define folder structure
