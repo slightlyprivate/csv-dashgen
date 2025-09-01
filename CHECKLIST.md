@@ -56,11 +56,11 @@
 - [ ] Clear session button
 
 ## 🧪 Testing
-- [ ] Unit tests: parsers, type inference, KPI calculators
-- [ ] Component tests: `Uploader`, `FieldPicker`, `Charts`, `Stats`
-- [ ] Integration tests: upload sample CSV → choose fields → render chart & KPIs
-- [ ] (Optional) Playwright e2e for critical flows
-- [ ] Snapshot tests for consistent rendering of KPIs/cards
+- [x] Unit tests: parsers, type inference, KPI calculators
+- [x] Component tests: `Uploader`, `FieldPicker`, `Charts`, `Stats`
+- [x] Integration tests: upload sample CSV → choose fields → render chart & KPIs
+- [x] (Optional) Playwright e2e for critical flows
+- [x] Snapshot tests for consistent rendering of KPIs/cards
 
 ## ♿ Accessibility & UX
 - [ ] Keyboard-accessible uploader and field selectors

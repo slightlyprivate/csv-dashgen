@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Chart } from './Chart'
 import { ChartSelector } from './ChartSelector'
 import { Dataset } from '../types'
 import { ChartConfig } from '../utils/chartUtils'
+import { usePersistentChartConfig } from '../hooks/usePersistentState'
 
 interface ChartContainerProps {
   dataset: Dataset
@@ -12,10 +13,10 @@ interface ChartContainerProps {
  * Container component that manages chart configuration and rendering
  */
 export const ChartContainer: React.FC<ChartContainerProps> = ({ dataset }) => {
-  const [chartConfig, setChartConfig] = useState<ChartConfig | null>(null)
+  const { chartConfig, updateChartConfig } = usePersistentChartConfig()
 
   const handleConfigChange = (config: ChartConfig) => {
-    setChartConfig(config)
+    updateChartConfig(config)
   }
 
   if (!dataset || dataset.rows.length === 0) {

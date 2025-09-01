@@ -97,6 +97,9 @@ export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
+        role="region"
+        aria-label="CSV file upload area"
+        aria-describedby="upload-instructions"
       >
         <input
           type="file"
@@ -104,10 +107,12 @@ export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
           onChange={handleFileInput}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           disabled={state.isProcessing}
+          aria-label="Select CSV or TSV file"
+          id="file-input"
         />
 
         <div className="space-y-4">
-          <div className="text-6xl text-gray-400">
+          <div className="text-6xl text-gray-400" aria-hidden="true">
             {state.isProcessing ? '⏳' : '📁'}
           </div>
 
@@ -115,7 +120,7 @@ export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               {state.isProcessing ? 'Processing CSV...' : 'Upload CSV File'}
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600" id="upload-instructions">
               {state.isProcessing
                 ? 'Please wait while we analyze your data...'
                 : 'Drag and drop your CSV or TSV file here, or click to browse'
@@ -124,18 +129,29 @@ export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
           </div>
 
           {!state.isProcessing && (
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-gray-500" aria-label="File requirements">
               <p>Supported formats: .csv, .tsv</p>
               <p>Maximum file size: 50MB</p>
             </div>
           )}
         </div>
+
+        {/* Keyboard accessible button for screen readers */}
+        <button
+          type="button"
+          onClick={() => document.getElementById('file-input')?.click()}
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:right-2 focus:px-3 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-md focus:text-sm"
+          disabled={state.isProcessing}
+          aria-describedby="upload-instructions"
+        >
+          Browse Files
+        </button>
       </div>
 
       {state.error && (
-        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
+        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md" role="alert" aria-live="polite">
           <div className="flex">
-            <div className="text-red-400">⚠️</div>
+            <div className="text-red-400" aria-hidden="true">⚠️</div>
             <div className="ml-3">
               <h3 className="text-sm font-medium text-red-800">Upload Error</h3>
               <p className="text-sm text-red-700 mt-1">{state.error}</p>
