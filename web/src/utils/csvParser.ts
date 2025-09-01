@@ -45,7 +45,7 @@ export function validateFile(
  */
 export function parseCSV(file: File): Promise<ParsedCSV> {
   return new Promise((resolve, reject) => {
-    Papa.parse(file as unknown, {
+    Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
       dynamicTyping: false, // We'll handle typing manually
@@ -59,16 +59,84 @@ export function parseCSV(file: File): Promise<ParsedCSV> {
           )
           return
         }
+
+        // Convert object array to string array for compatibility
+        const data: string[][] = []
+        if (results.data && results.data.length > 0) {
+          const headers = Object.keys(
+            results.data[0] as Record<string, unknown>
+          )
+          data.push(headers) // Add headers as first row
+          results.data.forEach((row: unknown) => {
+            const rowData = headers.map((header) => {
+              const value = (row as Record<string, unknown>)[header]
+              return value === null || value === undefined ? '' : String(value)
+            })
+            data.push(rowData)
+          })
+        }
+
         resolve({
-          data: results.data as unknown[],
+          data,
           errors: [],
           meta: results.meta,
         })
       },
       error: (error: unknown) => {
-        reject(
-          new Error(`CSV parsing failed: ${error.message || 'Unknown error'}`)
-        )
+        const errorMessage =
+          error instanceof Error ? error.message : 'Unknown error'
+        reject(new Error(`CSV parsing failed: ${errorMessage}`))
+      },
+    })
+  })
+}
+
+/**
+ * Parses CSV text directly using PapaParse
+ */
+export function parseCSVText(csvText: string): Promise<ParsedCSV> {
+  return new Promise((resolve, reject) => {
+    Papa.parse(csvText, {
+      header: true,
+      skipEmptyLines: true,
+      dynamicTyping: false, // We'll handle typing manually
+      transformHeader: (header: string) => header.trim(),
+      complete: (results: Papa.ParseResult<unknown>) => {
+        if (results.errors && results.errors.length > 0) {
+          reject(
+            new Error(
+              `CSV parsing errors: ${results.errors.map((err) => err.message).join(', ')}`
+            )
+          )
+          return
+        }
+
+        // Convert object array to string array for compatibility
+        const data: string[][] = []
+        if (results.data && results.data.length > 0) {
+          const headers = Object.keys(
+            results.data[0] as Record<string, unknown>
+          )
+          data.push(headers) // Add headers as first row
+          results.data.forEach((row: unknown) => {
+            const rowData = headers.map((header) => {
+              const value = (row as Record<string, unknown>)[header]
+              return value === null || value === undefined ? '' : String(value)
+            })
+            data.push(rowData)
+          })
+        }
+
+        resolve({
+          data,
+          errors: [],
+          meta: results.meta,
+        })
+      },
+      error: (error: unknown) => {
+        const errorMessage =
+          error instanceof Error ? error.message : 'Unknown error'
+        reject(new Error(`CSV parsing failed: ${errorMessage}`))
       },
     })
   })
@@ -78,7 +146,7 @@ export function parseCSV(file: File): Promise<ParsedCSV> {
  * Validates parsed CSV data
  */
 export function validateCSVData(
-  data: unknown[],
+  data: string[][],
   headers: string[],
   maxRows: number,
   maxColumns: number
@@ -126,11 +194,17 @@ export function createDataset(
   filename: string,
   fileSize: number
 ): Dataset {
-  const headers = Object.keys(parsedData.data[0] || {})
-  const rows: Row[] = parsedData.data.map((row: unknown) => {
+  if (parsedData.data.length === 0) {
+    throw new Error('No data found in CSV')
+  }
+
+  const headers = parsedData.data[0]
+  const dataRows = parsedData.data.slice(1)
+
+  const rows: Row[] = dataRows.map((row: string[]) => {
     const processedRow: Row = {}
-    headers.forEach((header) => {
-      const value = row[header]
+    headers.forEach((header, index) => {
+      const value = row[index]
       processedRow[header] = value === '' ? null : value
     })
     return processedRow

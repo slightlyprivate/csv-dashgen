@@ -87,26 +87,25 @@ export function SampleLoader({ onDatasetLoaded, onError }: SampleLoaderProps) {
   const loadSampleFile = async (filename: string) => {
     setLoadingFile(filename)
     try {
-      const response = await fetch(`/samples/${filename}`)
+      const response = await fetch(`/${filename}`)
       if (!response.ok) {
         throw new Error(`Failed to load ${filename}`)
       }
 
       const csvText = await response.text()
-      const blob = new Blob([csvText], { type: 'text/csv' })
-      const file = new File([blob], filename, { type: 'text/csv' })
 
       // Import the CSV parsing function
-      const { parseCSV, createDataset, validateCSVData } = await import(
+      const { parseCSVText, createDataset, validateCSVData } = await import(
         '../utils/csvParser'
       )
 
-      const parsedData = await parseCSV(file)
-      const headers = Object.keys(parsedData.data[0] || {})
+      const parsedData = await parseCSVText(csvText)
+      const headers = parsedData.data[0] || []
+      const dataRows = parsedData.data.slice(1)
 
       // Validate the data
       const dataValidation = validateCSVData(
-        parsedData.data,
+        dataRows,
         headers,
         limits.MAX_ROWS,
         limits.MAX_COLUMNS
@@ -116,7 +115,7 @@ export function SampleLoader({ onDatasetLoaded, onError }: SampleLoaderProps) {
       }
 
       // Create dataset
-      const dataset = createDataset(parsedData, filename, file.size)
+      const dataset = createDataset(parsedData, filename, csvText.length)
       onDatasetLoaded(dataset)
     } catch (error) {
       const errorMessage =

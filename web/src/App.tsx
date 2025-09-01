@@ -7,6 +7,7 @@ import ChartContainer from './components/ChartContainer'
 import SidebarLayout from './components/SidebarLayout'
 import Settings from './components/Settings'
 import PrivacyNotice from './components/PrivacyNotice'
+import ToastContainer from './components/ToastContainer'
 import { Dataset, ColumnType } from './types'
 import { calculateDatasetStats } from './utils/statistics'
 import {
@@ -14,15 +15,16 @@ import {
   usePersistentColumnTypes,
   useSessionManager,
 } from './hooks/usePersistentState'
+import { ToastProvider, useToast } from './contexts/ToastContext'
 
-function App() {
-  const [error, setError] = useState<string | null>(null)
+function AppContent() {
   const [showSettings, setShowSettings] = useState(false)
   const [showPrivacyNotice, setShowPrivacyNotice] = useState(false)
   const { dataset, updateDataset, clearDataset } = usePersistentDataset()
   const { columnTypes, updateColumnType, clearColumnTypes } =
     usePersistentColumnTypes(dataset?.filename || '')
   const { clearSession, hasSessionData } = useSessionManager()
+  const { showError, showSuccess } = useToast()
 
   // Check if privacy notice should be shown on first load
   useEffect(() => {
@@ -55,13 +57,13 @@ function App() {
 
   const handleDatasetLoaded = (newDataset: Dataset) => {
     updateDataset(newDataset)
-    setError(null)
+    showSuccess('Dataset Loaded', `Successfully loaded ${newDataset.filename}`)
     // Clear previous column types when loading new dataset
     clearColumnTypes()
   }
 
   const handleError = (errorMessage: string) => {
-    setError(errorMessage)
+    showError('Error Loading Dataset', errorMessage)
     updateDataset(null)
   }
 
@@ -108,7 +110,10 @@ function App() {
   // Sidebar content
   const sidebarContent = datasetWithTypes ? (
     <div className="space-y-6">
-      <StatsPanel stats={stats} />
+      {/* Stats are now shown in main content on larger screens */}
+      <div className="lg:hidden">
+        <StatsPanel stats={stats} />
+      </div>
     </div>
   ) : null
 
@@ -126,30 +131,6 @@ function App() {
             onDatasetLoaded={handleDatasetLoaded}
             onError={handleError}
           />
-
-          {error && (
-            <div className="max-w-2xl mx-auto">
-              <div
-                className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4"
-                role="alert"
-                aria-live="polite"
-              >
-                <div className="flex">
-                  <div className="text-red-400" aria-hidden="true">
-                    ⚠️
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800 dark:text-red-200">
-                      Error
-                    </h3>
-                    <p className="text-sm text-red-700 dark:text-red-300 mt-1">
-                      {error}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       ) : (
         <div className="space-y-6">
@@ -198,8 +179,11 @@ function App() {
             </div>
           </section>
 
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            <section className="xl:col-span-2" aria-labelledby="data-preview">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            <section
+              className="lg:col-span-1 xl:col-span-2"
+              aria-labelledby="data-preview"
+            >
               <h3 id="data-preview" className="sr-only">
                 Data Preview
               </h3>
@@ -207,6 +191,15 @@ function App() {
                 dataset={datasetWithTypes}
                 onColumnTypeChange={handleColumnTypeChange}
               />
+            </section>
+            <section
+              className="lg:col-span-1 xl:col-span-1"
+              aria-labelledby="stats-section"
+            >
+              <h3 id="stats-section" className="sr-only">
+                Statistics Summary
+              </h3>
+              <StatsPanel stats={stats} />
             </section>
           </div>
 
@@ -239,7 +232,17 @@ function App() {
           setShowSettings(true)
         }}
       />
+
+      <ToastContainer />
     </>
+  )
+}
+
+function App() {
+  return (
+    <ToastProvider>
+      <AppContent />
+    </ToastProvider>
   )
 }
 

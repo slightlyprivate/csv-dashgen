@@ -54,9 +54,10 @@ export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
         const parsedData = await parseCSV(file)
 
         // Validate parsed data
-        const headers = Object.keys(parsedData.data[0] || {})
+        const headers = parsedData.data[0] || []
+        const dataRows = parsedData.data.slice(1) // Exclude header row
         const dataValidation = validateCSVData(
-          parsedData.data,
+          dataRows,
           headers,
           limits.MAX_ROWS,
           limits.MAX_COLUMNS

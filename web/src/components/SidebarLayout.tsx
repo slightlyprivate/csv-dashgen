@@ -30,7 +30,8 @@ export function SidebarLayout({
       {/* Sidebar */}
       <div
         className={`
-        fixed inset-y-0 left-0 z-50 w-80 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0
+        fixed inset-y-0 left-0 z-50 w-80 bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 ease-in-out
+        lg:translate-x-0 lg:hidden lg:inset-0 lg:shadow-none
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}
       >
@@ -75,7 +76,7 @@ export function SidebarLayout({
       </div>
 
       {/* Main content */}
-      <div className="lg:pl-0">
+      <div className="lg:pl-0 flex flex-col min-h-screen">
         {/* Top navigation */}
         <div className="sticky top-0 z-30 bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
           <div className="px-4 sm:px-6 lg:px-8">
