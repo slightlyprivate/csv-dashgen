@@ -1,11 +1,20 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import Uploader from './components/Uploader'
 import DataPreview from './components/DataPreview'
+import StatsPanel from './components/StatsPanel'
+import ChartContainer from './components/ChartContainer'
 import { Dataset, ColumnType } from './types'
+import { calculateDatasetStats } from './utils/statistics'
 
 function App() {
   const [dataset, setDataset] = useState<Dataset | null>(null)
   const [error, setError] = useState<string | null>(null)
+
+  // Calculate statistics when dataset changes
+  const stats = useMemo(() => {
+    if (!dataset) return []
+    return calculateDatasetStats(dataset.rows, dataset.columnTypes)
+  }, [dataset])
 
   const handleDatasetLoaded = (newDataset: Dataset) => {
     setDataset(newDataset)
@@ -83,10 +92,19 @@ function App() {
               </div>
             </div>
 
-            <DataPreview
-              dataset={dataset}
-              onColumnTypeChange={handleColumnTypeChange}
-            />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <DataPreview
+                  dataset={dataset}
+                  onColumnTypeChange={handleColumnTypeChange}
+                />
+              </div>
+              <div className="lg:col-span-1">
+                <StatsPanel stats={stats} />
+              </div>
+            </div>
+
+            <ChartContainer dataset={dataset} />
           </div>
         )}
       </div>

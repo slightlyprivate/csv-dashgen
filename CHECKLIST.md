@@ -30,19 +30,19 @@
 - [x] Provide manual override UI for column types
 
 ## 📊 KPIs & Stats Panel
-- [ ] Compute per-numeric-column: count, mean, median, min, max, sum, std dev
-- [ ] Per-categorical: unique count, top-k values, frequency
-- [ ] Missing values report per column
-- [ ] Render KPI cards with compact formatting; copy-to-clipboard
+- [x] Compute per-numeric-column: count, mean, median, min, max, sum, std dev
+- [x] Per-categorical: unique count, top-k values, frequency
+- [x] Missing values report per column
+- [x] Render KPI cards with compact formatting; copy-to-clipboard
 
 ## 📈 Charting Engine
-- [ ] Integrate Chart.js (+ `react-chartjs-2` optional)
-- [ ] Supported charts (MVP): line, bar (grouped/stacked), pie, scatter
-- [ ] FieldPicker: select X, Y (and optional series/category)
-- [ ] Auto-suggest reasonable defaults (e.g., datetime→line, categorical→bar)
-- [ ] Chart options: legend toggle, gridlines, value formatters, color palette
-- [ ] Interactivity: tooltips, hover, click-to-highlight series
-- [ ] Empty-state and loading skeletons
+- [x] Integrate Chart.js (+ `react-chartjs-2` optional)
+- [x] Supported charts (MVP): line, bar (grouped/stacked), pie, scatter
+- [x] FieldPicker: select X, Y (and optional series/category)
+- [x] Auto-suggest reasonable defaults (e.g., datetime→line, categorical→bar)
+- [x] Chart options: legend toggle, gridlines, value formatters, color palette
+- [x] Interactivity: tooltips, hover, click-to-highlight series
+- [x] Empty-state and loading skeletons
 
 ## 🧮 Transformations (Nice-to-have for MVP+)
 - [ ] Aggregations: group by category/date (day/week/month), sum/avg/count
