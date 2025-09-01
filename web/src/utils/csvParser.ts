@@ -1,6 +1,7 @@
 import Papa from 'papaparse'
 import { Dataset, ParsedCSV, Row, ColumnType } from '../types'
-import { MAX_FILE_SIZE, MAX_ROWS, SAMPLE_SIZE } from '../constants'
+import { MAX_FILE_SIZE, MAX_ROWS } from '../constants'
+import { inferColumnType, DEFAULT_TYPE_CONFIG, TypeInferenceConfig } from './typeInference'
 
 /**
  * Validates file before parsing
@@ -99,10 +100,10 @@ export function createDataset(
         return processedRow
     })
 
-    // Basic column type inference (will be enhanced later)
+    // Enhanced column type inference
     const columnTypes: Record<string, ColumnType> = {}
     headers.forEach(header => {
-        columnTypes[header] = inferColumnType(rows.slice(0, SAMPLE_SIZE), header)
+        columnTypes[header] = inferColumnType(rows, header)
     })
 
     return {
@@ -112,43 +113,4 @@ export function createDataset(
         filename,
         size: fileSize
     }
-}
-
-/**
- * Basic column type inference
- */
-function inferColumnType(sampleRows: Row[], columnName: string): ColumnType {
-    const values = sampleRows
-        .map(row => row[columnName])
-        .filter(val => val !== null && val !== '')
-
-    if (values.length === 0) return 'unknown'
-
-    // Check for boolean
-    const booleanValues = values.filter(val =>
-        typeof val === 'string' &&
-        ['true', 'false', '1', '0', 'yes', 'no'].includes(val.toLowerCase())
-    )
-    if (booleanValues.length === values.length) return 'boolean'
-
-    // Check for numbers
-    const numericValues = values.filter(val => {
-        if (typeof val === 'number') return true
-        if (typeof val === 'string') {
-            return !isNaN(Number(val)) && !isNaN(parseFloat(val))
-        }
-        return false
-    })
-    if (numericValues.length / values.length > 0.8) return 'number'
-
-    // Check for dates (basic check)
-    const dateValues = values.filter(val => {
-        if (typeof val === 'string') {
-            return !isNaN(Date.parse(val))
-        }
-        return false
-    })
-    if (dateValues.length / values.length > 0.8) return 'date'
-
-    return 'string'
 }

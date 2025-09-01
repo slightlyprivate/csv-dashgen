@@ -1,7 +1,9 @@
 import { Dataset, ColumnType } from '../types'
+import ColumnTypeEditor from './ColumnTypeEditor'
 
 interface DataPreviewProps {
   dataset: Dataset
+  onColumnTypeChange?: (columnName: string, newType: ColumnType) => void
   maxRows?: number
 }
 
@@ -21,7 +23,7 @@ const COLUMN_TYPE_LABELS: Record<ColumnType, string> = {
   unknown: 'Unknown'
 }
 
-export default function DataPreview({ dataset, maxRows = 50 }: DataPreviewProps) {
+export default function DataPreview({ dataset, onColumnTypeChange, maxRows = 50 }: DataPreviewProps) {
   const displayRows = dataset.rows.slice(0, maxRows)
   const hasMoreRows = dataset.rows.length > maxRows
 
@@ -51,12 +53,22 @@ export default function DataPreview({ dataset, maxRows = 50 }: DataPreviewProps)
                 >
                   <div className="flex flex-col space-y-1">
                     <span className="font-semibold text-gray-900">{header}</span>
-                    <span className={`
-                      inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
-                      ${COLUMN_TYPE_COLORS[dataset.columnTypes[header]]}
-                    `}>
-                      {COLUMN_TYPE_LABELS[dataset.columnTypes[header]]}
-                    </span>
+                    <div className="flex items-center space-x-2">
+                      {onColumnTypeChange ? (
+                        <ColumnTypeEditor
+                          columnName={header}
+                          currentType={dataset.columnTypes[header]}
+                          onTypeChange={onColumnTypeChange}
+                        />
+                      ) : (
+                        <span className={`
+                          inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
+                          ${COLUMN_TYPE_COLORS[dataset.columnTypes[header]]}
+                        `}>
+                          {COLUMN_TYPE_LABELS[dataset.columnTypes[header]]}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </th>
               ))}

@@ -24,10 +24,10 @@
 - [x] Data preview table (first 50 rows) with column type badges
 
 ## 🔎 Column Type Inference
-- [ ] Heuristics to classify columns: numeric, categorical, datetime, boolean
-- [ ] Configurable sniffing: sample N rows (e.g., 1000) for performance
-- [ ] Datetime parsing (ISO, mm/dd/yyyy, dd/mm/yyyy) with fallback
-- [ ] Provide manual override UI for column types
+- [x] Heuristics to classify columns: numeric, categorical, datetime, boolean
+- [x] Configurable sniffing: sample N rows (e.g., 1000) for performance
+- [x] Datetime parsing (ISO, mm/dd/yyyy, dd/mm/yyyy) with fallback
+- [x] Provide manual override UI for column types
 
 ## 📊 KPIs & Stats Panel
 - [ ] Compute per-numeric-column: count, mean, median, min, max, sum, std dev

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Uploader from './components/Uploader'
 import DataPreview from './components/DataPreview'
-import { Dataset } from './types'
+import { Dataset, ColumnType } from './types'
 
 function App() {
   const [dataset, setDataset] = useState<Dataset | null>(null)
@@ -15,6 +15,18 @@ function App() {
   const handleError = (errorMessage: string) => {
     setError(errorMessage)
     setDataset(null)
+  }
+
+  const handleColumnTypeChange = (columnName: string, newType: ColumnType) => {
+    if (dataset) {
+      setDataset({
+        ...dataset,
+        columnTypes: {
+          ...dataset.columnTypes,
+          [columnName]: newType
+        }
+      })
+    }
   }
 
   return (
@@ -71,7 +83,10 @@ function App() {
               </div>
             </div>
 
-            <DataPreview dataset={dataset} />
+            <DataPreview
+              dataset={dataset}
+              onColumnTypeChange={handleColumnTypeChange}
+            />
           </div>
         )}
       </div>
