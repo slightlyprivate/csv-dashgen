@@ -5,15 +5,27 @@ import DataPreview from './components/DataPreview'
 import StatsPanel from './components/StatsPanel'
 import ChartContainer from './components/ChartContainer'
 import SidebarLayout from './components/SidebarLayout'
+import Settings from './components/Settings'
+import PrivacyNotice from './components/PrivacyNotice'
 import { Dataset, ColumnType } from './types'
 import { calculateDatasetStats } from './utils/statistics'
 import { usePersistentDataset, usePersistentColumnTypes, useSessionManager } from './hooks/usePersistentState'
 
 function App() {
   const [error, setError] = useState<string | null>(null)
+  const [showSettings, setShowSettings] = useState(false)
+  const [showPrivacyNotice, setShowPrivacyNotice] = useState(false)
   const { dataset, updateDataset, clearDataset } = usePersistentDataset()
   const { columnTypes, updateColumnType, clearColumnTypes } = usePersistentColumnTypes(dataset?.filename || '')
   const { clearSession, hasSessionData } = useSessionManager()
+
+  // Check if privacy notice should be shown on first load
+  useEffect(() => {
+    const privacyAccepted = localStorage.getItem('csv-dashgen-privacy-accepted')
+    if (!privacyAccepted) {
+      setShowPrivacyNotice(true)
+    }
+  }, [])
 
   // Merge stored column types with dataset
   const datasetWithTypes = useMemo(() => {
@@ -62,6 +74,22 @@ function App() {
         <p className="text-sm text-gray-600 dark:text-gray-400">
           Upload any CSV file and generate interactive charts and statistics
         </p>
+      </div>
+      <div className="flex items-center space-x-2">
+        <button
+          onClick={() => setShowPrivacyNotice(true)}
+          className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          aria-label="View privacy and data handling information"
+        >
+          Privacy
+        </button>
+        <button
+          onClick={() => setShowSettings(true)}
+          className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          aria-label="Open settings to configure limits and preferences"
+        >
+          Settings
+        </button>
       </div>
     </div>
   )
@@ -157,11 +185,27 @@ function App() {
   )
 
   return (
-    <SidebarLayout
-      header={headerContent}
-      sidebar={sidebarContent}
-      main={mainContent}
-    />
+    <>
+      <SidebarLayout
+        header={headerContent}
+        sidebar={sidebarContent}
+        main={mainContent}
+      />
+
+      <Settings
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+      />
+
+      <PrivacyNotice
+        isOpen={showPrivacyNotice}
+        onClose={() => setShowPrivacyNotice(false)}
+        onOpenSettings={() => {
+          setShowPrivacyNotice(false)
+          setShowSettings(true)
+        }}
+      />
+    </>
   )
 }
 

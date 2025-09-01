@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Dataset } from '../types'
+import { useLimits } from '../hooks/useLimits'
 
 interface SampleLoaderProps {
   onDatasetLoaded: (dataset: Dataset) => void
@@ -56,6 +57,7 @@ const sampleFiles: SampleFile[] = [
 ]
 
 export function SampleLoader({ onDatasetLoaded, onError }: SampleLoaderProps) {
+  const limits = useLimits()
   const [loadingFile, setLoadingFile] = useState<string | null>(null)
 
   const loadSampleFile = async (filename: string) => {
@@ -77,7 +79,7 @@ export function SampleLoader({ onDatasetLoaded, onError }: SampleLoaderProps) {
       const headers = Object.keys(parsedData.data[0] || {})
 
       // Validate the data
-      const dataValidation = validateCSVData(parsedData.data, headers)
+      const dataValidation = validateCSVData(parsedData.data, headers, limits.MAX_ROWS, limits.MAX_COLUMNS)
       if (!dataValidation.isValid) {
         throw new Error(dataValidation.error)
       }

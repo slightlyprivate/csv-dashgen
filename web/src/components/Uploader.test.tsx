@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import Uploader from '../components/Uploader'
+import { ConfigProvider } from '../contexts/ConfigContext'
 
 describe('Uploader Component', () => {
   const mockOnDatasetLoaded = vi.fn()
@@ -8,10 +9,12 @@ describe('Uploader Component', () => {
 
   it('should render upload area', () => {
     render(
-      <Uploader
-        onDatasetLoaded={mockOnDatasetLoaded}
-        onError={mockOnError}
-      />
+      <ConfigProvider>
+        <Uploader
+          onDatasetLoaded={mockOnDatasetLoaded}
+          onError={mockOnError}
+        />
+      </ConfigProvider>
     )
 
     expect(screen.getByText('Upload CSV File')).toBeInTheDocument()
@@ -20,10 +23,12 @@ describe('Uploader Component', () => {
 
   it('should show file input', () => {
     render(
-      <Uploader
-        onDatasetLoaded={mockOnDatasetLoaded}
-        onError={mockOnError}
-      />
+      <ConfigProvider>
+        <Uploader
+          onDatasetLoaded={mockOnDatasetLoaded}
+          onError={mockOnError}
+        />
+      </ConfigProvider>
     )
 
     const fileInput = document.querySelector('input[type="file"][accept=".csv,.tsv"]') as HTMLInputElement
@@ -34,13 +39,15 @@ describe('Uploader Component', () => {
 
   it('should show supported formats info', () => {
     render(
-      <Uploader
-        onDatasetLoaded={mockOnDatasetLoaded}
-        onError={mockOnError}
-      />
+      <ConfigProvider>
+        <Uploader
+          onDatasetLoaded={mockOnDatasetLoaded}
+          onError={mockOnError}
+        />
+      </ConfigProvider>
     )
 
     expect(screen.getByText('Supported formats: .csv, .tsv')).toBeInTheDocument()
-    expect(screen.getByText('Maximum file size: 50MB')).toBeInTheDocument()
+    expect(screen.getByText(/Maximum file size:/)).toBeInTheDocument()
   })
 })

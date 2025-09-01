@@ -1,6 +1,7 @@
 import { useState, useCallback, DragEvent, ChangeEvent } from 'react'
 import { validateFile, parseCSV, validateCSVData, createDataset } from '../utils/csvParser'
 import { Dataset } from '../types'
+import { useLimits } from '../hooks/useLimits'
 
 interface UploaderProps {
   onDatasetLoaded: (dataset: Dataset) => void
@@ -14,6 +15,7 @@ interface UploadState {
 }
 
 export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
+  const limits = useLimits()
   const [state, setState] = useState<UploadState>({
     isDragOver: false,
     isProcessing: false,
@@ -37,7 +39,7 @@ export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
 
     try {
       // Validate file
-      const validation = validateFile(file)
+      const validation = validateFile(file, limits.MAX_FILE_SIZE)
       if (!validation.isValid) {
         throw new Error(validation.error)
       }
@@ -47,7 +49,7 @@ export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
 
       // Validate parsed data
       const headers = Object.keys(parsedData.data[0] || {})
-      const dataValidation = validateCSVData(parsedData.data, headers)
+      const dataValidation = validateCSVData(parsedData.data, headers, limits.MAX_ROWS, limits.MAX_COLUMNS)
       if (!dataValidation.isValid) {
         throw new Error(dataValidation.error)
       }
@@ -63,7 +65,7 @@ export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
       setState(prev => ({ ...prev, isProcessing: false, error: errorMessage }))
       onError(errorMessage)
     }
-  }, [onDatasetLoaded, onError])
+  }, [onDatasetLoaded, onError, limits])
 
   const handleDrop = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.preventDefault()
@@ -131,7 +133,9 @@ export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
           {!state.isProcessing && (
             <div className="text-sm text-gray-500" aria-label="File requirements">
               <p>Supported formats: .csv, .tsv</p>
-              <p>Maximum file size: 50MB</p>
+              <p>Maximum file size: {(limits.MAX_FILE_SIZE / (1024 * 1024)).toFixed(1)}MB</p>
+              <p>Maximum rows: {limits.MAX_ROWS.toLocaleString()}</p>
+              <p>Maximum columns: {limits.MAX_COLUMNS}</p>
             </div>
           )}
         </div>

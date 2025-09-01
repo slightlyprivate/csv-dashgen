@@ -5,11 +5,13 @@ import { calculateDatasetStats } from '../utils/statistics'
 import { Row } from '../types'
 
 describe('File Validation', () => {
+    const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
+
     it('should validate file size limits', () => {
         const largeContent = 'a'.repeat(51 * 1024 * 1024) // 51MB
         const mockFile = new File([largeContent], 'large.csv', { type: 'text/csv' })
 
-        const result = validateFile(mockFile)
+        const result = validateFile(mockFile, MAX_FILE_SIZE)
         expect(result.isValid).toBe(false)
         expect(result.error).toContain('File size exceeds')
     })
@@ -17,7 +19,7 @@ describe('File Validation', () => {
     it('should validate file type', () => {
         const mockFile = new File(['content'], 'test.txt', { type: 'text/plain' })
 
-        const result = validateFile(mockFile)
+        const result = validateFile(mockFile, MAX_FILE_SIZE)
         expect(result.isValid).toBe(false)
         expect(result.error).toContain('Invalid file type')
     })
@@ -25,7 +27,7 @@ describe('File Validation', () => {
     it('should accept valid CSV files', () => {
         const mockFile = new File(['content'], 'test.csv', { type: 'text/csv' })
 
-        const result = validateFile(mockFile)
+        const result = validateFile(mockFile, MAX_FILE_SIZE)
         expect(result.isValid).toBe(true)
     })
 })

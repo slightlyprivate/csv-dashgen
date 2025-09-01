@@ -1,12 +1,11 @@
 import Papa from 'papaparse'
 import { Dataset, ParsedCSV, Row, ColumnType } from '../types'
-import { MAX_FILE_SIZE, MAX_ROWS } from '../constants'
-import { inferColumnType, DEFAULT_TYPE_CONFIG, TypeInferenceConfig } from './typeInference'
+import { inferColumnType } from './typeInference'
 
 /**
  * Validates file before parsing
  */
-export function validateFile(file: File): { isValid: boolean; error?: string } {
+export function validateFile(file: File, maxFileSize: number): { isValid: boolean; error?: string } {
     // Check file type
     const allowedTypes = ['text/csv', 'text/tab-separated-values', 'application/vnd.ms-excel']
     const allowedExtensions = ['.csv', '.tsv']
@@ -19,8 +18,8 @@ export function validateFile(file: File): { isValid: boolean; error?: string } {
     }
 
     // Check file size
-    if (file.size > MAX_FILE_SIZE) {
-        return { isValid: false, error: `File size exceeds ${MAX_FILE_SIZE / (1024 * 1024)}MB limit.` }
+    if (file.size > maxFileSize) {
+        return { isValid: false, error: `File size exceeds ${(maxFileSize / (1024 * 1024)).toFixed(1)}MB limit.` }
     }
 
     return { isValid: true }
@@ -57,7 +56,7 @@ export function parseCSV(file: File): Promise<ParsedCSV> {
 /**
  * Validates parsed CSV data
  */
-export function validateCSVData(data: any[], headers: string[]): { isValid: boolean; error?: string } {
+export function validateCSVData(data: any[], headers: string[], maxRows: number, maxColumns: number): { isValid: boolean; error?: string } {
     // Check for headers
     if (!headers || headers.length === 0) {
         return { isValid: false, error: 'No headers found in CSV file.' }
@@ -69,14 +68,19 @@ export function validateCSVData(data: any[], headers: string[]): { isValid: bool
         return { isValid: false, error: 'Duplicate column headers found.' }
     }
 
+    // Check column count limit
+    if (headers.length > maxColumns) {
+        return { isValid: false, error: `Too many columns. Maximum ${maxColumns} columns allowed.` }
+    }
+
     // Check for data rows
     if (!data || data.length === 0) {
         return { isValid: false, error: 'No data rows found in CSV file.' }
     }
 
     // Check row count limit
-    if (data.length > MAX_ROWS) {
-        return { isValid: false, error: `Too many rows. Maximum ${MAX_ROWS} rows allowed.` }
+    if (data.length > maxRows) {
+        return { isValid: false, error: `Too many rows. Maximum ${maxRows} rows allowed.` }
     }
 
     return { isValid: true }
