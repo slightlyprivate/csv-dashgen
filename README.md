@@ -1,187 +1,95 @@
-# CSV → Dashboard Generator# CSV → Dashboard Generator
+# CSV → Dashboard Generator
 
+A modern, privacy-focused web application that transforms CSV files into interactive dashboards with automatic data analysis, visualizations, and insights. Built with React, TypeScript, and Vite for fast, client-side processing.
 
+Upload any CSV and get instant charts + summary stats. Great for quick insights without spreadsheets.
 
-A modern, privacy-focused web application that transforms CSV files into interactive dashboards with automatic data analysis, visualizations, and insights. Built with React, TypeScript, and Vite for fast, client-side processing.Upload any CSV and get instant charts + summary stats. Great for quick insights without spreadsheets.
+![Dashboard Preview](docs/dashboard.png)
 
+## ✨ Features
 
-
-![Dashboard Preview](docs/dashboard.png)![dashboard-screenshot](docs/dashboard.png)
-
-
-
-## ✨ Features## ✨ Features
-
-
-
-### Core Functionality* Drag-and-drop CSV upload
-
-* **Drag-and-drop CSV upload** with instant parsing and validation* Auto-detect numeric vs categorical fields
-
-* **Automatic field type detection** (numeric, categorical, date/time)* KPI cards (sum, mean, min/max), column stats
-
-* **Interactive visualizations**: Line charts, bar charts, pie charts, scatter plots* Visualizations: line, bar, pie, scatter
-
-* **Smart KPI cards**: Sum, mean, median, min/max, standard deviation* Client-only mode or API mode (FastAPI/Node)
-
+### Core Functionality
+* **Drag-and-drop CSV upload** with instant parsing and validation
+* **Automatic field type detection** (numeric, categorical, date/time)
+* **Interactive visualizations**: Line charts, bar charts, pie charts, scatter plots
+* **Smart KPI cards**: Sum, mean, median, min/max, standard deviation
 * **Column statistics** with data quality insights
+* **Responsive design** that works on desktop and mobile
 
-* **Responsive design** that works on desktop and mobile## 🧰 Tech Stack
-
-
-
-### Advanced Features* Frontend: React + Vite, Papaparse, Chart.js
-
-* **Privacy controls** with configurable data retention and usage tracking* Optional API: FastAPI (Python) or Hono (Node)
-
-* **Configurable limits** for file size, row count, and processing time* TypeScript throughout
-
+### Advanced Features
+* **Privacy controls** with configurable data retention and usage tracking
+* **Configurable limits** for file size, row count, and processing time
 * **Dark/Light theme** with system preference detection
-
-* **Data persistence** using localStorage for datasets and user preferences## 🚀 Quick Start (Frontend-only)
-
+* **Data persistence** using localStorage for datasets and user preferences
 * **Sample datasets** for quick demos and testing
+* **Export capabilities** for charts and processed data
+* **Real-time validation** with helpful error messages
 
-* **Export capabilities** for charts and processed data```bash
-
-* **Real-time validation** with helpful error messagesgit clone https://github.com/YOURUSER/csv-dashgen
-
-cd csv-dashgen/web
-
-### Developer Experiencenpm i
-
-* **Full TypeScript** with strict type checkingnpm run dev
-
-* **Comprehensive testing** with Vitest and React Testing Library```
-
+### Developer Experience
+* **Full TypeScript** with strict type checking
+* **Comprehensive testing** with Vitest and React Testing Library
 * **Modern tooling** with Vite, ESLint, and Prettier
-
-* **Accessibility compliant** (WCAG 2.1 AA)## 🚀 Quick Start (Full-stack, Python API)
-
+* **Accessibility compliant** (WCAG 2.1 AA)
 * **Modular architecture** with custom hooks and contexts
+* **Optional backend integration** (FastAPI/Python or Hono/Node)
 
-* **Optional backend integration** (FastAPI/Python or Hono/Node)```bash
+## 🧰 Tech Stack
 
-# Frontend
-
-## 🧰 Tech Stackcd csv-dashgen/web && npm i && npm run build
-
-# Backend
-
-### Frontendcd ../api-py
-
-* **React 18** with functional components and hookspython -m venv .venv && source .venv/bin/activate
-
-* **TypeScript** for type safety and better DXpip install -r requirements.txt
-
-* **Vite** for fast development and optimized buildsuvicorn app:app --reload
-
-* **Tailwind CSS v4** for utility-first styling```
-
+### Frontend
+* **React 18** with functional components and hooks
+* **TypeScript** for type safety and better DX
+* **Vite** for fast development and optimized builds
+* **Tailwind CSS v4** for utility-first styling
 * **Chart.js** with react-chartjs-2 for data visualization
-
-* **Papaparse** for robust CSV parsing## 🗂️ Project Structure
-
+* **Papaparse** for robust CSV parsing
 * **React Router** for navigation (if needed)
 
-```
+### Backend (Optional)
+* **FastAPI** (Python) for data processing API
+* **Hono** (Node.js) for lightweight API
+* **Pandas** for advanced data manipulation
 
-### Backend (Optional)/web
+### Development & Testing
+* **Vitest** for unit and integration testing
+* **React Testing Library** for component testing
+* **ESLint v9** with flat configuration
+* **Prettier** for code formatting
+* **TypeScript** strict mode enabled
 
-* **FastAPI** (Python) for data processing API  src/
+## 🚀 Quick Start
 
-* **Hono** (Node.js) for lightweight API    main.tsx
+### Frontend Only (Recommended)
 
-* **Pandas** for advanced data manipulation    App.tsx
-
-    components/
-
-### Development & Testing      Uploader.tsx
-
-* **Vitest** for unit and integration testing      FieldPicker.tsx
-
-* **React Testing Library** for component testing      Charts.tsx
-
-* **ESLint v9** with flat configuration      Stats.tsx
-
-* **Prettier** for code formatting  public/
-
-* **TypeScript** strict mode enabled  vite.config.ts
-
-/api-py
-
-## 🚀 Quick Start  app.py
-
-  requirements.txt  # fastapi uvicorn pandas numpy
-
-### Frontend Only (Recommended)/docs
-
-  dashboard.png
-
-```bash  upload.png
-
-# Clone the repositoryREADME.md
-
-git clone https://github.com/YOURUSER/csv-dashgen```
-
+```bash
+# Clone the repository
+git clone https://github.com/YOURUSER/csv-dashgen
 cd csv-dashgen/web
 
-## 📁 Sample Data
-
 # Install dependencies
+npm install
 
-npm install* `samples/sales.csv`
-
-* `samples/expenses.csv`
-
-# Start development server* `samples/fitness.csv`
-
+# Start development server
 npm run dev
 
-## 🧪 Demo Flow
-
 # Open http://localhost:5173 in your browser
+```
 
-```1. Upload `samples/sales.csv`
+### Full-Stack Mode (Python API)
 
-2. Pick x=Date, y=Revenue → line chart
-
-### Full-Stack Mode (Python API)3. View auto KPIs + “Top 5 categories”
-
-
-
-```bash## ⚙️ Env (if using API)
-
+```bash
 # Frontend
+cd csv-dashgen/web && npm install && npm run build
 
-cd csv-dashgen/web```
-
-npm install && npm run buildAPI_PORT=8000
-
-MAX_UPLOAD_MB=10
-
-# Backend```
-
+# Backend
 cd ../api-py
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app:app --reload
+```
 
-python -m venv .venv## 🧭 Roadmap
+### Full-Stack Mode (Node API)
 
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-pip install -r requirements.txt* Smart chart suggestions
-
-uvicorn app:app --reload --port 8000* LLM “insight sentences” from the data
-
-```* Save dashboards (localStorage/DB)
-
-
-
-### Full-Stack Mode (Node API)## 📝 License
-
-
-
-```bashMIT
-
+```bash
 # Frontend
 cd csv-dashgen/web
 npm install && npm run build
@@ -426,5 +334,3 @@ MIT License - see [LICENSE](LICENSE) file for details.
 * Thanks to the open-source community for amazing libraries
 
 ---
-
-**Made with ❤️ for data enthusiasts and developers**
