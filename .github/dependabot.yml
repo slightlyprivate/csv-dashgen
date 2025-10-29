@@ -21,6 +21,8 @@ updates:
       - "dependencies"
       - "automated"
     ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
       # Ignore major version updates for React (handle manually)
       - dependency-name: "react"
         update-types: ["version-update:semver-major"]
