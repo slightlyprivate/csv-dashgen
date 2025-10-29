@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useConfig } from '../contexts/ConfigContext'
-import { AppLimits, PrivacySettings } from '../contexts/ConfigContext'
+import { useConfig } from '../hooks/useConfig'
+import { AppLimits, PrivacySettings } from '../contexts/ConfigContext.context'
 
 interface SettingsProps {
   isOpen: boolean

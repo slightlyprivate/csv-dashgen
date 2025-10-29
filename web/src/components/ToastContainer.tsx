@@ -1,4 +1,5 @@
-import { Toast, useToast } from '../contexts/ToastContext'
+import { Toast } from '../contexts/ToastContext.context'
+import { useToast } from '../hooks/useToast'
 
 interface ToastItemProps {
   toast: Toast

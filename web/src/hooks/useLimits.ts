@@ -1,4 +1,4 @@
-import { useConfig } from '../contexts/ConfigContext'
+import { useConfig } from './useConfig'
 
 /**
  * Hook to get current application limits from config

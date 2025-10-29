@@ -1,31 +1,10 @@
+import { useState, useEffect, ReactNode } from 'react'
 import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from 'react'
-
-export interface AppLimits {
-  maxFileSize: number // in bytes
-  maxRows: number
-  maxColumns: number
-  maxCharts: number
-  enableDataPersistence: boolean
-  enableAnalytics: boolean
-}
-
-export interface PrivacySettings {
-  allowDataCollection: boolean
-  allowErrorReporting: boolean
-  allowUsageAnalytics: boolean
-  dataRetentionDays: number
-}
-
-export interface AppConfig {
-  limits: AppLimits
-  privacy: PrivacySettings
-}
+  ConfigContext,
+  AppLimits,
+  PrivacySettings,
+  AppConfig,
+} from './ConfigContext.context'
 
 const DEFAULT_LIMITS: AppLimits = {
   maxFileSize: 50 * 1024 * 1024, // 50MB
@@ -47,21 +26,6 @@ const DEFAULT_CONFIG: AppConfig = {
   limits: DEFAULT_LIMITS,
   privacy: DEFAULT_PRIVACY,
 }
-
-interface ConfigContextType {
-  config: AppConfig
-  updateLimits: (limits: Partial<AppLimits>) => void
-  updatePrivacy: (privacy: Partial<PrivacySettings>) => void
-  resetToDefaults: () => void
-  getCurrentUsage: () => {
-    fileSize: number
-    rowCount: number
-    columnCount: number
-    chartCount: number
-  }
-}
-
-const ConfigContext = createContext<ConfigContextType | undefined>(undefined)
 
 const CONFIG_STORAGE_KEY = 'csv-dashgen-config'
 
@@ -135,12 +99,4 @@ export function ConfigProvider({ children }: { children: ReactNode }) {
       {children}
     </ConfigContext.Provider>
   )
-}
-
-export function useConfig() {
-  const context = useContext(ConfigContext)
-  if (context === undefined) {
-    throw new Error('useConfig must be used within a ConfigProvider')
-  }
-  return context
 }

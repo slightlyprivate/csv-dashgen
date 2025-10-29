@@ -15,7 +15,8 @@ import {
   usePersistentColumnTypes,
   useSessionManager,
 } from './hooks/usePersistentState'
-import { ToastProvider, useToast } from './contexts/ToastContext'
+import { ToastProvider } from './contexts/ToastContext'
+import { useToast } from './hooks/useToast'
 
 function AppContent() {
   const [showSettings, setShowSettings] = useState(false)
