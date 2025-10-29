@@ -22,20 +22,13 @@ interface UsePersistentStateOptions {
  */
 export function usePersistentDataset(options: UsePersistentStateOptions = {}) {
   const { autoSave = true, autoLoad = true } = options
-  const [dataset, setDataset] = useState<Dataset | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-
-  // Load dataset on mount
-  useEffect(() => {
+  const [dataset, setDataset] = useState<Dataset | null>(() => {
     if (autoLoad && isStorageAvailable()) {
-      setIsLoading(true)
-      const savedDataset = loadDataset()
-      if (savedDataset) {
-        setDataset(savedDataset)
-      }
-      setIsLoading(false)
+      return loadDataset()
     }
-  }, [autoLoad])
+    return null
+  })
+  const [isLoading] = useState(false)
 
   // Auto-save when dataset changes
   useEffect(() => {
@@ -71,17 +64,12 @@ export function usePersistentChartConfig(
   options: UsePersistentStateOptions = {}
 ) {
   const { autoSave = true, autoLoad = true } = options
-  const [chartConfig, setChartConfig] = useState<ChartConfig | null>(null)
-
-  // Load chart config on mount
-  useEffect(() => {
+  const [chartConfig, setChartConfig] = useState<ChartConfig | null>(() => {
     if (autoLoad && isStorageAvailable()) {
-      const savedConfig = loadChartConfig()
-      if (savedConfig) {
-        setChartConfig(savedConfig)
-      }
+      return loadChartConfig()
     }
-  }, [autoLoad])
+    return null
+  })
 
   // Auto-save when config changes
   useEffect(() => {
@@ -117,15 +105,21 @@ export function usePersistentColumnTypes(
   options: UsePersistentStateOptions = {}
 ) {
   const { autoSave = true, autoLoad = true } = options
-  const [columnTypes, setColumnTypes] = useState<Record<string, string>>({})
+  const [columnTypes, setColumnTypes] = useState<Record<string, string>>(() => {
+    if (autoLoad && filename && isStorageAvailable()) {
+      return loadColumnTypes(filename) || {}
+    }
+    return {}
+  })
 
-  // Load column types on mount or filename change
+  // Update column types when filename changes
   useEffect(() => {
     if (autoLoad && filename && isStorageAvailable()) {
       const savedTypes = loadColumnTypes(filename)
-      if (savedTypes) {
-        setColumnTypes(savedTypes)
-      }
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setColumnTypes(savedTypes || {})
+    } else {
+      setColumnTypes({})
     }
   }, [filename, autoLoad])
 
@@ -173,14 +167,12 @@ export function usePersistentColumnTypes(
  * Hook for managing session state
  */
 export function useSessionManager() {
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
-
-  useEffect(() => {
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(() => {
     if (isStorageAvailable()) {
-      const updated = getLastUpdated()
-      setLastUpdated(updated)
+      return getLastUpdated()
     }
-  }, [])
+    return null
+  })
 
   const clearSession = useCallback(() => {
     clearStoredData()

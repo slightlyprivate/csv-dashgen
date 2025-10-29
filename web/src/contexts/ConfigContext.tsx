@@ -30,24 +30,22 @@ const DEFAULT_CONFIG: AppConfig = {
 const CONFIG_STORAGE_KEY = 'csv-dashgen-config'
 
 export function ConfigProvider({ children }: { children: ReactNode }) {
-  const [config, setConfig] = useState<AppConfig>(DEFAULT_CONFIG)
-
-  // Load config from localStorage on mount
-  useEffect(() => {
+  const [config, setConfig] = useState<AppConfig>(() => {
     try {
       const stored = localStorage.getItem(CONFIG_STORAGE_KEY)
       if (stored) {
         const parsedConfig = JSON.parse(stored)
         // Merge with defaults to handle new config options
-        setConfig({
+        return {
           limits: { ...DEFAULT_LIMITS, ...parsedConfig.limits },
           privacy: { ...DEFAULT_PRIVACY, ...parsedConfig.privacy },
-        })
+        }
       }
     } catch (error) {
       console.warn('Failed to load config from localStorage:', error)
     }
-  }, [])
+    return DEFAULT_CONFIG
+  })
 
   // Save config to localStorage whenever it changes
   useEffect(() => {

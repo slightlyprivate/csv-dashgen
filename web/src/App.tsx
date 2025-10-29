@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import Uploader from './components/Uploader'
 import SampleLoader from './components/SampleLoader'
 import DataPreview from './components/DataPreview'
@@ -20,20 +20,15 @@ import { useToast } from './hooks/useToast'
 
 function AppContent() {
   const [showSettings, setShowSettings] = useState(false)
-  const [showPrivacyNotice, setShowPrivacyNotice] = useState(false)
+  const [showPrivacyNotice, setShowPrivacyNotice] = useState(() => {
+    const privacyAccepted = localStorage.getItem('csv-dashgen-privacy-accepted')
+    return !privacyAccepted
+  })
   const { dataset, updateDataset, clearDataset } = usePersistentDataset()
   const { columnTypes, updateColumnType, clearColumnTypes } =
     usePersistentColumnTypes(dataset?.filename || '')
   const { clearSession, hasSessionData } = useSessionManager()
   const { showError, showSuccess } = useToast()
-
-  // Check if privacy notice should be shown on first load
-  useEffect(() => {
-    const privacyAccepted = localStorage.getItem('csv-dashgen-privacy-accepted')
-    if (!privacyAccepted) {
-      setShowPrivacyNotice(true)
-    }
-  }, [])
 
   // Merge stored column types with dataset
   const datasetWithTypes = useMemo(() => {

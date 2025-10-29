@@ -12,20 +12,18 @@ export function ThemeProvider({
   defaultTheme = 'system',
   storageKey = 'csv-dashgen-theme',
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(defaultTheme)
-  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light')
-
-  // Load theme from localStorage on mount
-  useEffect(() => {
+  const [theme, setTheme] = useState<Theme>(() => {
     try {
       const stored = localStorage.getItem(storageKey)
       if (stored && ['light', 'dark', 'system'].includes(stored)) {
-        setTheme(stored as Theme)
+        return stored as Theme
       }
     } catch (error) {
       console.warn('Failed to load theme from localStorage:', error)
     }
-  }, [storageKey])
+    return defaultTheme
+  })
+  const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light')
 
   // Update resolved theme when theme changes
   useEffect(() => {

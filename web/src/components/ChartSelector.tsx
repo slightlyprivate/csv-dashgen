@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { ChartConfig, suggestChartConfig } from '../utils/chartUtils'
 import { Dataset, ChartKind } from '../types'
 
@@ -16,24 +16,26 @@ export const ChartSelector: React.FC<ChartSelectorProps> = ({
   onConfigChange,
   currentConfig,
 }) => {
-  const [config, setConfig] = useState<ChartConfig>(
-    currentConfig ||
-      suggestChartConfig(dataset) || {
-        type: 'bar',
-        xField: dataset.headers[0] || '',
-        yField: dataset.headers[1] || '',
-      }
-  )
+  const [config, setConfig] = useState<ChartConfig>(() => {
+    if (currentConfig) {
+      return currentConfig
+    }
 
-  useEffect(() => {
-    if (!currentConfig && dataset.headers.length > 0) {
+    if (dataset.headers.length > 0) {
       const suggested = suggestChartConfig(dataset)
       if (suggested) {
-        setConfig(suggested)
-        onConfigChange(suggested)
+        // Notify parent of initial config
+        setTimeout(() => onConfigChange(suggested), 0)
+        return suggested
       }
     }
-  }, [dataset, currentConfig, onConfigChange])
+
+    return {
+      type: 'bar',
+      xField: dataset.headers[0] || '',
+      yField: dataset.headers[1] || '',
+    }
+  })
 
   const handleTypeChange = (type: ChartKind) => {
     const newConfig = { ...config, type }
