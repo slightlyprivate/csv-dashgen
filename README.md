@@ -1,8 +1,19 @@
-# CSV → Dashboard Generator
+# CSV DashGen
 
-A modern, privacy-focused web application that transforms CSV files into interactive dashboards with automatic data analysis, visualizations, and insights. Built with React, TypeScript, and Vite for fast, client-side processing.
+**Status:** Public portfolio project / relaunch candidate
 
-Upload any CSV and get instant charts + summary stats. Great for quick insights without spreadsheets.
+CSV DashGen is a privacy-focused CSV exploration tool that turns uploaded CSV files into quick charts, summary statistics, and field-level insights in the browser.
+
+The current repo name is `csv-dashgen`, but the product identity is being reconsidered as part of a polish/relaunch pass.
+
+## What it demonstrates
+
+- Client-side CSV parsing and validation
+- Automatic field/type detection
+- Basic statistical summaries
+- Interactive chart generation
+- React + TypeScript application architecture
+- Privacy-conscious local data handling
 
 ![Dashboard Preview](docs/dashboard.png)
 
