@@ -4,7 +4,9 @@
 
 **Status:** Active relaunch in progress.
 
-Spread Your Sheets is a privacy-first, browser-based CSV explorer. Upload a CSV or TSV file and it parses, profiles, and charts your data entirely on your device — nothing is uploaded to a server.
+**Private CSV exploration with instant summaries, column profiles, and chart ideas.**
+
+Drop in a CSV or TSV file and quickly understand what's inside. Your data is processed locally in your browser.
 
 Planned public URL: `spreadyoursheets.slightlyprivate.com`
 

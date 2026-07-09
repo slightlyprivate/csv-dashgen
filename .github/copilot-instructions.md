@@ -1,4 +1,4 @@
-# Copilot Instructions – CSV → Dashboard Generator
+# Copilot Instructions – Spread Your Sheets
 
 These are the guidelines for GitHub Copilot (and other AI assistants) when generating code in this repository.
 
@@ -6,10 +6,10 @@ These are the guidelines for GitHub Copilot (and other AI assistants) when gener
 
 ## 🎯 Project Context
 
-* Project name: **CSV → Dashboard Generator** (`csv-dashgen`)
-* Type: **React + Vite web app with optional backend**
-* Purpose: Turn uploaded CSVs into interactive dashboards with charts + summary stats.
-* Showcase: **frontend data parsing, visualization, and optional API integration**.
+* Product name: **Spread Your Sheets**. Repository name: `csv-dashgen` (unchanged — do not rename the repo).
+* Type: **React + Vite web app, frontend-only for the current relaunch**
+* Purpose: Private CSV exploration with instant summaries, column profiles, and chart ideas — drop in a CSV/TSV file and understand what's inside, processed locally in the browser.
+* Showcase: **frontend data parsing, visualization, and UI/UX craft**.
 
 ---
 
@@ -88,4 +88,4 @@ These are the guidelines for GitHub Copilot (and other AI assistants) when gener
 
 ---
 
-By following these rules, Copilot (and contributors) will generate consistent, maintainable code for CSV → Dashboard Generator.
+By following these rules, Copilot (and contributors) will generate consistent, maintainable code for Spread Your Sheets.

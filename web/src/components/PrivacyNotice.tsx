@@ -68,9 +68,9 @@ export default function PrivacyNotice({
               </h3>
               <div className="prose prose-sm dark:prose-invert max-w-none">
                 <p className="text-gray-700 dark:text-gray-300 mb-4">
-                  CSV Dashboard Generator processes all your data locally in
-                  your browser. Your files never leave your device unless you
-                  explicitly choose to share them.
+                  Spread Your Sheets processes all your data locally in your
+                  browser. Your files stay on your device unless you explicitly
+                  choose to share them.
                 </p>
 
                 <div className="space-y-4">

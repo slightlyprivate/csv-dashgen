@@ -226,8 +226,8 @@ export function SampleLoader({ onDatasetLoaded, onError }: SampleLoaderProps) {
             </h4>
             <p className="text-xs text-gray-600 dark:text-gray-400">
               These sample files demonstrate various data types and analytical
-              scenarios. All data is fictional and designed to showcase the
-              dashboard&apos;s capabilities. Files are stored locally and never
+              scenarios. All data is fictional and designed to showcase what
+              Spread Your Sheets can do. Files are stored locally and never
               uploaded to external servers.
             </p>
           </div>

@@ -78,10 +78,11 @@ function AppContent() {
     <div className="flex items-center justify-between w-full">
       <div>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          CSV Dashboard Generator
+          Spread Your Sheets
         </h1>
         <p className="text-sm text-gray-600 dark:text-gray-400">
-          Upload any CSV file and generate interactive charts and statistics
+          Private CSV exploration with instant summaries, column profiles, and
+          chart ideas.
         </p>
       </div>
       <div className="flex items-center space-x-2">
