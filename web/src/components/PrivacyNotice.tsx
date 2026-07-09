@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { usePrivacy } from '../hooks/useLimits'
 
 interface PrivacyNoticeProps {
   isOpen: boolean
@@ -12,7 +11,6 @@ export default function PrivacyNotice({
   onClose,
   onOpenSettings,
 }: PrivacyNoticeProps) {
-  const privacy = usePrivacy()
   const [dontShowAgain, setDontShowAgain] = useState(false)
 
   if (!isOpen) return null
@@ -155,27 +153,6 @@ export default function PrivacyNotice({
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-              <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
-                Current Privacy Settings
-              </h4>
-              <div className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
-                <p>
-                  • Data Collection:{' '}
-                  {privacy.ALLOW_DATA_COLLECTION ? 'Enabled' : 'Disabled'}
-                </p>
-                <p>
-                  • Error Reporting:{' '}
-                  {privacy.ALLOW_ERROR_REPORTING ? 'Enabled' : 'Disabled'}
-                </p>
-                <p>
-                  • Usage Analytics:{' '}
-                  {privacy.ALLOW_USAGE_ANALYTICS ? 'Enabled' : 'Disabled'}
-                </p>
-                <p>• Data Retention: {privacy.DATA_RETENTION_DAYS} days</p>
               </div>
             </div>
 

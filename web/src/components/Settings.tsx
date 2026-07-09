@@ -1,33 +1,37 @@
 import { useState } from 'react'
 import { useConfig } from '../hooks/useConfig'
-import { AppLimits, PrivacySettings } from '../contexts/ConfigContext.context'
+import { AppLimits } from '../contexts/ConfigContext.context'
+
+interface DatasetUsage {
+  fileSize: number
+  rowCount: number
+  columnCount: number
+}
 
 interface SettingsProps {
   isOpen: boolean
   onClose: () => void
+  datasetInfo?: DatasetUsage | null
 }
 
-export default function Settings({ isOpen, onClose }: SettingsProps) {
-  const {
-    config,
-    updateLimits,
-    updatePrivacy,
-    resetToDefaults,
-    getCurrentUsage,
-  } = useConfig()
+const NO_DATASET_USAGE: DatasetUsage = {
+  fileSize: 0,
+  rowCount: 0,
+  columnCount: 0,
+}
+
+export default function Settings({
+  isOpen,
+  onClose,
+  datasetInfo,
+}: SettingsProps) {
+  const { config, updateLimits, resetToDefaults } = useConfig()
   const [activeTab, setActiveTab] = useState<'limits' | 'privacy'>('limits')
 
-  const usage = getCurrentUsage()
+  const usage = datasetInfo ?? NO_DATASET_USAGE
 
   const handleLimitChange = (key: keyof AppLimits, value: number | boolean) => {
     updateLimits({ [key]: value })
-  }
-
-  const handlePrivacyChange = (
-    key: keyof PrivacySettings,
-    value: boolean | number
-  ) => {
-    updatePrivacy({ [key]: value })
   }
 
   const formatFileSize = (bytes: number) => {
@@ -187,34 +191,6 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
                       Current usage: {usage.columnCount} columns
                     </p>
                   </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Maximum Charts
-                    </label>
-                    <div className="flex items-center space-x-4">
-                      <input
-                        type="range"
-                        min="1"
-                        max="50"
-                        step="1"
-                        value={config.limits.maxCharts}
-                        onChange={(e) =>
-                          handleLimitChange(
-                            'maxCharts',
-                            parseInt(e.target.value)
-                          )
-                        }
-                        className="flex-1"
-                      />
-                      <span className="text-sm text-gray-600 dark:text-gray-400 min-w-[80px]">
-                        {config.limits.maxCharts}
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Current usage: {usage.chartCount} charts
-                    </p>
-                  </div>
                 </div>
               </div>
 
@@ -229,8 +205,11 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
                         Enable Data Persistence
                       </label>
                       <p className="text-xs text-gray-500">
-                        Save your datasets and settings locally for future
-                        sessions
+                        Save your dataset, chart config, and column types
+                        locally so they&apos;re restored next time you open the
+                        app. Turning this off stops new data from being saved
+                        (it does not clear what&apos;s already stored — use
+                        Clear Session for that).
                       </p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
@@ -248,29 +227,6 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
                       <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                     </label>
                   </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Enable Analytics
-                      </label>
-                      <p className="text-xs text-gray-500">
-                        Help improve the app by sharing anonymous usage
-                        statistics
-                      </p>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={config.limits.enableAnalytics}
-                        onChange={(e) =>
-                          handleLimitChange('enableAnalytics', e.target.checked)
-                        }
-                        className="sr-only peer"
-                      />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                    </label>
-                  </div>
                 </div>
               </div>
             </div>
@@ -278,127 +234,25 @@ export default function Settings({ isOpen, onClose }: SettingsProps) {
 
           {activeTab === 'privacy' && (
             <div className="space-y-6">
-              <div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                  Data Collection & Privacy
-                </h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Allow Data Collection
-                      </label>
-                      <p className="text-xs text-gray-500">
-                        Collect anonymous usage data to improve the application
-                      </p>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={config.privacy.allowDataCollection}
-                        onChange={(e) =>
-                          handlePrivacyChange(
-                            'allowDataCollection',
-                            e.target.checked
-                          )
-                        }
-                        className="sr-only peer"
-                      />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                    </label>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Allow Error Reporting
-                      </label>
-                      <p className="text-xs text-gray-500">
-                        Automatically report errors to help fix issues faster
-                      </p>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={config.privacy.allowErrorReporting}
-                        onChange={(e) =>
-                          handlePrivacyChange(
-                            'allowErrorReporting',
-                            e.target.checked
-                          )
-                        }
-                        className="sr-only peer"
-                      />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                    </label>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Allow Usage Analytics
-                      </label>
-                      <p className="text-xs text-gray-500">
-                        Track feature usage to prioritize improvements
-                      </p>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={config.privacy.allowUsageAnalytics}
-                        onChange={(e) =>
-                          handlePrivacyChange(
-                            'allowUsageAnalytics',
-                            e.target.checked
-                          )
-                        }
-                        className="sr-only peer"
-                      />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                    </label>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Data Retention Period
-                    </label>
-                    <div className="flex items-center space-x-4">
-                      <input
-                        type="range"
-                        min="1"
-                        max="365"
-                        step="1"
-                        value={config.privacy.dataRetentionDays}
-                        onChange={(e) =>
-                          handlePrivacyChange(
-                            'dataRetentionDays',
-                            parseInt(e.target.value)
-                          )
-                        }
-                        className="flex-1"
-                      />
-                      <span className="text-sm text-gray-600 dark:text-gray-400 min-w-[80px]">
-                        {config.privacy.dataRetentionDays} days
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      How long to keep your data before automatic deletion
-                    </p>
-                  </div>
-                </div>
-              </div>
-
               <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
                 <h4 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
                   Privacy Information
                 </h4>
                 <div className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
                   <p>• All data processing happens locally in your browser</p>
+                  <p>• Nothing is sent to a server — there is no backend</p>
                   <p>
-                    • No data is sent to external servers without your consent
+                    • There is no analytics, error reporting, or usage tracking
+                    of any kind
                   </p>
-                  <p>• You can delete all stored data at any time</p>
-                  <p>• Settings are saved locally and never shared</p>
+                  <p>
+                    • You can delete all stored data at any time with Clear
+                    Session
+                  </p>
+                  <p>
+                    • Turn off Data Persistence (Limits & Performance tab) to
+                    stop saving your dataset between visits
+                  </p>
                 </div>
               </div>
             </div>

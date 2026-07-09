@@ -5,7 +5,6 @@ export const SUPPORTED_CHART_TYPES: readonly string[] = [
   'bar',
   'pie',
   'scatter',
-  'area',
 ] as const
 
 export const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB

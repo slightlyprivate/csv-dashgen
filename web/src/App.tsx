@@ -219,7 +219,19 @@ function AppContent() {
         main={mainContent}
       />
 
-      <Settings isOpen={showSettings} onClose={() => setShowSettings(false)} />
+      <Settings
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        datasetInfo={
+          datasetWithTypes
+            ? {
+                fileSize: datasetWithTypes.size,
+                rowCount: datasetWithTypes.rows.length,
+                columnCount: datasetWithTypes.headers.length,
+              }
+            : null
+        }
+      />
 
       <PrivacyNotice
         isOpen={showPrivacyNotice}

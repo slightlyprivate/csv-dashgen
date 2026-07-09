@@ -33,7 +33,7 @@ export interface KPI {
   trend?: 'up' | 'down' | 'neutral'
 }
 
-export type ChartKind = 'line' | 'bar' | 'pie' | 'scatter' | 'area'
+export type ChartKind = 'line' | 'bar' | 'pie' | 'scatter'
 
 export interface ChartConfig {
   type: ChartKind

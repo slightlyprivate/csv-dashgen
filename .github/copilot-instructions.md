@@ -20,13 +20,17 @@ These are the guidelines for GitHub Copilot (and other AI assistants) when gener
 * Organize code into:
 
   ```
-  /src
+  /web/src
     components/   # UI components
     utils/        # parsing, chart helpers
     hooks/        # custom React hooks
-  /api-py        # optional FastAPI backend
+    contexts/     # ConfigContext, ThemeContext, ToastContext
   /docs          # screenshots + docs
   ```
+
+  There is no backend folder in this repository. Do not create `api-py/` or
+  similar scaffolding without an explicit decision to add a backend — see
+  [docs/architecture.md](../docs/architecture.md).
 * Use **async/await** over `.then()`.
 * Keep components small and composable.
 * Use **named exports** (avoid default exports).
@@ -36,20 +40,24 @@ These are the guidelines for GitHub Copilot (and other AI assistants) when gener
 ## 📦 Libraries & Tools
 
 * **CSV parsing:** Papaparse.
-* **Charts:** Chart.js (with `react-chartjs-2` if needed).
+* **Charts:** Chart.js (with `react-chartjs-2`).
 * **Styling:** Tailwind CSS (if styling required beyond defaults).
-* **Backend (optional):** FastAPI (Python) or Hono (Node) for data processing.
+* **Backend:** none. The app is frontend-only; do not add a Python/Node backend without an explicit decision to do so.
 * **Testing:** Vitest + React Testing Library.
 
 ---
 
-## 🧩 Components to Prioritize
+## 🧩 Core Components (actual)
 
 1. `Uploader` – drag-and-drop or file input for CSVs.
-2. `FieldPicker` – let users choose x/y columns.
-3. `Charts` – render different chart types based on fields.
-4. `Stats` – summary KPIs (sum, mean, min/max).
+2. `ChartSelector` – let users choose chart type and x/y/series columns.
+3. `Chart` / `ChartContainer` – render and export chart types based on fields.
+4. `StatsPanel` – summary statistics (sum, mean, min/max, etc).
 5. `App` – main layout and state manager.
+
+Do not recreate `FieldPicker.tsx`, `Charts.tsx`, or `Stats.tsx` — these were
+empty, unused stub files removed during the scope-cleanup pass. Their
+responsibilities are already covered by the components above.
 
 ---
 

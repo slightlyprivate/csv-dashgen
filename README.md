@@ -22,19 +22,18 @@ Everything below runs today, client-side, in the app under [`web/`](web):
 - Data preview table with sorting, filtering, pagination, and inline type editing
 - Per-column statistics panel (numeric and categorical summaries)
 - Chart generation: line, bar, pie, and scatter
+- Chart export as a PNG image
 - Light/dark/system theme toggle
-- Local persistence of dataset, chart config, and column types via `localStorage`
-- Privacy notice and settings modal
+- Local persistence of dataset, chart config, and column types via `localStorage`, gated by a real "Enable Data Persistence" setting
+- Privacy notice and settings modal (Privacy & Data tab is a truthful, static info panel — no fake toggles)
 - CI pipeline (lint, build, test) on push/PR
 
-All processing happens in the browser. There is no backend in the current build, and no data leaves the device.
+All processing happens in the browser. There is no backend in the current build or repo, and no data leaves the device.
 
 ## Partial / in-progress capabilities
 
 These exist in some form but are not finished:
 
-- **Chart export** — the export button is currently a placeholder (shows an alert); it does not produce an image or file yet
-- **Privacy/settings controls** — the settings UI exists, but some toggles (for example persistence preferences) are not yet enforced by the underlying persistence logic
 - **Accessibility** — good baseline practices (labeled controls, ARIA attributes, focus-visible styling), but no focus trap/escape handling in modals and no dedicated accessibility test suite. This is **not** a certified WCAG 2.1 AA-compliant implementation
 - **Test coverage** — narrow unit tests for parsing and a basic uploader render test; no integration or end-to-end coverage of the full upload → preview → chart flow
 
@@ -43,8 +42,8 @@ These exist in some form but are not finished:
 Not implemented yet — tracked as relaunch roadmap items, not current features:
 
 - Processed data export (CSV/JSON)
-- Real chart image export (PNG/SVG)
-- Optional backend processing for larger files (a Python/FastAPI backend folder exists as an empty placeholder; no Node backend exists)
+- Additional chart export formats (for example SVG)
+- Optional backend processing for larger files (no backend scaffolding exists in this repo today — it would be built fresh from a real requirement)
 - Self-host deployment packaging (Docker/Caddy/Nginx config) for the target infrastructure
 - Smart chart suggestions, natural-language insights, saved dashboards, and other longer-term ideas (see Roadmap below)
 
@@ -62,7 +61,7 @@ Not implemented yet — tracked as relaunch roadmap items, not current features:
 
 ### Backend (not implemented — planned only)
 
-An `api-py/` folder exists as an empty placeholder for a possible future FastAPI backend. There is no working backend today, and the current relaunch direction is **frontend-only, browser-local processing**.
+There is no backend scaffolding in this repository. The current relaunch direction is **frontend-only, browser-local processing**; a backend would only be added later from a concrete requirement.
 
 ## Quick start
 
@@ -112,7 +111,6 @@ csv-dashgen/
 │   ├── vitest.config.ts
 │   ├── package.json
 │   └── eslint.config.js
-├── api-py/                       # Empty placeholder for a possible future backend (not implemented)
 ├── samples/                      # Sample CSV files for demos/testing
 ├── docs/                         # Documentation and screenshots
 ├── CHECKLIST.md                  # Build/relaunch checklist
@@ -122,27 +120,12 @@ csv-dashgen/
 
 ## Configuration
 
-### Environment variables
+There are no environment variables in the current build — nothing in the app reads `import.meta.env`. All configuration is runtime-only, set through the in-app Settings modal and persisted to `localStorage`:
 
-Create a `.env` file in `web/` if you want to override defaults:
+- **Limits & Performance** — maximum file size, maximum rows, maximum columns (all actually enforced during upload/validation), and an "Enable Data Persistence" toggle that gates whether the dataset, chart config, and column types are saved/loaded from `localStorage`
+- **Privacy & Data** — a static info panel describing what actually happens (everything local, no server, no analytics/error reporting/tracking of any kind); there are no privacy toggles because there is nothing for them to govern
 
-```env
-# Application limits
-VITE_MAX_FILE_SIZE_MB=10
-VITE_MAX_ROWS=10000
-VITE_PROCESSING_TIMEOUT_MS=30000
-
-# Privacy-related UI defaults
-VITE_ENABLE_ANALYTICS=false
-VITE_DATA_RETENTION_DAYS=30
-VITE_REQUIRE_CONSENT=true
-```
-
-There is no `VITE_API_URL` / `VITE_API_ENABLED` in the current build — no backend exists to point at.
-
-### Runtime configuration
-
-The in-app settings panel lets you adjust file size limits, row count limits, processing timeout, theme preference, and privacy-related preferences. Note that not every toggle currently changes runtime behavior — see "Partial / in-progress capabilities."
+Theme (light/dark/system) is set separately via the theme toggle in the header.
 
 ## Sample data
 
@@ -158,7 +141,7 @@ Try these datasets from [`samples/`](samples):
 1. Upload a CSV, or click a sample card to load `samples/sales.csv`
 2. Review automatic field detection and per-column statistics
 3. Pick columns for a chart and choose a chart type
-4. Adjust theme, limits, and privacy preferences in Settings
+4. Toggle theme from the header, and review limits/privacy info in Settings
 
 ## Deployment
 
@@ -182,7 +165,7 @@ Longer-term ideas, not yet started:
 - Natural-language data summaries
 - Saved dashboards with cloud storage
 - Advanced filtering and derived columns
-- Processed data and chart export (see "Planned / future capabilities" above for the near-term version of this)
+- Processed data export (see "Planned / future capabilities" above for the near-term version of this)
 
 ## Contributing
 

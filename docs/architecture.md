@@ -39,7 +39,8 @@ Spread Your Sheets is a client-side React + TypeScript application that parses, 
 - Vitest + React Testing Library
 
 ### Backend (not implemented)
-An empty `api-py/` folder exists as a placeholder for a possible future FastAPI backend. It contains no code. There is no Node/Hono backend in this repository. Do not describe a backend as implemented in any public-facing material until one actually exists.
+
+There is no backend and no backend scaffolding in this repository — an earlier empty `api-py/` placeholder was removed during the scope-cleanup pass. Do not describe a backend as implemented in any public-facing material until one actually exists.
 
 ## Directory structure (actual)
 
@@ -58,10 +59,7 @@ web/src/
 │   ├── Settings.tsx           # Settings modal
 │   ├── PrivacyNotice.tsx      # Privacy notice modal
 │   ├── ThemeToggle.tsx        # Light/dark/system toggle
-│   ├── ToastContainer.tsx     # Toast notifications
-│   ├── Charts.tsx             # Empty file — not in use (cleanup planned)
-│   ├── FieldPicker.tsx        # Empty file — not in use (cleanup planned)
-│   └── Stats.tsx              # Empty file — not in use (cleanup planned)
+│   └── ToastContainer.tsx     # Toast notifications
 ├── contexts/
 │   ├── ConfigContext.tsx      # App configuration/limits
 │   ├── ThemeContext.tsx       # Theme state
@@ -84,7 +82,7 @@ web/src/
 └── main.tsx                   # Entry point
 ```
 
-Three component files (`Charts.tsx`, `FieldPicker.tsx`, `Stats.tsx`) are currently empty and unused — leftover drift from earlier iterations. They are not referenced by `App.tsx` or any other active component. Removing them is planned for a later architecture-cleanup pass, not this documentation pass.
+The three previously-empty, unused component files (`Charts.tsx`, `FieldPicker.tsx`, `Stats.tsx`) noted in earlier drafts of this document were deleted during the scope-cleanup pass; they are no longer part of the source tree.
 
 ## Component hierarchy (actual)
 
@@ -114,7 +112,7 @@ There is no separate `Header`/`Footer`/`Dashboard` component tree, no `ExportPan
 - **Local component state**: `useState`/`useMemo` in `App.tsx` and individual components
 - **Persistent state**: `usePersistentState.ts` exposes `usePersistentDataset`, `usePersistentColumnTypes`, and `useSessionManager`, backed by `localStorage`
 
-Not every configuration toggle exposed in the Settings UI is currently wired into runtime behavior — see the README's "Partial / in-progress capabilities" section for specifics.
+Every configuration toggle exposed in the Settings UI is wired into real runtime behavior: the file/row/column limits are enforced during upload validation, and "Enable Data Persistence" gates whether `usePersistentDataset`/`usePersistentChartConfig`/`usePersistentColumnTypes` actually save to or load from `localStorage` (see `usePersistentState.ts`). Settings that had no backing implementation (analytics, data collection, error reporting, data retention, a max-charts limit) were removed during the scope-cleanup pass rather than left as non-functional UI.
 
 ## Data flow
 
@@ -151,11 +149,12 @@ All of this runs synchronously on the main thread; there is no web worker or str
 - All processing is client-side; no data is sent to a server (there is no server)
 - A privacy notice modal is shown on first load
 - Configurable file size/row limits exist and are enforced during validation
+- The Settings "Privacy & Data" tab is a static, accurate info panel (no toggles) stating there is no analytics, data collection, or error reporting — because there genuinely is none, not because a real pipeline is hidden behind an unchecked box
 
 ### What's not true yet — do not claim these
 
-- There is no real telemetry/analytics pipeline for the privacy settings to govern; the privacy/analytics toggles are largely UI/configuration-level today
 - No formal security review or input-sanitization audit has been performed beyond basic file/type/size validation
+- There is no telemetry, analytics, error-reporting, or data-retention system in this app, and none is planned without an explicit decision to add one (which would also require updating this document and the privacy notice)
 
 ## Performance
 

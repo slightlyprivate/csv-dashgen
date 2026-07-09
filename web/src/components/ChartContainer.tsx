@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { Chart } from './Chart'
 import { ChartSelector } from './ChartSelector'
 import { Dataset } from '../types'
 import { ChartConfig } from '../utils/chartUtils'
 import { usePersistentChartConfig } from '../hooks/usePersistentState'
+import { useToast } from '../hooks/useToast'
 
 interface ChartContainerProps {
   dataset: Dataset
@@ -14,9 +15,32 @@ interface ChartContainerProps {
  */
 export const ChartContainer: React.FC<ChartContainerProps> = ({ dataset }) => {
   const { chartConfig, updateChartConfig } = usePersistentChartConfig()
+  const chartWrapperRef = useRef<HTMLDivElement>(null)
+  const { showSuccess, showError } = useToast()
 
   const handleConfigChange = (config: ChartConfig) => {
     updateChartConfig(config)
+  }
+
+  const handleExportChart = () => {
+    const canvas = chartWrapperRef.current?.querySelector('canvas')
+    if (!canvas || !chartConfig) {
+      showError('Export Failed', 'No chart is currently rendered to export.')
+      return
+    }
+
+    const filename = `${(chartConfig.title || `${chartConfig.type}-chart`)
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '-')}.png`
+
+    const link = document.createElement('a')
+    link.href = canvas.toDataURL('image/png')
+    link.download = filename
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    showSuccess('Chart Exported', `Saved as ${filename}`)
   }
 
   if (!dataset || dataset.rows.length === 0) {
@@ -59,7 +83,7 @@ export const ChartContainer: React.FC<ChartContainerProps> = ({ dataset }) => {
       {/* Chart Display */}
       {chartConfig && (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="h-96">
+          <div className="h-96" ref={chartWrapperRef}>
             <Chart
               dataset={dataset}
               config={chartConfig}
@@ -81,13 +105,10 @@ export const ChartContainer: React.FC<ChartContainerProps> = ({ dataset }) => {
             </div>
             <div className="flex space-x-2">
               <button
-                onClick={() => {
-                  // Export chart as image (placeholder for future implementation)
-                  alert('Chart export feature coming soon!')
-                }}
+                onClick={handleExportChart}
                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
-                Export Chart
+                Export Chart (PNG)
               </button>
               <button
                 onClick={() => {

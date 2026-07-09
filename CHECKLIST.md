@@ -2,7 +2,9 @@
 
 **Status:** Active relaunch in progress. This checklist previously claimed 100% completion; that was inaccurate. It has been corrected against the actual codebase — see [docs/relaunch/CODEBASE_AUDIT.md](docs/relaunch/CODEBASE_AUDIT.md) for the full audit.
 
-**Next steps:** documentation reality pass (this file, README, PRD) → rebrand pass → architecture cleanup → UI/UX redesign → self-host deployment artifacts → public relaunch.
+**Next steps:** ~~documentation reality pass~~ → ~~rebrand pass~~ → ~~scope cleanup (dead files, placeholder actions, settings truthfulness)~~ → UI/UX redesign → self-host deployment artifacts → public relaunch.
+
+The scope-cleanup pass removed dead files (`Charts.tsx`, `FieldPicker.tsx`, `Stats.tsx`, `api-py/`, root `package-lock.json`), implemented real PNG chart export, removed the unimplemented `area` chart type, removed fictional settings/privacy toggles with no backing implementation, wired `Enable Data Persistence` to real behavior, and replaced the session-clear full-page reload with explicit state clearing. It did not redesign the UI, refactor data architecture, or touch deployment.
 
 ---
 
@@ -23,7 +25,7 @@
 - [x] Folder structure defined
 - [x] Core TypeScript types defined (`ColumnType`, `Dataset`, `Row`, `ChartKind`, etc.)
 - [x] Constants centralized
-- [ ] Dead/empty component files removed (`Charts.tsx`, `FieldPicker.tsx`, `Stats.tsx` are currently empty stubs — cleanup planned for the architecture-cleanup phase, not this pass)
+- [x] Dead/empty component files removed (`Charts.tsx`, `FieldPicker.tsx`, `Stats.tsx` deleted — they were unused stubs)
 
 ## 📥 CSV Ingestion & Validation
 
@@ -52,8 +54,8 @@
 - [x] Chart types: line, bar, pie, scatter
 - [x] Column selection for X/Y (and series where applicable)
 - [x] Auto-suggested defaults based on column types
-- [ ] Chart export (button exists; currently a placeholder alert, not a real export)
-- [ ] Area chart (present in type definitions/constants, not implemented in selector or rendering)
+- [x] Chart export (downloads a real PNG via canvas; no longer a placeholder alert)
+- [x] Chart type list matches implementation (removed unimplemented `area` chart type from `ChartKind`/constants)
 
 ## 🧮 Transformations
 
@@ -65,8 +67,8 @@
 
 - [x] Context + hooks for state management
 - [x] Persist last session (localStorage): dataset, chart config, column types
-- [x] Clear session control (full page reload)
-- [ ] All settings toggles enforced by runtime behavior (some persistence-related toggles are UI-only today)
+- [x] Clear session control (explicit React/localStorage state clearing, no full page reload)
+- [x] All visible settings toggles are truthful: "Enable Data Persistence" actually gates save/load; fictional toggles with no backing implementation (analytics, data collection, error reporting, data retention, max charts) were removed rather than left as decoration
 
 ## 🧪 Testing
 
@@ -105,17 +107,17 @@
 - [x] Configurable max file size and row count
 - [x] Privacy notice UI
 - [x] Settings panel for limits/preferences
-- [ ] Full enforcement of every configurable privacy/persistence toggle by runtime code
+- [x] Full enforcement of every configurable privacy/persistence toggle by runtime code (Privacy & Data tab is now a static, accurate info panel with no fake toggles)
 
 ## 🌐 Optional Backend
 
-- [ ] FastAPI or Node/Hono endpoint — not implemented (`api-py/` is an empty placeholder; no Node backend exists)
+- [ ] FastAPI or Node/Hono endpoint — not implemented; the empty `api-py/` placeholder folder was removed in the scope-cleanup pass rather than left as unused scaffolding
 - [ ] Streaming upload / chunked parsing
 - [ ] Server-side aggregation
 - [ ] Rate limiting / auth
 - [ ] CORS / content-type validation
 
-This section reflects a **planned, optional** future direction. The current relaunch direction is frontend-only.
+This section reflects a **planned, optional** future direction. The current relaunch direction is frontend-only. A backend would be added fresh, from a real requirement, not resurrected from this removed scaffolding.
 
 ## 📦 Build & Deploy
 
@@ -139,7 +141,7 @@ This section reflects a **planned, optional** future direction. The current rela
 - [x] ESLint rules for hooks & accessibility
 - [x] Prettier formatting enforced
 - [x] Dependabot for dependency updates
-- [ ] Empty/dead source files removed
+- [x] Empty/dead source files removed (`Charts.tsx`, `FieldPicker.tsx`, `Stats.tsx`, `api-py/`, root `package-lock.json`)
 
 ## ✅ Relaunch exit criteria (not yet met)
 
