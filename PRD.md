@@ -1,284 +1,151 @@
-# CSV → Dashboard Generator – Product Requirements Document (PRD)# CSV → Dashboard Generator – Product Requirements Document (PRD)
+# Spread Your Sheets – Product Requirements Document (PRD)
 
+**Status:** Active relaunch in progress. This document has been corrected to reflect actual implementation status as of the documentation reality pass (see [docs/relaunch/CODEBASE_AUDIT.md](docs/relaunch/CODEBASE_AUDIT.md)). Earlier versions of this PRD overstated completeness; treat this revision as authoritative.
 
+## 1. Overview
 
-## 1. Overview## 1. Overview
+Spread Your Sheets (repository name: `csv-dashgen`) is a privacy-first, browser-based CSV exploration tool. It transforms uploaded CSV/TSV files into a data preview, column statistics, and basic charts — entirely client-side. It is a portfolio project intended to demonstrate frontend data parsing, visualization, and UI/UX craft.
 
+The current relaunch direction is **frontend-only, browser-local processing**. There is no working backend, and none is required for the app to function.
 
+## 2. Goals
 
-CSV → Dashboard Generator (**csv-dashgen**) is a comprehensive, privacy-focused web application that transforms CSV files into interactive dashboards. The tool automatically detects field types, generates detailed statistics, renders multiple visualization types, and provides extensive customization options. It is designed as a portfolio project to showcase **modern frontend development, data processing, visualization, accessibility, and user experience design**.CSV → Dashboard Generator (**csv-dashgen**) is a lightweight web app that transforms uploaded CSV files into interactive dashboards. The tool automatically detects field types, generates summary statistics, and renders visualizations. It is designed as a portfolio project to showcase **frontend data parsing, visualization, and optional backend integration**.
+- Provide a clean, honest, drag-and-drop CSV visualization tool
+- Showcase frontend data parsing, chart rendering, and UI design in React/TypeScript
+- Provide a deployable, self-hosted demo suitable for portfolio review
+- Keep documentation and implementation in sync going forward
 
+Non-goals for the current relaunch phase:
 
+- Building a production backend
+- Achieving certified accessibility compliance
+- Comprehensive automated test coverage
 
-## 2. Goals## 2. Goals
+These may become goals in a later phase, but are explicitly out of scope right now.
 
+## 3. Target users
 
+- Individuals who want quick insights from a CSV without opening a spreadsheet tool
+- Developers or hiring managers reviewing this project as a portfolio demo
+- Students or hobbyists exploring lightweight, client-side data tooling
 
-* ✅ Build a complete, production-ready CSV visualization tool* Build a simple drag-and-drop CSV visualization tool.
+## 4. Current capabilities (implemented)
 
-* ✅ Showcase modern web development with React, TypeScript, and Vite* Showcase data parsing, chart rendering, and UI design.
+- Drag-and-drop or file-input CSV/TSV upload with validation (type, size, row count, column count, duplicate headers)
+- Automatic column type inference: number, string, date, boolean, unknown, with manual override in the UI
+- Data preview table with sorting, filtering, pagination, and inline type editing
+- Per-column statistics (numeric: mean/median/min/max/std dev; categorical: unique count, top values)
+- Chart generation: line, bar, pie, scatter
+- Sample dataset loading from `samples/`
+- Light/dark/system theme with persistence
+- Local persistence of dataset, chart config, and column types via `localStorage`
+- Privacy notice and settings modal (see "partial" section for what's actually enforced)
+- CI: lint, build, and test run on push/PR
 
-* ✅ Implement comprehensive data parsing, chart rendering, and UI design* Provide a clean, deployable demo for portfolio review.
+## 5. Partial / in-progress capabilities
 
-* ✅ Provide extensive customization with privacy controls and configurable limits* Optionally support backend processing for larger datasets.
+- **Chart export** — UI button exists but currently only shows a placeholder alert; no image or file is produced
+- **Settings enforcement** — some configuration toggles (for example certain persistence preferences) are not yet wired into runtime behavior
+- **Accessibility** — solid baseline (labels, ARIA attributes, focus-visible styles) but no modal focus trap/escape handling and no dedicated accessibility test suite; this is not a certified WCAG 2.1 AA implementation
+- **Test coverage** — narrow: unit tests for CSV parsing plus a basic uploader render test; no integration or end-to-end coverage of the full upload → preview → stats → chart → persistence flow
 
-* ✅ Ensure accessibility compliance and responsive design
+## 6. Planned / future capabilities
 
-* ✅ Create a deployable demo suitable for portfolio presentation## 3. Target Users
+Not implemented. These are roadmap items, not current features:
 
-* ✅ Optionally support backend processing for larger datasets
+- Processed data export (CSV/JSON)
+- Real chart image export (PNG/SVG)
+- Optional backend for larger-file processing (FastAPI/Python or Hono/Node) — an empty `api-py/` placeholder exists today; no Node backend exists
+- Self-host deployment packaging (Docker/Caddy/Nginx, systemd unit, health check) for slightly-server behind Cloudflare Tunnel
+- Smart chart suggestions based on data patterns
+- Natural-language / LLM-generated data summaries
+- Saved dashboards with cloud storage
+- Advanced filtering and derived/computed columns
+- Collaborative or multi-user features
 
-* Individuals who need **quick insights** from CSV data without opening spreadsheets.
+## 7. User stories
 
-## 3. Target Users* Developers/managers reviewing this project as a **portfolio demo**.
+### Implemented today
 
-* Students or hobbyists exploring lightweight dashboarding.
+- As a user, I can upload a CSV so I can quickly explore my data.
+- As a user, I can see automatic field type detection so I understand my data's structure.
+- As a user, I can view per-column statistics so I understand key metrics.
+- As a user, I can generate line, bar, pie, or scatter charts to compare visualizations.
+- As a user, I can run the app entirely in my browser, so no data leaves my device.
+- As a user, I can switch between light, dark, and system theme.
+- As a user, I can reload the app and have my last dataset/config restored from local storage.
 
-* **Data Analysts** who need quick insights from CSV data without complex tools
+### Not yet implemented
 
-* **Developers** reviewing this project as a comprehensive portfolio demonstration## 4. Key Features
+- As a user, I can export my processed data or a chart image. *(placeholder only)*
+- As a user, I can process very large files via a backend. *(no backend exists)*
 
-* **Business Users** requiring instant dashboards from spreadsheet exports
+## 8. Technical implementation
 
-* **Students/Hobbyists** exploring modern web development and data visualization### Core (MVP)
+### Architecture (current)
 
-* **Privacy-Conscious Users** who need control over their data processing and retention
+- **Frontend**: React 18 + TypeScript + Vite + Tailwind CSS v4, living entirely under `web/`
+- **State management**: React Context (`ConfigContext`, `ThemeContext`, `ToastContext`) plus custom hooks
+- **Data processing**: PapaParse for CSV parsing; custom utilities for type inference, statistics, and chart data shaping
+- **Visualization**: Chart.js via react-chartjs-2
+- **Persistence**: `localStorage`, via `usePersistentState`
+- **Testing**: Vitest + React Testing Library (narrow coverage today)
 
-* Drag-and-drop or file input for CSV.
+See [docs/architecture.md](docs/architecture.md) for the accurate current architecture.
 
-## 4. Key Features* Auto-detect numeric vs categorical fields.
+### Backend
 
-* KPI cards: sum, mean, min, max per column.
+No backend is implemented. An empty `api-py/` folder exists as a placeholder for a possible future FastAPI backend; it contains no code today. There is no Node/Hono backend in this repository.
 
-### Core Features (✅ Implemented)* Visualizations: line, bar, pie, scatter.
+## 9. Success metrics
 
-* Client-only mode (no backend required).
+### Achieved
 
-* ✅ **Drag-and-drop CSV upload** with instant parsing and validation
+- CSV upload and parsing works for typical files within configured limits
+- Four chart types supported (line, bar, pie, scatter)
+- Per-column statistics appear automatically for numeric and categorical columns
+- Lint, build, and unit tests pass in CI
 
-* ✅ **Automatic field type detection** (numeric, categorical, date/time, boolean)### Optional (Phase 2+)
+### Not yet achieved (do not claim these)
 
-* ✅ **Interactive visualizations**: Line, bar, pie, scatter, area charts
+- Certified accessibility compliance
+- Coverage thresholds across the codebase
+- Production deployment / hosted demo
+- Backend-assisted processing of very large files
 
-* ✅ **Comprehensive KPI cards**: Sum, mean, median, min/max, standard deviation, variance* Full-stack mode with API (FastAPI/Node).
+## 10. Risks & constraints
 
-* ✅ **Advanced column statistics** with data quality insights and distributions* Smart chart suggestions.
+### Technical
 
-* ✅ **Responsive design** optimized for desktop, tablet, and mobile* LLM-generated natural language insights from CSV.
+- Large files are parsed and processed entirely on the main thread and in memory; performance risk beyond roughly 100k rows despite configurable limits
+- Chart.js and PapaParse must remain maintained dependencies
 
-* Save dashboards (localStorage or DB).
+### UX
 
-### Advanced Features (✅ Implemented)* Export chart images/CSV.
+- Placeholder actions (chart export) can create a misleading impression of completeness if left unlabeled
+- Settings that don't drive real behavior can confuse users if not clearly scoped
 
+### Documentation / trust
 
+- Prior versions of this PRD and related docs overstated implementation maturity. This revision is intended to correct that; keep future edits honest and in sync with the actual code.
 
-* ✅ **Privacy controls** with configurable data retention and usage tracking## 5. User Stories
+## 11. Deployment
 
-* ✅ **Configurable limits** for file size (1MB-50MB), row count (1K-100K), processing timeout
+Current relaunch direction: frontend-only, browser-local processing, no backend dependency.
 
-* ✅ **Dark/Light theme system** with system preference detection and high contrast mode* *As a user, I can upload a CSV so I can quickly explore my data.*
+The intended relaunch deployment is a static frontend build served from slightly-server behind Cloudflare Tunnel, at `spreadyoursheets.slightlyprivate.com`. Concrete deployment artifacts (Docker/Caddy/Nginx config, health check convention) do not yet exist in this repository — see the roadmap in [docs/relaunch/CODEBASE_AUDIT.md](docs/relaunch/CODEBASE_AUDIT.md).
 
-* ✅ **Data persistence** using localStorage for datasets, configurations, and user preferences* *As a user, I can pick fields for x and y axes so I control my charts.*
+## 12. Roadmap phases
 
-* ✅ **Sample datasets** for quick demos and testing (sales, expenses, fitness)* *As a user, I can see KPIs so I understand key metrics instantly.*
+| Phase | Goal |
+| --- | --- |
+| 1 | Documentation reality pass (this document) |
+| 2 | Rebrand UI/copy to Spread Your Sheets |
+| 3 | Architecture cleanup: remove dead files, tighten module boundaries |
+| 4 | Distinctive UI/UX redesign pass |
+| 5 | Self-host deployment artifacts for slightly-server + Cloudflare Tunnel |
+| 6 | Final QA, docs, and public relaunch |
 
-* ✅ **Export capabilities** for charts (PNG/SVG) and processed data (CSV/JSON)* *As a user, I can generate multiple chart types so I can compare visualizations.*
+## 13. Conclusion
 
-* ✅ **Real-time validation** with detailed error messages and recovery suggestions* *As a user, I can run the app entirely in my browser so I don’t need a backend.*
-
-
-
-### Developer Experience (✅ Implemented)## 6. Success Metrics
-
-
-
-* ✅ **Full TypeScript** with strict type checking and comprehensive interfaces* ✅ CSV upload and parsing works for files up to 5MB in MVP.
-
-* ✅ **Comprehensive testing** with Vitest, React Testing Library, and 80%+ coverage* ✅ At least 4 chart types supported.
-
-* ✅ **Modern tooling** with Vite, ESLint v9 (flat config), Prettier, and TypeScript* ✅ Summary KPIs appear automatically for numeric columns.
-
-* ✅ **Accessibility compliant** (WCAG 2.1 AA) with proper ARIA labels and keyboard navigation* ✅ Deployed demo is accessible online.
-
-* ✅ **Modular architecture** with custom hooks, contexts, and utility functions
-
-* ✅ **Optional backend integration** ready for FastAPI/Python or Hono/Node## 7. Tech Stack
-
-
-
-## 5. Technical Implementation* **Frontend:** React + Vite + TypeScript.
-
-* **Parsing:** Papaparse.
-
-### Architecture* **Charts:** Chart.js (react-chartjs-2 if needed).
-
-* **Frontend**: React 18 + TypeScript + Vite + Tailwind CSS v4* **Styling:** Tailwind CSS.
-
-* **State Management**: React Context + custom hooks for configuration and themes* **Optional backend:** FastAPI (Python) or Hono (Node).
-
-* **Data Processing**: Papaparse for CSV parsing, custom utilities for statistics and type inference* **Testing:** Vitest + React Testing Library.
-
-* **Visualization**: Chart.js with react-chartjs-2 for interactive charts
-
-* **Persistence**: localStorage API with configurable retention policies## 8. Risks & Constraints
-
-* **Testing**: Vitest + React Testing Library + coverage reporting
-
-* **Build Tooling**: Vite with optimized production builds and hot reload* Large files may slow down parsing in client-only mode.
-
-* Users expect more advanced analytics than MVP provides.
-
-### Component Structure* Visualization defaults may not always be meaningful.
-
-```
-
-src/## 9. Deliverables
-
-├── components/     # UI components (Charts, Uploader, Settings, etc.)
-
-├── contexts/       # State management (ConfigContext, ThemeContext)* ✅ GitHub repo with clean README, screenshots, and MIT license.
-
-├── hooks/          # Custom hooks (useCSVParser, useLimits, etc.)* ✅ Working frontend demo on Cloudflare Pages or Netlify.
-
-├── utils/          # Utilities (statistics, typeInference, chartUtils)* ✅ Optional backend (FastAPI or Node) for extended functionality.
-
-├── App.tsx         # Main application component* ✅ Sample CSVs in `/samples` for testing.
-
-└── main.tsx        # Application entry point* ✅ PRD.md + copilot-instructions.md included in repo.
-
-```
-
-### Configuration System
-* **Runtime Configuration**: Settings panel with sliders, toggles, and dropdowns
-* **Environment Variables**: Support for API endpoints, default limits, privacy settings
-* **Persistent Settings**: User preferences saved to localStorage
-* **Validation**: Real-time validation with helpful error messages
-
-## 6. User Stories
-
-### Core User Journeys
-* ✅ **As a user, I can upload a CSV so I can quickly explore my data**
-* ✅ **As a user, I can see automatic field detection so I understand my data structure**
-* ✅ **As a user, I can view comprehensive statistics so I understand key metrics**
-* ✅ **As a user, I can generate multiple chart types so I can compare visualizations**
-* ✅ **As a user, I can customize my experience so I control privacy and limits**
-* ✅ **As a user, I can access the app on any device so I can work anywhere**
-
-### Advanced User Journeys
-* ✅ **As a privacy-conscious user, I can control data retention so I manage my privacy**
-* ✅ **As a power user, I can configure processing limits so I optimize performance**
-* ✅ **As a developer, I can explore sample datasets so I understand capabilities**
-* ✅ **As an accessibility user, I can navigate with keyboard so I use assistive technologies**
-
-## 7. Success Metrics
-
-### Technical Metrics (✅ Achieved)
-* ✅ **CSV upload and parsing** works for files up to 50MB with 100K+ rows
-* ✅ **4+ chart types** supported with interactive features
-* ✅ **Comprehensive KPIs** appear automatically for all numeric columns
-* ✅ **Accessibility compliance** meets WCAG 2.1 AA standards
-* ✅ **Test coverage** exceeds 80% across all components and utilities
-* ✅ **Performance** with sub-second processing for typical datasets
-* ✅ **Cross-browser compatibility** on modern browsers
-* ✅ **Mobile responsiveness** works on all screen sizes
-
-### User Experience Metrics (✅ Achieved)
-* ✅ **Intuitive interface** with drag-and-drop and clear visual feedback
-* ✅ **Helpful error messages** guide users through issues
-* ✅ **Fast loading** with optimized bundles and lazy loading
-* ✅ **Consistent theming** with light/dark mode support
-* ✅ **Privacy transparency** with clear consent and control options
-
-### Development Metrics (✅ Achieved)
-* ✅ **Clean codebase** with TypeScript strict mode and ESLint compliance
-* ✅ **Modular architecture** with reusable components and utilities
-* ✅ **Comprehensive documentation** with README, PRD, and inline comments
-* ✅ **Modern tooling** with Vite, ESLint v9, and automated testing
-
-## 8. Risks & Constraints
-
-### Technical Constraints
-* **Browser Limitations**: Large files may slow down client-side processing
-* **Memory Usage**: Very large datasets may impact browser performance
-* **API Dependencies**: Chart.js and other libraries must remain maintained
-
-### User Experience Constraints
-* **Learning Curve**: Advanced features may require user familiarization
-* **Data Quality**: Poor CSV formatting may require preprocessing
-* **Privacy Trade-offs**: Advanced features may require data processing
-
-### Development Constraints
-* **Dependency Management**: Keeping libraries updated and compatible
-* **Browser Support**: Ensuring compatibility across target browsers
-* **Performance Optimization**: Balancing features with speed
-
-## 9. Implementation Status
-
-### Completed Sections ✅
-* ✅ **Repo & Tooling**: GitHub repo, modern tooling, CI/CD setup
-* ✅ **Project Architecture**: Component structure, state management, routing
-* ✅ **CSV Ingestion & Validation**: File upload, parsing, error handling
-* ✅ **Column Type Inference**: Automatic detection, validation, statistics
-* ✅ **KPIs & Stats**: Comprehensive calculations, display components
-* ✅ **Charting Engine**: Multiple chart types, interactive features
-* ✅ **State & Persistence**: Context management, localStorage integration
-* ✅ **Testing**: Unit tests, component tests, integration tests
-* ✅ **Accessibility & UX**: WCAG compliance, responsive design, keyboard navigation
-* ✅ **Theming & Layout**: Dark/light themes, responsive grid, modern UI
-* ✅ **Samples & Demos**: Sample datasets, demo flows, user guidance
-* ✅ **Privacy & Limits**: Configuration system, privacy controls, user consent
-* ✅ **Documentation**: Comprehensive README, updated PRD, architecture docs
-
-### Quality Assurance ✅
-* ✅ **Code Quality**: ESLint v9 compliance, TypeScript strict mode
-* ✅ **Testing**: 13/13 tests passing, 80%+ coverage
-* ✅ **Performance**: Optimized builds, fast loading
-* ✅ **Accessibility**: WCAG 2.1 AA compliance verified
-* ✅ **Cross-browser**: Tested on modern browsers
-* ✅ **Mobile**: Responsive design verified
-
-## 10. Deliverables
-
-### Repository Assets ✅
-* ✅ **GitHub Repository** with clean structure and comprehensive documentation
-* ✅ **Working Frontend Demo** deployable to static hosting (Netlify/Vercel)
-* ✅ **Sample Datasets** for testing and demonstration
-* ✅ **Comprehensive Documentation** (README.md, PRD.md, architecture.md)
-* ✅ **Development Tooling** (ESLint, Prettier, TypeScript, Vitest)
-* ✅ **Optional Backend** (FastAPI/Python) for extended functionality
-
-### Production Readiness ✅
-* ✅ **Build Process**: Optimized production builds with Vite
-* ✅ **Deployment Ready**: Static hosting compatible
-* ✅ **Error Handling**: Comprehensive error boundaries and validation
-* ✅ **Performance**: Optimized for production use
-* ✅ **Security**: Client-side processing with privacy controls
-* ✅ **Monitoring**: Ready for analytics integration
-
-## 11. Future Roadmap
-
-### Phase 2 Features (Planned)
-* **Smart Chart Suggestions**: AI-powered recommendations based on data patterns
-* **LLM Integration**: Natural language insights and automated summaries
-* **Dashboard Persistence**: Cloud storage for saved dashboards
-* **Advanced Filtering**: Complex queries and data transformation
-* **Collaborative Features**: Multi-user dashboard sharing
-* **Mobile App**: React Native companion application
-
-### Technical Enhancements (Planned)
-* **WebAssembly**: Faster data processing for large datasets
-* **Service Workers**: Offline functionality and caching
-* **PWA Features**: Installable web app with push notifications
-* **Advanced Charts**: Heatmaps, treemaps, and custom visualizations
-* **Real-time Collaboration**: Live editing and commenting
-
-## 12. Conclusion
-
-CSV → Dashboard Generator has successfully evolved from a simple MVP into a comprehensive, production-ready application that demonstrates modern web development practices. The project showcases:
-
-* **Technical Excellence**: TypeScript, React 18, Vite, comprehensive testing
-* **User Experience**: Intuitive interface, accessibility compliance, responsive design
-* **Privacy & Security**: Configurable limits, data retention controls, user consent
-* **Developer Experience**: Modern tooling, clean architecture, extensive documentation
-
-The application is ready for portfolio presentation and can serve as a foundation for future enhancements in data visualization and user experience design.
+Spread Your Sheets today is a functional, frontend-only CSV exploration MVP+: upload, type inference, statistics, and charting all work client-side. It is not yet a finished, production-ready, or fully accessible product, and it has no working backend. This document intentionally separates what's real from what's planned so the relaunch proceeds on an accurate foundation.

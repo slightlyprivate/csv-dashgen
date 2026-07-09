@@ -1,394 +1,192 @@
 # Architecture Documentation
 
-## CSV → Dashboard Generator
+## Spread Your Sheets (repository: csv-dashgen)
 
-This document provides a comprehensive overview of the application architecture, design patterns, and technical implementation details.
+**Status:** Active relaunch in progress. This document was previously aspirational in places (describing folder structures, component names, and a testing pyramid that do not exist in the codebase). It has been rewritten to describe what is actually implemented today. See [docs/relaunch/CODEBASE_AUDIT.md](relaunch/CODEBASE_AUDIT.md) for the full audit this rewrite is based on.
 
 ## Table of Contents
 
-1. [System Overview](#system-overview)
-2. [Technology Stack](#technology-stack)
-3. [Application Architecture](#application-architecture)
-4. [Component Architecture](#component-architecture)
-5. [State Management](#state-management)
-6. [Data Flow](#data-flow)
-7. [Security & Privacy](#security--privacy)
-8. [Performance Considerations](#performance-considerations)
-9. [Testing Strategy](#testing-strategy)
-10. [Deployment Architecture](#deployment-architecture)
+1. [System overview](#system-overview)
+2. [Technology stack](#technology-stack)
+3. [Directory structure (actual)](#directory-structure-actual)
+4. [Component hierarchy (actual)](#component-hierarchy-actual)
+5. [State management](#state-management)
+6. [Data flow](#data-flow)
+7. [Security & privacy](#security--privacy)
+8. [Performance](#performance)
+9. [Testing](#testing)
+10. [Deployment](#deployment)
 
-## System Overview
+## System overview
 
-CSV → Dashboard Generator is a modern web application built with React and TypeScript that provides instant data visualization from CSV files. The application features:
+Spread Your Sheets is a client-side React + TypeScript application that parses, profiles, and charts CSV/TSV files entirely in the browser. There is no backend in the current build. The current relaunch direction is **frontend-only, browser-local processing**.
 
-- **Client-side processing** for privacy and performance
-- **Modular architecture** with clear separation of concerns
-- **Comprehensive testing** with high coverage
-- **Accessibility compliance** (WCAG 2.1 AA)
-- **Responsive design** for all devices
-- **Privacy-focused** with configurable data controls
+## Technology stack
 
-## Technology Stack
+### Frontend (implemented)
 
-### Core Framework
-- **React 18** - Modern React with concurrent features and hooks
-- **TypeScript** - Strict type checking and enhanced developer experience
-- **Vite** - Fast build tool with hot reload and optimized production builds
+- React 18
+- TypeScript (strict mode)
+- Vite
+- Tailwind CSS v4
+- Chart.js + react-chartjs-2
+- PapaParse
 
-### UI & Styling
-- **Tailwind CSS v4** - Utility-first CSS framework with dark mode support
-- **Chart.js + react-chartjs-2** - Powerful charting library with React integration
-- **Custom CSS** - Component-specific styling and animations
+### Development tools (implemented)
 
-### Data Processing
-- **Papaparse** - Robust CSV parsing with error handling
-- **Custom Utilities** - Statistics calculations, type inference, data validation
+- ESLint v9 (flat config)
+- Prettier
+- Vitest + React Testing Library
 
-### Development Tools
-- **ESLint v9** - Modern linting with flat configuration
-- **Prettier** - Code formatting for consistency
-- **Vitest** - Fast unit testing framework
-- **React Testing Library** - Component testing utilities
-- **TypeScript Compiler** - Type checking and compilation
+### Backend (not implemented)
+An empty `api-py/` folder exists as a placeholder for a possible future FastAPI backend. It contains no code. There is no Node/Hono backend in this repository. Do not describe a backend as implemented in any public-facing material until one actually exists.
 
-### Optional Backend
-- **FastAPI** (Python) - High-performance API framework
-- **Hono** (Node.js) - Lightweight API for edge computing
+## Directory structure (actual)
 
-## Application Architecture
-
-### High-Level Architecture
-
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   User Interface │    │  State Management│    │  Data Processing│
-│                 │    │                 │    │                 │
-│  - Components   │◄──►│  - Contexts     │◄──►│  - Parsers      │
-│  - Layout       │    │  - Hooks        │    │  - Validators   │
-│  - Themes       │    │  - Persistence  │    │  - Transformers │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         └───────────────────────┼───────────────────────┘
-                                 │
-                    ┌─────────────────┐
-                    │  External APIs  │
-                    │                 │
-                    │  - Chart.js     │
-                    │  - localStorage │
-                    │  - File API     │
-                    └─────────────────┘
-```
-
-### Directory Structure
-
-```
-src/
-├── components/           # UI components
-│   ├── common/          # Shared components
-│   ├── layout/          # Layout components
-│   └── features/        # Feature-specific components
-├── contexts/            # React contexts for state
-├── hooks/               # Custom React hooks
-├── utils/               # Utility functions
-├── types/               # TypeScript type definitions
-├── constants/           # Application constants
-└── styles/              # Global styles and themes
+```text
+web/src/
+├── components/
+│   ├── Uploader.tsx           # Drag-and-drop / file input upload
+│   ├── SampleLoader.tsx       # Sample dataset loader
+│   ├── DataPreview.tsx        # Sortable/filterable/paginated table + type editor
+│   ├── ColumnTypeEditor.tsx   # Column type override control
+│   ├── StatsPanel.tsx         # Per-column statistics display
+│   ├── ChartContainer.tsx     # Chart configuration + rendering wrapper
+│   ├── Chart.tsx              # Chart.js rendering
+│   ├── ChartSelector.tsx      # Chart type/column selection UI
+│   ├── SidebarLayout.tsx      # App shell/layout
+│   ├── Settings.tsx           # Settings modal
+│   ├── PrivacyNotice.tsx      # Privacy notice modal
+│   ├── ThemeToggle.tsx        # Light/dark/system toggle
+│   ├── ToastContainer.tsx     # Toast notifications
+│   ├── Charts.tsx             # Empty file — not in use (cleanup planned)
+│   ├── FieldPicker.tsx        # Empty file — not in use (cleanup planned)
+│   └── Stats.tsx              # Empty file — not in use (cleanup planned)
+├── contexts/
+│   ├── ConfigContext.tsx      # App configuration/limits
+│   ├── ThemeContext.tsx       # Theme state
+│   └── ToastContext.tsx       # Toast notification state
+├── hooks/
+│   ├── useConfig.ts
+│   ├── useLimits.ts
+│   ├── usePersistentState.ts  # Dataset/column-type/session persistence
+│   ├── useTheme.ts
+│   └── useToast.ts
+├── utils/
+│   ├── csvParser.ts           # Parsing + validation (PapaParse-based)
+│   ├── typeInference.ts       # Column type detection
+│   ├── statistics.ts          # Numeric/categorical stats
+│   ├── chartUtils.ts          # Chart data shaping
+│   └── storage.ts             # localStorage helpers
+├── types/index.ts             # Shared TypeScript types
+├── constants/index.ts         # Shared constants/defaults
+├── App.tsx                    # Main application component
+└── main.tsx                   # Entry point
 ```
 
-## Component Architecture
+Three component files (`Charts.tsx`, `FieldPicker.tsx`, `Stats.tsx`) are currently empty and unused — leftover drift from earlier iterations. They are not referenced by `App.tsx` or any other active component. Removing them is planned for a later architecture-cleanup pass, not this documentation pass.
 
-### Component Hierarchy
+## Component hierarchy (actual)
 
-```
+Based on `App.tsx`:
+
+```text
 App
-├── Header
-│   ├── Logo
-│   ├── Navigation
-│   └── SettingsButton
-├── MainContent
-│   ├── Uploader
-│   ├── DataPreview
-│   │   ├── FieldSelector
-│   │   └── DataTable
-│   ├── Dashboard
-│   │   ├── StatsPanel
-│   │   │   ├── KPICard
-│   │   │   └── SummaryStats
-│   │   ├── ChartsPanel
-│   │   │   ├── ChartControls
-│   │   │   ├── LineChart
-│   │   │   ├── BarChart
-│   │   │   ├── PieChart
-│   │   │   └── ScatterChart
-│   │   └── ExportPanel
-│   └── SettingsPanel
-│       ├── PrivacySettings
-│       ├── LimitSettings
-│       └── ThemeSettings
-└── Footer
+└── ToastProvider
+    └── AppContent
+        ├── SidebarLayout
+        │   ├── header: title + Privacy/Settings buttons
+        │   ├── sidebar: StatsPanel (mobile-only slot)
+        │   └── main:
+        │       ├── (no dataset) Uploader, SampleLoader
+        │       └── (dataset loaded) dataset info bar, DataPreview,
+        │           StatsPanel, ChartContainer
+        ├── Settings (modal)
+        ├── PrivacyNotice (modal)
+        └── ToastContainer
 ```
 
-### Component Patterns
+There is no separate `Header`/`Footer`/`Dashboard` component tree, no `ExportPanel`, and no dedicated `LineChart`/`BarChart`/`PieChart`/`ScatterChart` components — chart type switching happens inside `Chart.tsx`/`ChartContainer.tsx`.
 
-#### 1. Container/Presentational Pattern
-- **Container Components**: Handle data fetching and state management
-- **Presentational Components**: Focus on UI rendering and user interaction
+## State management
 
-#### 2. Custom Hooks Pattern
-- **useCSVParser**: CSV parsing logic
-- **useChartGenerator**: Chart creation and configuration
-- **useLocalStorage**: Data persistence
-- **useLimits**: Configuration limits management
+- **Context**: `ConfigContext` (limits/config), `ThemeContext` (theme), `ToastContext` (notifications)
+- **Local component state**: `useState`/`useMemo` in `App.tsx` and individual components
+- **Persistent state**: `usePersistentState.ts` exposes `usePersistentDataset`, `usePersistentColumnTypes`, and `useSessionManager`, backed by `localStorage`
 
-#### 3. Context Pattern
-- **ConfigContext**: Application configuration and limits
-- **ThemeContext**: Theme management and preferences
+Not every configuration toggle exposed in the Settings UI is currently wired into runtime behavior — see the README's "Partial / in-progress capabilities" section for specifics.
 
-### Component Communication
+## Data flow
 
-Components communicate through:
-- **Props**: Parent-child data flow
-- **Context**: Global state access
-- **Custom Events**: Cross-component communication
-- **Callback Functions**: Child-to-parent communication
+CSV processing pipeline, as implemented:
 
-## State Management
-
-### State Architecture
-
-```
-┌─────────────────┐
-│   Global State  │
-├─────────────────┤
-│  ConfigContext  │  - Application limits
-│  ThemeContext   │  - Theme preferences
-└─────────────────┘
-         │
-         ▼
-┌─────────────────┐
-│ Component State │
-├─────────────────┤
-│  Local State    │  - Component-specific
-│  Derived State  │  - Computed values
-└─────────────────┘
+```text
+Upload or sample selection
+        │
+        ▼
+PapaParse parse (csvParser.ts)
+        │
+        ▼
+Validation (type, size, rows, columns, duplicate headers)
+        │
+        ▼
+Dataset construction
+        │
+        ▼
+Type inference (typeInference.ts) — with manual override in the UI
+        │
+        ▼
+Statistics (statistics.ts) — computed as derived state on each dataset/type change
+        │
+        ▼
+Chart data shaping (chartUtils.ts) → Chart.js rendering
 ```
 
-### State Management Strategy
+All of this runs synchronously on the main thread; there is no web worker or streaming pipeline today.
 
-#### 1. Local State (useState)
-- Component-specific state
-- Form inputs and UI state
-- Temporary state that doesn't need persistence
+## Security & privacy
 
-#### 2. Context State (useContext)
-- Global application state
-- Shared state between components
-- Configuration and preferences
+### What's true today
 
-#### 3. Persistent State (localStorage)
-- User preferences
-- Application configuration
-- Cached data and datasets
+- All processing is client-side; no data is sent to a server (there is no server)
+- A privacy notice modal is shown on first load
+- Configurable file size/row limits exist and are enforced during validation
 
-### State Flow
+### What's not true yet — do not claim these
 
-1. **User Action** → Component Event
-2. **Event Handler** → State Update
-3. **State Change** → Re-render
-4. **Side Effects** → Data Persistence/API Calls
+- There is no real telemetry/analytics pipeline for the privacy settings to govern; the privacy/analytics toggles are largely UI/configuration-level today
+- No formal security review or input-sanitization audit has been performed beyond basic file/type/size validation
 
-## Data Flow
+## Performance
 
-### CSV Processing Pipeline
+- CSV parsing, type inference, filtering, sorting, and statistics all run on the main thread over the full in-memory row array
+- No virtualization, chunked parsing, or web worker offloading exists today
+- This is acceptable for small/medium files but is a known risk for very large datasets (see [docs/relaunch/CODEBASE_AUDIT.md](relaunch/CODEBASE_AUDIT.md)), despite configurable size/row limits
 
+## Testing
+
+Actual current coverage:
+
+- Unit tests: CSV parsing (`csvParser.test.ts`)
+- Component test: basic `Uploader` render test (`Uploader.test.tsx`)
+
+Not present:
+
+- Broader component tests (`DataPreview`, `Chart`, `StatsPanel`, `Settings`, etc.)
+- Integration tests across the full upload → preview → stats → chart → persistence flow
+- End-to-end tests
+- A coverage threshold enforced in CI
+
+Do not describe this as "comprehensive testing" or claim a specific coverage percentage — the CI pipeline runs lint/build/test, but does not gate on coverage.
+
+## Deployment
+
+**Current state:** frontend-only static build (`npm run build` from `web/`), no backend dependency, verified working locally and in CI.
+
+**Planned relaunch deployment:** The intended relaunch deployment is a static frontend build served from slightly-server behind Cloudflare Tunnel, at `spreadyoursheets.slightlyprivate.com`. This repository does not yet contain the operational artifacts for that (no Dockerfile, reverse-proxy config, systemd unit, or health-check convention) — those are tracked as a later relaunch phase, not part of this documentation pass.
+
+```text
+Git push → CI: lint → build → test  (implemented)
+Local/CI build → web/dist           (implemented)
+web/dist → static server → Cloudflare Tunnel → spreadyoursheets.slightlyprivate.com  (planned, not yet wired up)
 ```
-CSV File → Parse → Validate → Transform → Visualize
-    │        │        │          │          │
-    ▼        ▼        ▼          ▼          ▼
-Upload   Papaparse  Type      Statistics  Chart.js
-         Config    Inference  Calculations Config
-```
-
-### Data Processing Steps
-
-1. **File Upload**: Drag-and-drop or file selection
-2. **Parsing**: Papaparse processes CSV with error handling
-3. **Validation**: Check file size, row count, data quality
-4. **Type Inference**: Automatic detection of data types
-5. **Statistics**: Calculate KPIs and summary metrics
-6. **Visualization**: Generate charts based on data types
-
-### Error Handling
-
-```
-┌─────────────────┐
-│   Error Types   │
-├─────────────────┤
-│  Parse Errors   │  - Invalid CSV format
-│  Size Errors    │  - File too large
-│  Type Errors    │  - Data type mismatches
-│  Network Errors │  - API failures
-└─────────────────┘
-```
-
-## Security & Privacy
-
-### Privacy-First Design
-
-#### Data Processing
-- **Client-side only**: No data sent to external servers
-- **No tracking**: No analytics without explicit consent
-- **Data retention**: Configurable data cleanup policies
-- **Export controls**: User controls over data export
-
-#### Security Measures
-- **Input validation**: Sanitize all user inputs
-- **File type checking**: Validate CSV files before processing
-- **Size limits**: Prevent memory exhaustion attacks
-- **Error boundaries**: Prevent application crashes
-
-### Privacy Controls
-
-```
-┌─────────────────┐
-│ Privacy Settings│
-├─────────────────┤
-│  Data Retention │  - Auto-cleanup policies
-│  Usage Tracking │  - Analytics opt-in/opt-out
-│  Data Export    │  - User-controlled exports
-│  Consent Mgmt   │  - Privacy notice and consent
-└─────────────────┘
-```
-
-## Performance Considerations
-
-### Optimization Strategies
-
-#### 1. Bundle Optimization
-- **Code splitting**: Lazy load components
-- **Tree shaking**: Remove unused code
-- **Minification**: Reduce bundle size
-- **Compression**: Gzip compression for assets
-
-#### 2. Runtime Performance
-- **Memoization**: React.memo for expensive components
-- **Virtualization**: For large datasets
-- **Debouncing**: For user input handling
-- **Caching**: localStorage for computed results
-
-#### 3. Memory Management
-- **Data cleanup**: Remove unused data from memory
-- **Chunked processing**: Process large files in chunks
-- **Garbage collection**: Help browser GC with cleanup
-
-### Performance Metrics
-
-- **First Contentful Paint**: < 1.5s
-- **Largest Contentful Paint**: < 2.5s
-- **First Input Delay**: < 100ms
-- **Bundle Size**: < 500KB (gzipped)
-
-## Testing Strategy
-
-### Testing Pyramid
-
-```
-┌─────────────────┐
-│   E2E Tests     │  ← User journey tests
-│   (Cypress)     │
-├─────────────────┤
-│ Integration     │  ← Component interaction
-│   Tests         │
-├─────────────────┤
-│   Unit Tests    │  ← Individual functions
-│   (Vitest)      │
-└─────────────────┘
-```
-
-### Test Categories
-
-#### 1. Unit Tests
-- **Utility functions**: Statistics, type inference, validation
-- **Custom hooks**: State management, data processing
-- **Pure components**: Presentational components
-
-#### 2. Integration Tests
-- **Component integration**: Parent-child component interaction
-- **Hook integration**: Custom hook behavior with components
-- **Context integration**: State management across components
-
-#### 3. End-to-End Tests
-- **User workflows**: Complete user journeys
-- **Cross-browser**: Compatibility testing
-- **Accessibility**: Screen reader and keyboard navigation
-
-### Test Coverage Goals
-
-- **Statements**: > 80%
-- **Branches**: > 75%
-- **Functions**: > 85%
-- **Lines**: > 80%
-
-## Deployment Architecture
-
-### Frontend Deployment
-
-#### Static Hosting (Recommended)
-```
-User → CDN (Netlify/Vercel) → Static Files
-```
-
-#### Benefits
-- **Fast deployment**: Instant updates
-- **Global CDN**: Fast content delivery
-- **SSL included**: Automatic HTTPS
-- **Scalable**: Handle high traffic
-
-### Backend Deployment (Optional)
-
-#### API Architecture
-```
-User → Frontend → API Gateway → Backend Service
-```
-
-#### Deployment Options
-- **Serverless**: AWS Lambda, Vercel Functions
-- **Container**: Docker with Kubernetes
-- **Traditional**: VPS with process manager
-
-### CI/CD Pipeline
-
-```
-Git Push → Build → Test → Lint → Deploy
-    │        │       │       │       │
-    ▼        ▼       ▼       ▼       ▼
-GitHub   Vite     Vitest  ESLint  Netlify
-Actions  Build    Tests   Check   Deploy
-```
-
-### Environment Configuration
-
-#### Development
-- Hot reload enabled
-- Source maps for debugging
-- Development API endpoints
-- Mock data for testing
-
-#### Production
-- Optimized builds
-- Minified bundles
-- Production API endpoints
-- Error tracking enabled
-
-## Conclusion
-
-This architecture provides a solid foundation for a modern, scalable web application with:
-
-- **Maintainable codebase** through modular design
-- **Excellent user experience** with fast performance
-- **Privacy-focused** data handling
-- **Comprehensive testing** for reliability
-- **Accessibility compliance** for inclusivity
-- **Deployment flexibility** for different hosting environments
-
-The architecture is designed to be extensible and can easily accommodate future enhancements such as real-time collaboration, advanced analytics, and mobile applications.
