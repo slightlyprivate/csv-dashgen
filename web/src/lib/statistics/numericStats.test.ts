@@ -12,6 +12,8 @@ describe('calculateNumericStats', () => {
     expect(stats.min).toBe(10)
     expect(stats.max).toBe(50)
     expect(stats.stdDev).toBeCloseTo(14.142, 2)
+    expect(stats.q1).toBe(20)
+    expect(stats.q3).toBe(40)
   })
 
   it('averages the two middle values for an even count', () => {
@@ -42,6 +44,8 @@ describe('calculateNumericStats', () => {
       max: 0,
       stdDev: 0,
       variance: 0,
+      q1: 0,
+      q3: 0,
     })
   })
 })

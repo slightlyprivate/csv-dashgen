@@ -74,7 +74,7 @@ The scope-cleanup pass removed dead files (`Charts.tsx`, `FieldPicker.tsx`, `Sta
 
 - [x] Focused unit tests for every `lib/` data-core module: CSV/TSV parsing, file/dataset validation, dataset construction, type inference, column quality/profiling, numeric/categorical statistics, chart config suggestion, chart data building, chart export filename, dataset/preferences storage
 - [x] Basic component test for `Uploader`
-- [ ] Broader component tests (`DataPreview`, `Chart`, `StatsPanel`, `Settings`, etc.)
+- [ ] Broader component tests (`DataPreview`, `Chart`, `ColumnProfile`, `Settings`, etc.)
 - [ ] Integration test: upload → preview → stats → chart → persistence
 - [ ] End-to-end tests
 - [ ] Coverage threshold enforced in CI (tests currently run, but there is no enforced coverage gate)
@@ -85,7 +85,7 @@ The scope-cleanup pass removed dead files (`Charts.tsx`, `FieldPicker.tsx`, `Sta
 - [x] Labels, roles, and ARIA attributes on most controls
 - [x] Color contrast considered in the design system
 - [x] Focus-visible styling
-- [ ] Modal focus trap / escape-key handling (settings, privacy notice)
+- [x] Modal focus trap / escape-key handling (settings, privacy, help — shared `Modal` primitive)
 - [ ] Dedicated accessibility test suite
 - [ ] Formal WCAG 2.1 AA verification (not currently claimed as compliant)
 

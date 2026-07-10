@@ -12,6 +12,12 @@ Planned public URL: `spreadyoursheets.slightlyprivate.com`
 
 ![Dashboard Preview](docs/dashboard.png)
 
+> **Note:** `docs/dashboard.png` and `docs/upload.png` predate the
+> `feature/signature-ux` visual redesign (new sidebar navigation, quick-read
+> summary, chart-idea cards, column checkup, restyled preview table, amber/dark
+> theme). They're kept as historical reference until refreshed screenshots are
+> captured in the release branch — see [`docs/screenshots.md`](docs/screenshots.md).
+
 ## Current capabilities
 
 Everything below runs today, client-side, in the app under [`web/`](web):
@@ -19,13 +25,16 @@ Everything below runs today, client-side, in the app under [`web/`](web):
 - Drag-and-drop CSV/TSV upload with validation (file type, size, row count, column count, duplicate headers)
 - Sample dataset loading (see [`samples/`](samples))
 - Automatic column type inference (number, string, date, boolean, unknown) with manual override in the UI
-- Data preview table with sorting, filtering, pagination, and inline type editing
-- Per-column statistics panel (numeric and categorical summaries)
-- Chart generation: line, bar, pie, and scatter
+- A "quick read" dataset overview (row/column counts, type breakdown, missing-value summary, date range, top category, and a data-quality note) shown before the detailed table
+- Ranked chart suggestions (trend, compare, relationship, distribution) with one-click chart creation, alongside manual chart configuration
+- Data preview table with sorting, filtering, pagination, sticky header, and inline type editing
+- Per-column inspector ("Column checkup") with quality stats, a distribution histogram for numeric columns, quartiles, top values for categorical columns, and date range for date columns
+- Chart generation: line, bar, pie, scatter, and a numeric distribution (histogram) view
 - Chart export as a PNG image
-- Light/dark/system theme toggle
+- Light/dark/system theme toggle, including a proper class-based dark mode (previously the `dark:` utility classes only responded to OS-level preference, not the in-app toggle)
 - Local persistence of dataset, chart config, and column types via `localStorage`, gated by a real "Enable Data Persistence" setting
-- Privacy notice and settings modal (Privacy & Data tab is a truthful, static info panel — no fake toggles)
+- Privacy notice and settings modals — truthful, static info panels with no fake toggles; no modal-first privacy gate on load
+- Sidebar section navigation (Overview/Columns/Charts/Data) with scroll-spy highlighting
 - CI pipeline (lint, build, test) on push/PR
 
 All processing happens in the browser. There is no backend in the current build or repo, and no data leaves the device.
@@ -34,8 +43,8 @@ All processing happens in the browser. There is no backend in the current build 
 
 These exist in some form but are not finished:
 
-- **Accessibility** — good baseline practices (labeled controls, ARIA attributes, focus-visible styling), but no focus trap/escape handling in modals and no dedicated accessibility test suite. This is **not** a certified WCAG 2.1 AA-compliant implementation
-- **Test coverage** — narrow unit tests for parsing and a basic uploader render test; no integration or end-to-end coverage of the full upload → preview → chart flow
+- **Accessibility** — good baseline practices (labeled controls, ARIA attributes, focus-visible styling), plus a focus trap and Escape-to-close on all modals (Settings, Privacy, Help), but still no dedicated accessibility test suite. This is **not** a certified WCAG 2.1 AA-compliant implementation
+- **Test coverage** — unit tests for parsing, statistics, chart suggestion/rendering logic, and a basic uploader render test; no integration or end-to-end coverage of the full upload → preview → chart flow
 
 ## Planned / future capabilities
 
@@ -45,7 +54,7 @@ Not implemented yet — tracked as relaunch roadmap items, not current features:
 - Additional chart export formats (for example SVG)
 - Optional backend processing for larger files (no backend scaffolding exists in this repo today — it would be built fresh from a real requirement)
 - Self-host deployment packaging (Docker/Caddy/Nginx config) for the target infrastructure
-- Smart chart suggestions, natural-language insights, saved dashboards, and other longer-term ideas (see Roadmap below)
+- Natural-language data summaries, saved dashboards, and other longer-term ideas (see Roadmap below)
 
 ## Tech stack
 
@@ -160,7 +169,6 @@ npm run build
 
 Longer-term ideas, not yet started:
 
-- Smart chart suggestions based on data patterns
 - Natural-language data summaries
 - Saved dashboards with cloud storage
 - Advanced filtering and derived columns

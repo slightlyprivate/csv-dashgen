@@ -7,6 +7,8 @@ export interface NumericStats {
   max: number
   stdDev: number
   variance: number
+  q1: number
+  q3: number
 }
 
 const EMPTY_NUMERIC_STATS: NumericStats = {
@@ -18,6 +20,22 @@ const EMPTY_NUMERIC_STATS: NumericStats = {
   max: 0,
   stdDev: 0,
   variance: 0,
+  q1: 0,
+  q3: 0,
+}
+
+/**
+ * Linear-interpolation percentile over an already-sorted array (the
+ * "inclusive"/Excel-style method).
+ */
+function percentile(sorted: number[], p: number): number {
+  if (sorted.length === 1) return sorted[0]
+  const index = p * (sorted.length - 1)
+  const lower = Math.floor(index)
+  const upper = Math.ceil(index)
+  if (lower === upper) return sorted[lower]
+  const weight = index - lower
+  return sorted[lower] + (sorted[upper] - sorted[lower]) * weight
 }
 
 /**
@@ -60,5 +78,8 @@ export function calculateNumericStats(values: unknown[]): NumericStats {
     numericValues.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0) / count
   const stdDev = Math.sqrt(variance)
 
-  return { count, sum, mean, median, min, max, stdDev, variance }
+  const q1 = percentile(numericValues, 0.25)
+  const q3 = percentile(numericValues, 0.75)
+
+  return { count, sum, mean, median, min, max, stdDev, variance, q1, q3 }
 }

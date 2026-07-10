@@ -122,4 +122,43 @@ describe('generateChartData', () => {
       { x: 3, y: 4 },
     ])
   })
+
+  it('builds histogram data by binning a single numeric column', () => {
+    const dataset = makeDataset({
+      headers: ['amount'],
+      columnTypes: { amount: 'number' },
+      rows: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((amount) => ({ amount })),
+    })
+    const config: ChartConfig = {
+      type: 'histogram',
+      xField: 'amount',
+      yField: 'amount',
+    }
+
+    const data = generateChartData(dataset, config)
+
+    expect(data?.labels.length).toBeGreaterThan(0)
+    expect(
+      (data?.datasets[0] as { data: number[] }).data.reduce((a, b) => a + b, 0)
+    ).toBe(10)
+  })
+
+  it('uses the provided color palette for series colors', () => {
+    const dataset = makeDataset({
+      headers: ['category', 'sales'],
+      columnTypes: { category: 'string', sales: 'number' },
+      rows: [{ category: 'A', sales: 10 }],
+    })
+    const config: ChartConfig = {
+      type: 'bar',
+      xField: 'category',
+      yField: 'sales',
+    }
+
+    const data = generateChartData(dataset, config, ['#000000'])
+
+    expect(
+      (data?.datasets[0] as { backgroundColor: string }).backgroundColor
+    ).toBe('#000000')
+  })
 })

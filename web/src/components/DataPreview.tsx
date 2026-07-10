@@ -1,6 +1,8 @@
 import { useMemo, useState, useEffect } from 'react'
 import { Dataset, ColumnType } from '../types'
 import ColumnTypeEditor from './ColumnTypeEditor'
+import EmptyState from './ui/EmptyState'
+import { SearchIcon } from './icons'
 
 interface DataPreviewProps {
   dataset: Dataset
@@ -8,26 +10,10 @@ interface DataPreviewProps {
   maxRows?: number
 }
 
-const COLUMN_TYPE_COLORS: Record<ColumnType, string> = {
-  string: 'bg-gray-100 text-gray-800',
-  number: 'bg-blue-100 text-blue-800',
-  date: 'bg-green-100 text-green-800',
-  boolean: 'bg-purple-100 text-purple-800',
-  unknown: 'bg-red-100 text-red-800',
-}
-
-const COLUMN_TYPE_LABELS: Record<ColumnType, string> = {
-  string: 'Text',
-  number: 'Number',
-  date: 'Date',
-  boolean: 'Boolean',
-  unknown: 'Unknown',
-}
-
 export default function DataPreview({
   dataset,
   onColumnTypeChange,
-  maxRows = 50,
+  maxRows = 25,
 }: DataPreviewProps) {
   // Sorting state
   const [sortColumn, setSortColumn] = useState<string | null>(null)
@@ -218,7 +204,7 @@ export default function DataPreview({
     if (sortColumn !== header)
       return (
         <svg
-          className="ml-1 h-3 w-3 text-gray-400"
+          className="ml-1 h-3 w-3 text-ink-300 dark:text-ink-600"
           viewBox="0 0 20 20"
           fill="currentColor"
           aria-hidden="true"
@@ -228,7 +214,7 @@ export default function DataPreview({
       )
     return sortDirection === 'asc' ? (
       <svg
-        className="ml-1 h-3 w-3 text-gray-600"
+        className="ml-1 h-3 w-3 text-brand-600 dark:text-brand-400"
         viewBox="0 0 20 20"
         fill="currentColor"
         aria-hidden="true"
@@ -237,7 +223,7 @@ export default function DataPreview({
       </svg>
     ) : (
       <svg
-        className="ml-1 h-3 w-3 text-gray-600"
+        className="ml-1 h-3 w-3 text-brand-600 dark:text-brand-400"
         viewBox="0 0 20 20"
         fill="currentColor"
         aria-hidden="true"
@@ -247,260 +233,279 @@ export default function DataPreview({
     )
   }
 
+  const activeFilterCount = Object.keys(filters).length
+
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-      <div className="px-6 py-4 border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium text-gray-900">Data Preview</h3>
-          <div className="text-sm text-gray-500">
-            {dataset.rows.length} rows × {dataset.headers.length} columns
-          </div>
-        </div>
-        <div className="mt-3 flex items-center justify-between">
-          <p className="text-sm text-gray-600">
-            Showing{' '}
-            {pageSize === 'all'
-              ? `1–${totalRows}`
-              : `${(currentPage - 1) * (pageSize as number) + 1}–${Math.min(
-                  currentPage * (pageSize as number),
-                  totalRows
-                )}`}{' '}
-            of {totalRows}
+    <div>
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 className="text-sm font-semibold text-ink-900 dark:text-ink-50">
+            Data preview
+          </h3>
+          <p className="text-xs text-ink-500 dark:text-ink-400">
+            {totalRows.toLocaleString()} row{totalRows === 1 ? '' : 's'}
+            {activeFilterCount > 0 &&
+              ` (filtered from ${dataset.rows.length.toLocaleString()})`}
           </p>
-          <div className="flex items-center space-x-3">
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+              showFilters
+                ? 'border-brand-300 bg-brand-50 text-brand-700 dark:border-brand-800 dark:bg-brand-950/40 dark:text-brand-400'
+                : 'border-ink-200 bg-white text-ink-600 hover:bg-ink-50 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-300 dark:hover:bg-ink-800'
+            }`}
+            onClick={() => setShowFilters((s) => !s)}
+            aria-pressed={showFilters}
+          >
+            Filter{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
+          </button>
+          {activeFilterCount > 0 && (
             <button
               type="button"
-              className="px-3 py-1.5 text-sm border border-gray-300 rounded-md bg-white text-gray-700"
-              onClick={() => setShowFilters((s) => !s)}
-              aria-pressed={showFilters}
+              className="rounded-lg border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-600 hover:bg-ink-50 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-300 dark:hover:bg-ink-800"
+              onClick={() => setFilters({})}
             >
-              {showFilters ? 'Hide Filters' : 'Show Filters'}
+              Clear
             </button>
-            {Object.keys(filters).length > 0 && (
-              <button
-                type="button"
-                className="px-3 py-1.5 text-sm border border-gray-300 rounded-md bg-white text-gray-700"
-                onClick={() => setFilters({})}
-              >
-                Clear Filters
-              </button>
-            )}
-            <label className="text-sm text-gray-600">Rows per page:</label>
-            <select
-              className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={pageSize === 'all' ? 'all' : String(pageSize)}
-              onChange={(e) => {
-                const val = e.target.value
-                setPageSize(val === 'all' ? 'all' : parseInt(val, 10))
-                setCurrentPage(1)
-              }}
-            >
-              {[10, 25, 50, 100].map((n) => (
-                <option key={n} value={n}>
-                  {n}
-                </option>
-              ))}
-              <option value="all">All</option>
-            </select>
-          </div>
+          )}
+          <select
+            aria-label="Rows per page"
+            className="rounded-lg border border-ink-200 bg-white px-2 py-1.5 text-xs text-ink-700 focus:border-brand-500 focus:outline-none dark:border-ink-700 dark:bg-ink-900 dark:text-ink-200"
+            value={pageSize === 'all' ? 'all' : String(pageSize)}
+            onChange={(e) => {
+              const val = e.target.value
+              setPageSize(val === 'all' ? 'all' : parseInt(val, 10))
+              setCurrentPage(1)
+            }}
+          >
+            {[10, 25, 50, 100].map((n) => (
+              <option key={n} value={n}>
+                {n} / page
+              </option>
+            ))}
+            <option value="all">All rows</option>
+          </select>
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              {dataset.headers.map((header, index) => (
-                <th
-                  key={index}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  <div className="flex flex-col space-y-1">
-                    <button
-                      type="button"
-                      onClick={() => handleHeaderClick(header)}
-                      className="inline-flex items-center font-semibold text-gray-900 hover:text-blue-700 focus:outline-none"
-                      title={`Sort by ${header}`}
-                    >
-                      {header}
-                      {sortIcon(header)}
-                    </button>
-                    <div className="flex items-center space-x-2">
-                      {onColumnTypeChange ? (
+      {totalRows === 0 ? (
+        <EmptyState
+          icon={<SearchIcon className="h-5 w-5" />}
+          title="No rows match your filters"
+          description="Try clearing filters to see the full dataset again."
+          action={
+            activeFilterCount > 0 && (
+              <button
+                type="button"
+                onClick={() => setFilters({})}
+                className="text-sm font-medium text-brand-700 hover:underline dark:text-brand-400"
+              >
+                Clear filters
+              </button>
+            )
+          }
+        />
+      ) : (
+        <div className="custom-scrollbar overflow-x-auto rounded-xl border border-ink-200 dark:border-ink-800">
+          <table className="min-w-full divide-y divide-ink-200 dark:divide-ink-800">
+            <thead className="sticky top-0 z-10 bg-ink-50 dark:bg-ink-900">
+              <tr>
+                {dataset.headers.map((header, index) => (
+                  <th
+                    key={index}
+                    className="whitespace-nowrap px-4 py-2.5 text-left text-xs font-medium text-ink-500 dark:text-ink-400"
+                  >
+                    <div className="flex flex-col gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => handleHeaderClick(header)}
+                        className="inline-flex items-center font-semibold text-ink-800 hover:text-brand-700 focus:outline-none dark:text-ink-100 dark:hover:text-brand-400"
+                        title={`Sort by ${header}`}
+                      >
+                        {header}
+                        {sortIcon(header)}
+                      </button>
+                      {onColumnTypeChange && (
                         <ColumnTypeEditor
                           columnName={header}
                           currentType={dataset.columnTypes[header]}
                           onTypeChange={onColumnTypeChange}
                         />
-                      ) : (
-                        <span
-                          className={`
-                          inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
-                          ${COLUMN_TYPE_COLORS[dataset.columnTypes[header]]}
-                        `}
-                        >
-                          {COLUMN_TYPE_LABELS[dataset.columnTypes[header]]}
-                        </span>
                       )}
                     </div>
-                  </div>
-                </th>
-              ))}
-            </tr>
-            {showFilters && (
-              <tr>
-                {dataset.headers.map((header, idx) => {
-                  const type = dataset.columnTypes[header]
-                  const f = filters[header]
-                  return (
-                    <th key={idx} className="px-6 pb-3 pt-0 text-left">
-                      {type === 'number' ? (
-                        <div className="flex items-center space-x-2">
-                          <input
-                            type="number"
-                            className="w-24 border border-gray-300 rounded-md px-2 py-1 text-sm"
-                            placeholder="min"
-                            value={(f && f.kind === 'number' && f.min) || ''}
-                            onChange={(e) =>
-                              setFilters((prev) => ({
-                                ...prev,
-                                [header]: {
-                                  kind: 'number',
-                                  min: e.target.value,
-                                  max:
-                                    f && f.kind === 'number'
-                                      ? f.max
-                                      : undefined,
-                                },
-                              }))
-                            }
-                          />
-                          <input
-                            type="number"
-                            className="w-24 border border-gray-300 rounded-md px-2 py-1 text-sm"
-                            placeholder="max"
-                            value={(f && f.kind === 'number' && f.max) || ''}
-                            onChange={(e) =>
-                              setFilters((prev) => ({
-                                ...prev,
-                                [header]: {
-                                  kind: 'number',
-                                  min:
-                                    f && f.kind === 'number'
-                                      ? f.min
-                                      : undefined,
-                                  max: e.target.value,
-                                },
-                              }))
-                            }
-                          />
-                        </div>
-                      ) : type === 'date' ? (
-                        <div className="flex items-center space-x-2">
-                          <input
-                            type="date"
-                            className="border border-gray-300 rounded-md px-2 py-1 text-sm"
-                            value={(f && f.kind === 'date' && f.from) || ''}
-                            onChange={(e) =>
-                              setFilters((prev) => ({
-                                ...prev,
-                                [header]: {
-                                  kind: 'date',
-                                  from: e.target.value,
-                                  to: f && f.kind === 'date' ? f.to : undefined,
-                                },
-                              }))
-                            }
-                          />
-                          <input
-                            type="date"
-                            className="border border-gray-300 rounded-md px-2 py-1 text-sm"
-                            value={(f && f.kind === 'date' && f.to) || ''}
-                            onChange={(e) =>
-                              setFilters((prev) => ({
-                                ...prev,
-                                [header]: {
-                                  kind: 'date',
-                                  from:
-                                    f && f.kind === 'date' ? f.from : undefined,
-                                  to: e.target.value,
-                                },
-                              }))
-                            }
-                          />
-                        </div>
-                      ) : type === 'boolean' ? (
-                        <select
-                          className="border border-gray-300 rounded-md px-2 py-1 text-sm"
-                          value={(f && f.kind === 'boolean' && f.value) || ''}
-                          onChange={(e) =>
-                            setFilters((prev) => ({
-                              ...prev,
-                              [header]: {
-                                kind: 'boolean',
-                                value: e.target.value as '' | 'true' | 'false',
-                              },
-                            }))
-                          }
-                        >
-                          <option value="">Any</option>
-                          <option value="true">True</option>
-                          <option value="false">False</option>
-                        </select>
-                      ) : (
-                        <input
-                          type="text"
-                          className="w-40 border border-gray-300 rounded-md px-2 py-1 text-sm"
-                          placeholder="contains..."
-                          value={(f && f.kind === 'string' && f.text) || ''}
-                          onChange={(e) =>
-                            setFilters((prev) => ({
-                              ...prev,
-                              [header]: {
-                                kind: 'string',
-                                text: e.target.value,
-                              },
-                            }))
-                          }
-                        />
-                      )}
-                    </th>
-                  )
-                })}
-              </tr>
-            )}
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {pagedRows.map((row, rowIndex) => (
-              <tr key={rowIndex} className="hover:bg-gray-50">
-                {dataset.headers.map((header, colIndex) => (
-                  <td
-                    key={colIndex}
-                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-                  >
-                    <div className="max-w-xs truncate">
-                      {row[header] === null ? (
-                        <span className="text-gray-400 italic">null</span>
-                      ) : (
-                        String(row[header])
-                      )}
-                    </div>
-                  </td>
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              {showFilters && (
+                <tr className="bg-ink-50 dark:bg-ink-900">
+                  {dataset.headers.map((header, idx) => {
+                    const type = dataset.columnTypes[header]
+                    const f = filters[header]
+                    const inputClass =
+                      'rounded-md border border-ink-200 bg-white px-2 py-1 text-xs text-ink-900 focus:border-brand-500 focus:outline-none dark:border-ink-700 dark:bg-ink-950 dark:text-ink-100'
+                    return (
+                      <th key={idx} className="px-4 pb-2.5 pt-0 text-left">
+                        {type === 'number' ? (
+                          <div className="flex items-center gap-1.5">
+                            <input
+                              type="number"
+                              className={`w-20 ${inputClass}`}
+                              placeholder="min"
+                              value={(f && f.kind === 'number' && f.min) || ''}
+                              onChange={(e) =>
+                                setFilters((prev) => ({
+                                  ...prev,
+                                  [header]: {
+                                    kind: 'number',
+                                    min: e.target.value,
+                                    max:
+                                      f && f.kind === 'number'
+                                        ? f.max
+                                        : undefined,
+                                  },
+                                }))
+                              }
+                            />
+                            <input
+                              type="number"
+                              className={`w-20 ${inputClass}`}
+                              placeholder="max"
+                              value={(f && f.kind === 'number' && f.max) || ''}
+                              onChange={(e) =>
+                                setFilters((prev) => ({
+                                  ...prev,
+                                  [header]: {
+                                    kind: 'number',
+                                    min:
+                                      f && f.kind === 'number'
+                                        ? f.min
+                                        : undefined,
+                                    max: e.target.value,
+                                  },
+                                }))
+                              }
+                            />
+                          </div>
+                        ) : type === 'date' ? (
+                          <div className="flex items-center gap-1.5">
+                            <input
+                              type="date"
+                              className={inputClass}
+                              value={(f && f.kind === 'date' && f.from) || ''}
+                              onChange={(e) =>
+                                setFilters((prev) => ({
+                                  ...prev,
+                                  [header]: {
+                                    kind: 'date',
+                                    from: e.target.value,
+                                    to:
+                                      f && f.kind === 'date' ? f.to : undefined,
+                                  },
+                                }))
+                              }
+                            />
+                            <input
+                              type="date"
+                              className={inputClass}
+                              value={(f && f.kind === 'date' && f.to) || ''}
+                              onChange={(e) =>
+                                setFilters((prev) => ({
+                                  ...prev,
+                                  [header]: {
+                                    kind: 'date',
+                                    from:
+                                      f && f.kind === 'date'
+                                        ? f.from
+                                        : undefined,
+                                    to: e.target.value,
+                                  },
+                                }))
+                              }
+                            />
+                          </div>
+                        ) : type === 'boolean' ? (
+                          <select
+                            className={inputClass}
+                            value={(f && f.kind === 'boolean' && f.value) || ''}
+                            onChange={(e) =>
+                              setFilters((prev) => ({
+                                ...prev,
+                                [header]: {
+                                  kind: 'boolean',
+                                  value: e.target.value as
+                                    | ''
+                                    | 'true'
+                                    | 'false',
+                                },
+                              }))
+                            }
+                          >
+                            <option value="">Any</option>
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                          </select>
+                        ) : (
+                          <input
+                            type="text"
+                            className={`w-32 ${inputClass}`}
+                            placeholder="contains…"
+                            value={(f && f.kind === 'string' && f.text) || ''}
+                            onChange={(e) =>
+                              setFilters((prev) => ({
+                                ...prev,
+                                [header]: {
+                                  kind: 'string',
+                                  text: e.target.value,
+                                },
+                              }))
+                            }
+                          />
+                        )}
+                      </th>
+                    )
+                  })}
+                </tr>
+              )}
+            </thead>
+            <tbody className="divide-y divide-ink-100 dark:divide-ink-800">
+              {pagedRows.map((row, rowIndex) => (
+                <tr
+                  key={rowIndex}
+                  className="hover:bg-ink-50 dark:hover:bg-ink-900/60"
+                >
+                  {dataset.headers.map((header, colIndex) => (
+                    <td
+                      key={colIndex}
+                      className="whitespace-nowrap px-4 py-2.5 text-sm text-ink-700 dark:text-ink-300"
+                    >
+                      <div className="max-w-xs truncate">
+                        {row[header] === null ? (
+                          <span className="italic text-ink-300 dark:text-ink-600">
+                            null
+                          </span>
+                        ) : (
+                          String(row[header])
+                        )}
+                      </div>
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-      <div className="px-6 py-3 bg-gray-50 border-t border-gray-200">
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-600">
+      {totalRows > 0 && (
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+          <div className="text-xs text-ink-500 dark:text-ink-400">
             Page {currentPage} of {totalPages}
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-1.5">
             <button
-              className="px-3 py-1.5 text-sm border border-gray-300 rounded-md bg-white text-gray-700 disabled:opacity-50"
+              className="rounded-lg border border-ink-200 bg-white px-2.5 py-1 text-xs text-ink-600 disabled:opacity-40 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-300"
               onClick={() => setCurrentPage(1)}
               disabled={currentPage === 1}
               aria-label="First page"
@@ -508,7 +513,7 @@ export default function DataPreview({
               « First
             </button>
             <button
-              className="px-3 py-1.5 text-sm border border-gray-300 rounded-md bg-white text-gray-700 disabled:opacity-50"
+              className="rounded-lg border border-ink-200 bg-white px-2.5 py-1 text-xs text-ink-600 disabled:opacity-40 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-300"
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
               aria-label="Previous page"
@@ -516,7 +521,7 @@ export default function DataPreview({
               ‹ Prev
             </button>
             <button
-              className="px-3 py-1.5 text-sm border border-gray-300 rounded-md bg-white text-gray-700 disabled:opacity-50"
+              className="rounded-lg border border-ink-200 bg-white px-2.5 py-1 text-xs text-ink-600 disabled:opacity-40 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-300"
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
               aria-label="Next page"
@@ -524,7 +529,7 @@ export default function DataPreview({
               Next ›
             </button>
             <button
-              className="px-3 py-1.5 text-sm border border-gray-300 rounded-md bg-white text-gray-700 disabled:opacity-50"
+              className="rounded-lg border border-ink-200 bg-white px-2.5 py-1 text-xs text-ink-600 disabled:opacity-40 dark:border-ink-700 dark:bg-ink-900 dark:text-ink-300"
               onClick={() => setCurrentPage(totalPages)}
               disabled={currentPage === totalPages}
               aria-label="Last page"
@@ -533,7 +538,7 @@ export default function DataPreview({
             </button>
           </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

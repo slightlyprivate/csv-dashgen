@@ -14,11 +14,9 @@ describe('Uploader Component', () => {
       </ConfigProvider>
     )
 
-    expect(screen.getByText('Upload CSV File')).toBeInTheDocument()
+    expect(screen.getByText('Drop in a file')).toBeInTheDocument()
     expect(
-      screen.getByText(
-        'Drag and drop your CSV or TSV file here, or click to browse'
-      )
+      screen.getByText('Drag a CSV or TSV here, or click to browse')
     ).toBeInTheDocument()
   })
 
@@ -44,9 +42,6 @@ describe('Uploader Component', () => {
       </ConfigProvider>
     )
 
-    expect(
-      screen.getByText('Supported formats: .csv, .tsv')
-    ).toBeInTheDocument()
-    expect(screen.getByText(/Maximum file size:/)).toBeInTheDocument()
+    expect(screen.getByText(/Up to \d+ MB/)).toBeInTheDocument()
   })
 })

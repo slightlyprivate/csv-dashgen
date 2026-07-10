@@ -2,7 +2,7 @@
 // previously this was defined separately (and slightly differently) in both
 // `types/index.ts` and `utils/chartUtils.ts`.
 
-export type ChartKind = 'line' | 'bar' | 'pie' | 'scatter'
+export type ChartKind = 'line' | 'bar' | 'pie' | 'scatter' | 'histogram'
 
 export interface ChartConfig {
   type: ChartKind

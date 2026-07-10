@@ -33,12 +33,31 @@ describe('calculateDatasetStats', () => {
     expect(stats[0].numericStats?.count).toBe(2)
   })
 
-  it('does not compute deep stats for date/unknown columns (not currently supported)', () => {
-    const rows: DatasetRow[] = [{ value: '2023-01-01' }]
+  it('attaches dateStats for date columns', () => {
+    const rows: DatasetRow[] = [
+      { value: '2023-01-01' },
+      { value: '2023-03-15' },
+    ]
     const stats = calculateDatasetStats(rows, { value: 'date' })
 
     expect(stats[0].numericStats).toBeUndefined()
     expect(stats[0].categoricalStats).toBeUndefined()
+    expect(stats[0].dateStats?.count).toBe(2)
+    expect(stats[0].dateStats?.min?.toISOString().slice(0, 10)).toBe(
+      '2023-01-01'
+    )
+    expect(stats[0].dateStats?.max?.toISOString().slice(0, 10)).toBe(
+      '2023-03-15'
+    )
+  })
+
+  it('does not compute deep stats for unknown columns', () => {
+    const rows: DatasetRow[] = [{ value: 'x' }]
+    const stats = calculateDatasetStats(rows, { value: 'unknown' })
+
+    expect(stats[0].numericStats).toBeUndefined()
+    expect(stats[0].categoricalStats).toBeUndefined()
+    expect(stats[0].dateStats).toBeUndefined()
   })
 })
 

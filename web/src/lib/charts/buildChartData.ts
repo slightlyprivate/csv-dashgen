@@ -10,11 +10,13 @@ import {
   Legend,
   ArcElement,
   ScatterController,
-  Colors,
 } from 'chart.js'
 import { Dataset, ChartKind, ChartConfig, ChartData } from '../../types'
+import { buildHistogramBuckets } from './histogram'
 
 // Register Chart.js components used by any of our supported chart kinds.
+// The `Colors` plugin is intentionally not registered — series colors are
+// assigned explicitly from the app's validated light/dark palettes below.
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -25,19 +27,32 @@ ChartJS.register(
   Tooltip,
   Legend,
   ArcElement,
-  ScatterController,
-  Colors
+  ScatterController
 )
 
-const CHART_COLORS = [
-  '#3B82F6', // blue
-  '#EF4444', // red
-  '#10B981', // green
-  '#F59E0B', // yellow
-  '#8B5CF6', // purple
-  '#06B6D4', // cyan
-  '#F97316', // orange
-  '#84CC16', // lime
+// Categorical palette, adjacent-pair CVD-validated for both surfaces (see
+// docs/relaunch — dataviz skill). Fixed order: blue, green, rose, orange,
+// violet, lime, cyan, red. Never reused for brand/UI chrome.
+export const LIGHT_CHART_COLORS = [
+  '#2563eb',
+  '#059669',
+  '#e11d48',
+  '#ea580c',
+  '#7c3aed',
+  '#4d7c0f',
+  '#0891b2',
+  '#dc2626',
+] as const
+
+export const DARK_CHART_COLORS = [
+  '#3b82f6',
+  '#059669',
+  '#e11d48',
+  '#ea580c',
+  '#8b5cf6',
+  '#65a30d',
+  '#0891b2',
+  '#dc2626',
 ] as const
 
 /**
@@ -47,7 +62,8 @@ const CHART_COLORS = [
  */
 export function generateChartData(
   dataset: Dataset,
-  config: ChartConfig
+  config: ChartConfig,
+  colors: readonly string[] = LIGHT_CHART_COLORS
 ): ChartData | null {
   const { xField, yField, type } = config
 
@@ -58,23 +74,29 @@ export function generateChartData(
   const yType = dataset.columnTypes[yField]
 
   if (yType !== 'number' && type !== 'pie') {
-    return null // Y-axis should be numeric for most charts
+    return null // Y-axis should be numeric for most charts (histogram sets yField = xField)
   }
 
   switch (type) {
     case 'line':
     case 'bar':
-      return generateLineBarData(dataset, config)
+      return generateLineBarData(dataset, config, colors)
     case 'pie':
-      return generatePieData(dataset, config)
+      return generatePieData(dataset, config, colors)
     case 'scatter':
-      return generateScatterData(dataset, config)
+      return generateScatterData(dataset, config, colors)
+    case 'histogram':
+      return generateHistogramData(dataset, config, colors)
     default:
       return null
   }
 }
 
-function generateLineBarData(dataset: Dataset, config: ChartConfig): ChartData {
+function generateLineBarData(
+  dataset: Dataset,
+  config: ChartConfig,
+  colors: readonly string[]
+): ChartData {
   const { xField, yField, seriesField } = config
 
   if (seriesField && dataset.columnTypes[seriesField] === 'string') {
@@ -101,8 +123,8 @@ function generateLineBarData(dataset: Dataset, config: ChartConfig): ChartData {
       ([seriesName, points], index) => ({
         label: seriesName,
         data: points,
-        backgroundColor: CHART_COLORS[index % CHART_COLORS.length],
-        borderColor: CHART_COLORS[index % CHART_COLORS.length],
+        backgroundColor: colors[index % colors.length],
+        borderColor: colors[index % colors.length],
         borderWidth: 2,
       })
     )
@@ -130,8 +152,8 @@ function generateLineBarData(dataset: Dataset, config: ChartConfig): ChartData {
         {
           label: yField,
           data,
-          backgroundColor: CHART_COLORS[0],
-          borderColor: CHART_COLORS[0],
+          backgroundColor: colors[0],
+          borderColor: colors[0],
           borderWidth: 2,
         },
       ],
@@ -139,7 +161,11 @@ function generateLineBarData(dataset: Dataset, config: ChartConfig): ChartData {
   }
 }
 
-function generatePieData(dataset: Dataset, config: ChartConfig): ChartData {
+function generatePieData(
+  dataset: Dataset,
+  config: ChartConfig,
+  colors: readonly string[]
+): ChartData {
   const { xField, yField } = config
 
   const dataMap = new Map()
@@ -160,17 +186,19 @@ function generatePieData(dataset: Dataset, config: ChartConfig): ChartData {
       {
         label: yField,
         data,
-        backgroundColor: CHART_COLORS.slice(0, labels.length),
-        borderColor: CHART_COLORS.slice(0, labels.length).map((color) =>
-          color.replace('0.8', '1')
-        ),
+        backgroundColor: colors.slice(0, labels.length),
+        borderColor: colors.slice(0, labels.length),
         borderWidth: 2,
       },
     ],
   }
 }
 
-function generateScatterData(dataset: Dataset, config: ChartConfig): ChartData {
+function generateScatterData(
+  dataset: Dataset,
+  config: ChartConfig,
+  colors: readonly string[]
+): ChartData {
   const { xField, yField, seriesField } = config
 
   if (seriesField && dataset.columnTypes[seriesField] === 'string') {
@@ -194,8 +222,8 @@ function generateScatterData(dataset: Dataset, config: ChartConfig): ChartData {
       ([seriesName, points], index) => ({
         label: seriesName,
         data: points,
-        backgroundColor: CHART_COLORS[index % CHART_COLORS.length],
-        borderColor: CHART_COLORS[index % CHART_COLORS.length],
+        backgroundColor: colors[index % colors.length],
+        borderColor: colors[index % colors.length],
         borderWidth: 2,
       })
     )
@@ -216,8 +244,8 @@ function generateScatterData(dataset: Dataset, config: ChartConfig): ChartData {
         {
           label: `${xField} vs ${yField}`,
           data,
-          backgroundColor: CHART_COLORS[0],
-          borderColor: CHART_COLORS[0],
+          backgroundColor: colors[0],
+          borderColor: colors[0],
           borderWidth: 2,
         },
       ],
@@ -225,22 +253,58 @@ function generateScatterData(dataset: Dataset, config: ChartConfig): ChartData {
   }
 }
 
+function generateHistogramData(
+  dataset: Dataset,
+  config: ChartConfig,
+  colors: readonly string[]
+): ChartData {
+  const { xField } = config
+
+  const values = dataset.rows
+    .map((row) => Number(row[xField]))
+    .filter((v) => !isNaN(v))
+
+  const buckets = buildHistogramBuckets(values)
+
+  return {
+    labels: buckets.map((b) => b.label),
+    datasets: [
+      {
+        label: `${xField} distribution`,
+        data: buckets.map((b) => b.count),
+        backgroundColor: colors[0],
+        borderColor: colors[0],
+        borderWidth: 1,
+      },
+    ],
+  }
+}
+
 /**
- * Get default Chart.js options for a given chart kind/title.
+ * Get default Chart.js options for a given chart kind/title. Pass
+ * `minimal: true` for small preview renders (chart-idea cards) — this hides
+ * axes, legend, and tooltips so only the mark shapes show.
  */
-export function getDefaultChartOptions(type: ChartKind, title?: string) {
+export function getDefaultChartOptions(
+  type: ChartKind,
+  title?: string,
+  minimal: boolean = false
+) {
   const baseOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    animation: minimal ? false : undefined,
     plugins: {
       legend: {
+        display: !minimal && type !== 'histogram',
         position: 'top' as const,
       },
       title: {
-        display: !!title,
+        display: !minimal && !!title,
         text: title,
       },
       tooltip: {
+        enabled: !minimal,
         mode: 'index' as const,
         intersect: false,
       },
@@ -249,17 +313,18 @@ export function getDefaultChartOptions(type: ChartKind, title?: string) {
       type !== 'pie'
         ? {
             x: {
-              display: true,
+              display: !minimal,
               title: {
                 display: true,
-                text: 'X-Axis',
+                text: type === 'histogram' ? 'Range' : 'X-Axis',
               },
+              ...(type === 'histogram' ? { grid: { display: false } } : {}),
             },
             y: {
-              display: true,
+              display: !minimal,
               title: {
                 display: true,
-                text: 'Y-Axis',
+                text: type === 'histogram' ? 'Count' : 'Y-Axis',
               },
             },
           }

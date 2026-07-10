@@ -13,6 +13,17 @@ Only two screenshots currently exist in `docs/`:
 
 `docs/dashboard-placeholder.txt` and `docs/upload-placeholder.txt` are leftover placeholder files from before real screenshots were captured; they can be removed once confirmed unnecessary.
 
+**These two screenshots are now stale.** They were captured before the
+`feature/signature-ux` visual redesign and show the old generic-dashboard
+styling (default Tailwind grays, sidebar drawer, single-suggestion chart
+picker). The current app has: a sidebar section nav (Overview/Columns/Charts/Data),
+an amber/dark visual identity, a two-column empty-state hero, a "quick read"
+summary row, ranked chart-idea cards, and a restyled column inspector with a
+distribution histogram. Treat `dashboard.png`/`upload.png` as historical
+reference only — do not use them in any relaunch marketing material. Refresh
+them (plus add real `settings.png`, `mobile.png`, and `dark-theme.png`
+captures of the current UI) in the release branch.
+
 The settings, mobile, and dark-theme screenshots referenced in the guidelines below **do not exist yet**. They are planned, not current. Do not reference `settings.png`, `mobile.png`, or `dark-theme.png` from README or other public docs until they are actually captured and committed.
 
 ## Screenshot Guidelines
