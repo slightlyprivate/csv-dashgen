@@ -47,6 +47,14 @@ updates:
       # vite's major line until vite itself is upgraded.
       - dependency-name: "@vitejs/plugin-react"
         update-types: ["version-update:semver-major"]
+      # eslint-plugin-react's latest release (7.37.5) caps its peer dep at
+      # eslint ^9.7; ESLint 10 isn't installable until that plugin catches up.
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      # lint-staged 17 requires Node >=22.22.1; this repo runs Node 20 in CI
+      # and locally. Revisit once the project's Node baseline moves to 22+.
+      - dependency-name: "lint-staged"
+        update-types: ["version-update:semver-major"]
 
   # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
