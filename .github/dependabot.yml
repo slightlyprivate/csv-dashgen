@@ -4,11 +4,11 @@ updates:
   - package-ecosystem: "npm"
     directory: "/web"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       day: "monday"
       time: "09:00"
       timezone: "UTC"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 5
     reviewers:
       - "slightlyprivate"
     assignees:
@@ -20,6 +20,15 @@ updates:
     labels:
       - "dependencies"
       - "automated"
+    groups:
+      # Routine dev-dependency minor bumps land in one PR instead of one per
+      # package. Patch bumps are already ignored below; majors (and the pins
+      # further down) are excluded so they still surface individually for
+      # manual review.
+      dev-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-patch"]
@@ -34,12 +43,16 @@ updates:
       # Ignore major version updates for Vite (handle manually)
       - dependency-name: "vite"
         update-types: ["version-update:semver-major"]
+      # @vitejs/plugin-react 6.x requires vite ^8.0.0; keep it pinned to
+      # vite's major line until vite itself is upgraded.
+      - dependency-name: "@vitejs/plugin-react"
+        update-types: ["version-update:semver-major"]
 
   # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
       day: "monday"
       time: "09:00"
       timezone: "UTC"
