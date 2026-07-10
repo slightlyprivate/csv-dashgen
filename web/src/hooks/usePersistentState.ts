@@ -135,6 +135,7 @@ export function usePersistentColumnTypes(
     if (autoLoad && filename && isStorageAvailable()) {
       const savedTypes = loadColumnTypes(filename)
 
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setColumnTypes(savedTypes || {})
     } else {
       setColumnTypes({})

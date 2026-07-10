@@ -1,13 +1,7 @@
 import React from 'react'
 
 export type BadgeTone =
-  | 'neutral'
-  | 'brand'
-  | 'number'
-  | 'date'
-  | 'boolean'
-  | 'warning'
-  | 'danger'
+  'neutral' | 'brand' | 'number' | 'date' | 'boolean' | 'warning' | 'danger'
 
 const TONE_CLASSES: Record<BadgeTone, string> = {
   neutral: 'bg-ink-100 text-ink-700 dark:bg-ink-800 dark:text-ink-300',

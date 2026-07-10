@@ -15,8 +15,10 @@ const TONE_CLASSES: Record<NoticeTone, string> = {
     'bg-emerald-50 border-emerald-200 text-emerald-900 dark:bg-emerald-950/30 dark:border-emerald-900/50 dark:text-emerald-200',
 }
 
-export interface InlineNoticeProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
+export interface InlineNoticeProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  'children'
+> {
   tone?: NoticeTone
   icon?: React.ReactNode
   children: React.ReactNode
