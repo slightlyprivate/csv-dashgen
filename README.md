@@ -10,13 +10,7 @@ Drop in a CSV or TSV file and quickly understand what's inside. Your data is pro
 
 Planned public URL: `app.example.com`
 
-![Dashboard Preview](docs/dashboard.png)
-
-> **Note:** `docs/dashboard.png` and `docs/upload.png` predate the
-> `feature/signature-ux` visual redesign (new sidebar navigation, quick-read
-> summary, chart-idea cards, column checkup, restyled preview table, amber/dark
-> theme). They're kept as historical reference until refreshed screenshots are
-> captured in the release branch — see [`docs/screenshots.md`](docs/screenshots.md).
+![Dashboard Preview](docs/screenshots/dashboard-home.png)
 
 ## Current capabilities
 

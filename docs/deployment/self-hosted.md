@@ -7,13 +7,13 @@ fronted by a reverse proxy that already runs on the target host.
 
 ## Host assumptions
 
-- Target host is **deployment-host**, running Docker and Docker Compose.
+- Target host is your deployment server, running Docker and Docker Compose.
 - A shared **Traefik** instance already runs on that host, attached to an
-  external Docker network named `proxy-network`, with an entrypoint named
-  `web`.
+  external Docker network (configured via `PROXY_NETWORK`, for example
+  `proxy-network`), with an entrypoint named `web`.
 - A **Cloudflare Tunnel** is already configured outside this repo, routing
-  `app.example.com` to `http://traefik:80`. This stack
-  does not run its own `cloudflared` container.
+  your public hostname (for example `app.example.com`) to `http://traefik:80`.
+  This stack does not run its own `cloudflared` container.
 - No database, queue, scheduler, migrations, or persistent app storage are
   needed by this app.
 
@@ -62,7 +62,7 @@ cd /srv/stacks/spread-your-sheets
 
 # copy docker-compose.yml and .env.example from repo deploy/deployment-host/
 cp .env.example .env
-# edit .env if needed (APP_HOST, IMAGE_TAG)
+# edit .env if needed (APP_HOST, PROXY_NETWORK, IMAGE_TAG)
 
 docker compose pull
 docker compose up -d
@@ -70,7 +70,7 @@ docker compose up -d
 curl https://app.example.com/health
 ```
 
-The `proxy-network` network must already exist on the host (it's created and
+The external proxy network must already exist on the host (it's created and
 owned by the shared Traefik stack, not by this one).
 
 ## Updating
@@ -111,21 +111,21 @@ health checks.
 ## Reverse proxy / Traefik labels
 
 The `web` service is not published on a host port; Traefik reaches it over
-the `proxy-network` network using these labels (already set in
+the configured external proxy network using these labels (already set in
 [`docker-compose.yml`](../../deploy/deployment-host/docker-compose.yml)):
 
 ```yaml
 labels:
   - "traefik.enable=true"
-  - "traefik.docker.network=proxy-network"
+  - "traefik.docker.network=${PROXY_NETWORK}"
   - "traefik.http.routers.spread-your-sheets.rule=Host(`${APP_HOST}`)"
   - "traefik.http.routers.spread-your-sheets.entrypoints=web"
   - "traefik.http.routers.spread-your-sheets.service=spread-your-sheets-web"
   - "traefik.http.services.spread-your-sheets-web.loadbalancer.server.port=80"
 ```
 
-`APP_HOST` comes from `.env` and must match the public hostname configured in
-the Cloudflare Tunnel.
+`APP_HOST` and `PROXY_NETWORK` come from `.env`. `APP_HOST` must match the
+public hostname configured in the Cloudflare Tunnel.
 
 ## Cloudflare Tunnel note
 
@@ -148,8 +148,8 @@ already exists and points at the shared Traefik entrypoint.
 - **`curl` to the public hostname fails or times out** — check `APP_HOST` in
   `.env` matches the Cloudflare Tunnel public hostname exactly (including
   no trailing slash/protocol).
-- **Traefik never picks up the service** — verify the external `proxy-network`
-  network exists (`docker network ls`) and that the `web` container is
+- **Traefik never picks up the service** — verify the external proxy network
+  exists (`docker network ls`) and that the `web` container is
   attached to it (`docker inspect` or `docker compose ps`).
 - **Cloudflare reports the hostname but the app doesn't load** — confirm the
   tunnel's public hostname rule points at `http://traefik:80`, and that
