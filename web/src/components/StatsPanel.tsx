@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { ColumnStats } from '../utils/statistics'
 import {
+  ColumnStats,
   formatNumber,
   formatPercentage,
   copyToClipboard,
-} from '../utils/statistics'
+} from '../lib/statistics'
 
 interface StatsPanelProps {
   stats: ColumnStats[]

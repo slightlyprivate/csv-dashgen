@@ -9,7 +9,7 @@ import Settings from './components/Settings'
 import PrivacyNotice from './components/PrivacyNotice'
 import ToastContainer from './components/ToastContainer'
 import { Dataset, ColumnType } from './types'
-import { calculateDatasetStats } from './utils/statistics'
+import { calculateDatasetStats } from './lib/statistics'
 import {
   usePersistentDataset,
   usePersistentColumnTypes,
@@ -35,10 +35,7 @@ function AppContent() {
     if (!dataset) return null
     return {
       ...dataset,
-      columnTypes: { ...dataset.columnTypes, ...columnTypes } as Record<
-        string,
-        ColumnType
-      >,
+      columnTypes: { ...dataset.columnTypes, ...columnTypes },
     }
   }, [dataset, columnTypes])
 

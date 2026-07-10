@@ -1,4 +1,4 @@
-import { Row, ColumnType } from '../types'
+import { DatasetRow, ColumnType } from '../../types'
 
 export interface TypeInferenceConfig {
   sampleSize: number
@@ -17,10 +17,10 @@ export const DEFAULT_TYPE_CONFIG: TypeInferenceConfig = {
 }
 
 /**
- * Enhanced column type inference with configurable heuristics
+ * Enhanced column type inference with configurable heuristics.
  */
 export function inferColumnType(
-  rows: Row[],
+  rows: DatasetRow[],
   columnName: string,
   config: TypeInferenceConfig = DEFAULT_TYPE_CONFIG
 ): ColumnType {
@@ -229,26 +229,4 @@ export function parseDate(value: string): Date | null {
   }
 
   return null
-}
-
-/**
- * Get column statistics for better type inference
- */
-export function getColumnStats(rows: Row[], columnName: string) {
-  const values = rows
-    .map((row) => row[columnName])
-    .filter((val) => val !== null && val !== undefined)
-
-  const uniqueValues = new Set(values)
-  const nullCount = rows.length - values.length
-  const emptyStringCount = values.filter((val) => val === '').length
-
-  return {
-    total: rows.length,
-    nonNull: values.length,
-    unique: uniqueValues.size,
-    nullCount,
-    emptyStringCount,
-    uniqueValues: Array.from(uniqueValues).slice(0, 10), // First 10 unique values
-  }
 }

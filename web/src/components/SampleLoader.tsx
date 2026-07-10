@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Dataset } from '../types'
 import { useLimits } from '../hooks/useLimits'
+import { parseCSVText, createDataset, validateDataset } from '../lib/csv'
 
 interface SampleLoaderProps {
   onDatasetLoaded: (dataset: Dataset) => void
@@ -94,17 +95,12 @@ export function SampleLoader({ onDatasetLoaded, onError }: SampleLoaderProps) {
 
       const csvText = await response.text()
 
-      // Import the CSV parsing function
-      const { parseCSVText, createDataset, validateCSVData } = await import(
-        '../utils/csvParser'
-      )
-
       const parsedData = await parseCSVText(csvText)
       const headers = parsedData.data[0] || []
       const dataRows = parsedData.data.slice(1)
 
       // Validate the data
-      const dataValidation = validateCSVData(
+      const dataValidation = validateDataset(
         dataRows,
         headers,
         limits.MAX_ROWS,

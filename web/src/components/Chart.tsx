@@ -1,11 +1,7 @@
 import React from 'react'
 import { Line, Bar, Pie, Scatter } from 'react-chartjs-2'
-import {
-  ChartConfig,
-  generateChartData,
-  getDefaultChartOptions,
-} from '../utils/chartUtils'
-import { Dataset } from '../types'
+import { generateChartData, getDefaultChartOptions } from '../lib/charts'
+import { Dataset, ChartConfig } from '../types'
 
 interface ChartProps {
   dataset: Dataset

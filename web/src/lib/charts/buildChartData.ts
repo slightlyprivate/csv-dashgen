@@ -12,10 +12,9 @@ import {
   ScatterController,
   Colors,
 } from 'chart.js'
-import { Dataset, ChartKind } from '../types'
-import { CHART_COLORS } from '../constants'
+import { Dataset, ChartKind, ChartConfig, ChartData } from '../../types'
 
-// Register Chart.js components
+// Register Chart.js components used by any of our supported chart kinds.
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -30,22 +29,21 @@ ChartJS.register(
   Colors
 )
 
-export interface ChartConfig {
-  type: ChartKind
-  xField: string
-  yField: string
-  seriesField?: string
-  title?: string
-  options?: unknown
-}
-
-export interface ChartData {
-  labels: string[]
-  datasets: unknown[]
-}
+const CHART_COLORS = [
+  '#3B82F6', // blue
+  '#EF4444', // red
+  '#10B981', // green
+  '#F59E0B', // yellow
+  '#8B5CF6', // purple
+  '#06B6D4', // cyan
+  '#F97316', // orange
+  '#84CC16', // lime
+] as const
 
 /**
- * Generate chart data from dataset based on configuration
+ * Generate chart data from a dataset based on the given configuration.
+ * Returns null when the config doesn't apply to the dataset (missing
+ * fields, or a non-numeric y-field on a chart type that requires one).
  */
 export function generateChartData(
   dataset: Dataset,
@@ -59,7 +57,6 @@ export function generateChartData(
 
   const yType = dataset.columnTypes[yField]
 
-  // Basic validation
   if (yType !== 'number' && type !== 'pie') {
     return null // Y-axis should be numeric for most charts
   }
@@ -77,9 +74,6 @@ export function generateChartData(
   }
 }
 
-/**
- * Generate data for line and bar charts
- */
 function generateLineBarData(dataset: Dataset, config: ChartConfig): ChartData {
   const { xField, yField, seriesField } = config
 
@@ -145,9 +139,6 @@ function generateLineBarData(dataset: Dataset, config: ChartConfig): ChartData {
   }
 }
 
-/**
- * Generate data for pie charts
- */
 function generatePieData(dataset: Dataset, config: ChartConfig): ChartData {
   const { xField, yField } = config
 
@@ -179,9 +170,6 @@ function generatePieData(dataset: Dataset, config: ChartConfig): ChartData {
   }
 }
 
-/**
- * Generate data for scatter plots
- */
 function generateScatterData(dataset: Dataset, config: ChartConfig): ChartData {
   const { xField, yField, seriesField } = config
 
@@ -238,7 +226,7 @@ function generateScatterData(dataset: Dataset, config: ChartConfig): ChartData {
 }
 
 /**
- * Get default chart options
+ * Get default Chart.js options for a given chart kind/title.
  */
 export function getDefaultChartOptions(type: ChartKind, title?: string) {
   const baseOptions = {
@@ -279,61 +267,4 @@ export function getDefaultChartOptions(type: ChartKind, title?: string) {
   }
 
   return baseOptions
-}
-
-/**
- * Suggest reasonable default chart configurations based on data types
- */
-export function suggestChartConfig(dataset: Dataset): ChartConfig | null {
-  const headers = dataset.headers
-  const types = dataset.columnTypes
-
-  // Find numeric columns
-  const numericColumns = headers.filter((h) => types[h] === 'number')
-  const dateColumns = headers.filter((h) => types[h] === 'date')
-  const categoricalColumns = headers.filter(
-    (h) => types[h] === 'string' || types[h] === 'boolean'
-  )
-
-  // Priority: Date + Numeric = Line chart
-  if (dateColumns.length > 0 && numericColumns.length > 0) {
-    return {
-      type: 'line',
-      xField: dateColumns[0],
-      yField: numericColumns[0],
-      title: `${numericColumns[0]} over time`,
-    }
-  }
-
-  // Priority: Categorical + Numeric = Bar chart
-  if (categoricalColumns.length > 0 && numericColumns.length > 0) {
-    return {
-      type: 'bar',
-      xField: categoricalColumns[0],
-      yField: numericColumns[0],
-      title: `${numericColumns[0]} by ${categoricalColumns[0]}`,
-    }
-  }
-
-  // Fallback: Two numeric columns = Scatter plot
-  if (numericColumns.length >= 2) {
-    return {
-      type: 'scatter',
-      xField: numericColumns[0],
-      yField: numericColumns[1],
-      title: `${numericColumns[1]} vs ${numericColumns[0]}`,
-    }
-  }
-
-  // Last resort: Pie chart for any data
-  if (categoricalColumns.length > 0) {
-    return {
-      type: 'pie',
-      xField: categoricalColumns[0],
-      yField: headers[1] || headers[0], // Use any available field
-      title: `Distribution of ${categoricalColumns[0]}`,
-    }
-  }
-
-  return null
 }

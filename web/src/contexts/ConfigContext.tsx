@@ -1,5 +1,7 @@
 import { useState, useEffect, ReactNode } from 'react'
-import { ConfigContext, AppLimits, AppConfig } from './ConfigContext.context'
+import { ConfigContext } from './ConfigContext.context'
+import { AppLimits, AppConfig } from '../types'
+import { loadJSONPreference, saveJSONPreference } from '../lib/storage'
 
 const DEFAULT_LIMITS: AppLimits = {
   maxFileSize: 50 * 1024 * 1024, // 50MB
@@ -16,28 +18,17 @@ const CONFIG_STORAGE_KEY = 'csv-dashgen-config'
 
 export function ConfigProvider({ children }: { children: ReactNode }) {
   const [config, setConfig] = useState<AppConfig>(() => {
-    try {
-      const stored = localStorage.getItem(CONFIG_STORAGE_KEY)
-      if (stored) {
-        const parsedConfig = JSON.parse(stored)
-        // Merge with defaults to handle new config options
-        return {
-          limits: { ...DEFAULT_LIMITS, ...parsedConfig.limits },
-        }
-      }
-    } catch (error) {
-      console.warn('Failed to load config from localStorage:', error)
+    const stored = loadJSONPreference<Partial<AppConfig>>(CONFIG_STORAGE_KEY)
+    if (stored) {
+      // Merge with defaults to handle new config options
+      return { limits: { ...DEFAULT_LIMITS, ...stored.limits } }
     }
     return DEFAULT_CONFIG
   })
 
   // Save config to localStorage whenever it changes
   useEffect(() => {
-    try {
-      localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(config))
-    } catch (error) {
-      console.warn('Failed to save config to localStorage:', error)
-    }
+    saveJSONPreference(CONFIG_STORAGE_KEY, config)
   }, [config])
 
   const updateLimits = (limits: Partial<AppLimits>) => {

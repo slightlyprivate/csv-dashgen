@@ -72,7 +72,7 @@ The scope-cleanup pass removed dead files (`Charts.tsx`, `FieldPicker.tsx`, `Sta
 
 ## 🧪 Testing
 
-- [x] Unit tests for CSV parsing and type inference paths
+- [x] Focused unit tests for every `lib/` data-core module: CSV/TSV parsing, file/dataset validation, dataset construction, type inference, column quality/profiling, numeric/categorical statistics, chart config suggestion, chart data building, chart export filename, dataset/preferences storage
 - [x] Basic component test for `Uploader`
 - [ ] Broader component tests (`DataPreview`, `Chart`, `StatsPanel`, `Settings`, etc.)
 - [ ] Integration test: upload → preview → stats → chart → persistence

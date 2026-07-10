@@ -1,10 +1,10 @@
 import { useState, useCallback, DragEvent, ChangeEvent } from 'react'
 import {
   validateFile,
-  parseCSV,
-  validateCSVData,
+  parseFile,
+  validateDataset,
   createDataset,
-} from '../utils/csvParser'
+} from '../lib/csv'
 import { Dataset } from '../types'
 import { useLimits } from '../hooks/useLimits'
 
@@ -51,12 +51,12 @@ export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
         }
 
         // Parse CSV
-        const parsedData = await parseCSV(file)
+        const parsedData = await parseFile(file)
 
         // Validate parsed data
         const headers = parsedData.data[0] || []
         const dataRows = parsedData.data.slice(1) // Exclude header row
-        const dataValidation = validateCSVData(
+        const dataValidation = validateDataset(
           dataRows,
           headers,
           limits.MAX_ROWS,

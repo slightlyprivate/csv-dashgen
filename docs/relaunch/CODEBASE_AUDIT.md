@@ -426,6 +426,8 @@ For likely target spreadyoursheets.slightlyprivate.com behind existing tunnel:
 | 5 | deploy-selfhost-slightly-server | Add operational deployment artifacts/docs | New deploy docs/scripts and server configs | One-command or clearly documented deployment path | Medium |
 | 6 | relaunch-public-v1 | Final QA, docs, screenshots, release prep | README/docs/screenshots and release notes | Public-facing repo and hosted app are consistent and credible | Medium |
 
+**Follow-up note:** Phases 1–3 above are complete (`audit/docs-reality-pass`, `feature/rebrand-spread-your-sheets`, and `refactor/scope-cleanup`), followed by an additional `refactor/data-core` branch that carried out the "Suggested Target Architecture" below for the data-processing layer specifically (`web/src/lib/{csv,profiling,statistics,charts,storage}` + `web/src/types/{dataset,charts,config}`). See [docs/architecture.md](../architecture.md) for the resulting structure. Phases 4–6 (UI/UX redesign, self-host deployment, public relaunch) remain open.
+
 ## 10. Suggested Target Architecture
 
 Frontend-first target (recommended):

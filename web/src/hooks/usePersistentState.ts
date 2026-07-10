@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Dataset, ChartConfig } from '../types'
+import { Dataset, ChartConfig, ColumnType } from '../types'
 import { useConfig } from './useConfig'
 import {
   saveDataset,
@@ -11,7 +11,7 @@ import {
   clearStoredData,
   isStorageAvailable,
   getLastUpdated,
-} from '../utils/storage'
+} from '../lib/storage'
 
 interface UsePersistentStateOptions {
   autoSave?: boolean
@@ -120,12 +120,14 @@ export function usePersistentColumnTypes(
     autoSave = config.limits.enableDataPersistence,
     autoLoad = config.limits.enableDataPersistence,
   } = options
-  const [columnTypes, setColumnTypes] = useState<Record<string, string>>(() => {
-    if (autoLoad && filename && isStorageAvailable()) {
-      return loadColumnTypes(filename) || {}
+  const [columnTypes, setColumnTypes] = useState<Record<string, ColumnType>>(
+    () => {
+      if (autoLoad && filename && isStorageAvailable()) {
+        return loadColumnTypes(filename) || {}
+      }
+      return {}
     }
-    return {}
-  })
+  )
 
   // Update column types when filename changes
   useEffect(() => {
@@ -150,14 +152,17 @@ export function usePersistentColumnTypes(
     }
   }, [columnTypes, filename, autoSave])
 
-  const updateColumnType = useCallback((columnName: string, type: string) => {
-    setColumnTypes((prev) => ({
-      ...prev,
-      [columnName]: type,
-    }))
-  }, [])
+  const updateColumnType = useCallback(
+    (columnName: string, type: ColumnType) => {
+      setColumnTypes((prev) => ({
+        ...prev,
+        [columnName]: type,
+      }))
+    },
+    []
+  )
 
-  const updateColumnTypes = useCallback((types: Record<string, string>) => {
+  const updateColumnTypes = useCallback((types: Record<string, ColumnType>) => {
     setColumnTypes(types)
   }, [])
 

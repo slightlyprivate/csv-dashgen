@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { ChartConfig, suggestChartConfig } from '../utils/chartUtils'
-import { Dataset, ChartKind } from '../types'
+import { suggestChartConfig } from '../lib/charts'
+import { Dataset, ChartKind, ChartConfig } from '../types'
 
 interface ChartSelectorProps {
   dataset: Dataset

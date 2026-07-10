@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useConfig } from '../hooks/useConfig'
-import { AppLimits } from '../contexts/ConfigContext.context'
+import { AppLimits } from '../types'
 
 interface DatasetUsage {
   fileSize: number

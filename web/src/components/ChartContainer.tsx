@@ -1,8 +1,8 @@
 import React, { useRef } from 'react'
 import { Chart } from './Chart'
 import { ChartSelector } from './ChartSelector'
-import { Dataset } from '../types'
-import { ChartConfig } from '../utils/chartUtils'
+import { Dataset, ChartConfig } from '../types'
+import { buildChartExportFilename, downloadCanvasAsPng } from '../lib/charts'
 import { usePersistentChartConfig } from '../hooks/usePersistentState'
 import { useToast } from '../hooks/useToast'
 
@@ -29,17 +29,8 @@ export const ChartContainer: React.FC<ChartContainerProps> = ({ dataset }) => {
       return
     }
 
-    const filename = `${(chartConfig.title || `${chartConfig.type}-chart`)
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, '-')}.png`
-
-    const link = document.createElement('a')
-    link.href = canvas.toDataURL('image/png')
-    link.download = filename
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    const filename = buildChartExportFilename(chartConfig)
+    downloadCanvasAsPng(canvas, filename)
     showSuccess('Chart Exported', `Saved as ${filename}`)
   }
 

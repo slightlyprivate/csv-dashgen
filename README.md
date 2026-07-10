@@ -101,9 +101,8 @@ csv-dashgen/
 │   │   ├── components/           # Uploader, DataPreview, StatsPanel, Chart, Settings, etc.
 │   │   ├── contexts/              # ConfigContext, ThemeContext, ToastContext
 │   │   ├── hooks/                 # useConfig, useLimits, usePersistentState, useTheme, useToast
-│   │   ├── utils/                 # csvParser, typeInference, statistics, chartUtils, storage
-│   │   ├── types/                 # Shared TypeScript types
-│   │   ├── constants/             # Shared constants/defaults
+│   │   ├── lib/                   # Data-core: csv, profiling, statistics, charts, storage
+│   │   ├── types/                 # Shared domain types (dataset, charts, config)
 │   │   ├── App.tsx                # Main application component
 │   │   └── main.tsx               # Application entry point
 │   ├── public/                    # Static assets
