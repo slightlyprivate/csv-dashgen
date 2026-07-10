@@ -253,10 +253,10 @@ Do not describe this as "comprehensive testing" or claim a specific coverage per
 
 **Current state:** frontend-only static build (`npm run build` from `web/`), no backend dependency, verified working locally and in CI.
 
-**Planned relaunch deployment:** The intended relaunch deployment is a static frontend build served from slightly-server behind Cloudflare Tunnel, at `spreadyoursheets.slightlyprivate.com`. This repository does not yet contain the operational artifacts for that (no Dockerfile, reverse-proxy config, systemd unit, or health-check convention) — those are tracked as a later relaunch phase, not part of this documentation pass.
+**Self-host deployment:** The relaunch deployment is a static frontend build packaged into a pre-built nginx Docker image, published to GHCR, and run on slightly-server behind a shared Traefik reverse proxy and a manually configured Cloudflare Tunnel, at `spreadyoursheets.slightlyprivate.com`. See [docs/deployment/self-hosted.md](deployment/self-hosted.md) for full setup, update, and rollback instructions.
 
 ```text
-Git push → CI: lint → build → test  (implemented)
-Local/CI build → web/dist           (implemented)
-web/dist → static server → Cloudflare Tunnel → spreadyoursheets.slightlyprivate.com  (planned, not yet wired up)
+Git push to main → CI: lint → build → test → Docker build → push to GHCR   (implemented)
+GHCR image → docker compose pull/up on slightly-server                     (implemented, manual trigger)
+slightly-server (Traefik) → Cloudflare Tunnel → spreadyoursheets.slightlyprivate.com  (Tunnel routing configured manually, outside this repo)
 ```
