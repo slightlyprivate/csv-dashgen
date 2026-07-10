@@ -8,6 +8,7 @@ import {
 import { Dataset } from '../types'
 import { useLimits } from '../hooks/useLimits'
 import InlineNotice from './ui/InlineNotice'
+import { trackAnalyticsEvent } from '../lib/analytics'
 
 interface UploaderProps {
   onDatasetLoaded: (dataset: Dataset) => void
@@ -109,6 +110,7 @@ export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
 
         const dataset = createDataset(parsedData, file.name, file.size)
 
+        trackAnalyticsEvent('upload_dataset')
         onDatasetLoaded(dataset)
         setState((prev) => ({ ...prev, isProcessing: false }))
       } catch (error) {

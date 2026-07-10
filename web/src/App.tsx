@@ -13,13 +13,18 @@ import ColumnProfile from './components/ColumnProfile'
 import DataPreview from './components/DataPreview'
 import Settings from './components/Settings'
 import PrivacyNotice from './components/PrivacyNotice'
+import PrivacyPolicy from './components/PrivacyPolicy'
+import TermsOfUse from './components/TermsOfUse'
 import HelpModal from './components/HelpModal'
 import ToastContainer from './components/ToastContainer'
+import ProductionAnalytics from './components/ProductionAnalytics'
+import Footer from './components/Footer'
 import Card from './components/ui/Card'
 import SectionHeader from './components/ui/SectionHeader'
 import { Dataset, ColumnType } from './types'
 import { calculateDatasetStats, buildDatasetOverview } from './lib/statistics'
 import { suggestChartConfigs } from './lib/charts'
+import { trackAnalyticsEvent } from './lib/analytics'
 import {
   usePersistentDataset,
   usePersistentColumnTypes,
@@ -40,6 +45,8 @@ const SECTION_IDS = {
 function AppContent() {
   const [showSettings, setShowSettings] = useState(false)
   const [showPrivacy, setShowPrivacy] = useState(false)
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false)
+  const [showTerms, setShowTerms] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
   const [selectedColumn, setSelectedColumn] = useState<string | null>(null)
 
@@ -114,6 +121,27 @@ function AppContent() {
     clearChartConfig()
     clearSession()
     setSelectedColumn(null)
+    trackAnalyticsEvent('clear_session')
+  }
+
+  const handleOpenSettings = () => {
+    trackAnalyticsEvent('open_settings')
+    setShowSettings(true)
+  }
+
+  const handleOpenPrivacy = () => {
+    trackAnalyticsEvent('open_privacy')
+    setShowPrivacy(true)
+  }
+
+  const handleOpenPrivacyPolicy = () => {
+    trackAnalyticsEvent('open_privacy')
+    setShowPrivacyPolicy(true)
+  }
+
+  const handleOpenTerms = () => {
+    trackAnalyticsEvent('open_terms')
+    setShowTerms(true)
   }
 
   const handleNavigate = (id: SectionId) => {
@@ -125,15 +153,22 @@ function AppContent() {
     })
   }
 
-  const header = <TopBar onOpenPrivacy={() => setShowPrivacy(true)} />
+  const header = <TopBar onOpenPrivacy={handleOpenPrivacy} />
 
   const sidebar = (
     <Sidebar
       activeSection={activeSection}
       hasDataset={!!datasetWithTypes}
       onNavigate={handleNavigate}
-      onOpenSettings={() => setShowSettings(true)}
+      onOpenSettings={handleOpenSettings}
       onOpenHelp={() => setShowHelp(true)}
+    />
+  )
+
+  const footer = (
+    <Footer
+      onOpenPrivacy={handleOpenPrivacyPolicy}
+      onOpenTerms={handleOpenTerms}
     />
   )
 
@@ -228,14 +263,14 @@ function AppContent() {
 
   return (
     <>
-      <AppShell header={header} sidebar={sidebar} main={main} />
+      <AppShell header={header} sidebar={sidebar} main={main} footer={footer} />
 
       <Settings
         isOpen={showSettings}
         onClose={() => setShowSettings(false)}
         onOpenPrivacy={() => {
           setShowSettings(false)
-          setShowPrivacy(true)
+          handleOpenPrivacy()
         }}
         datasetInfo={
           datasetWithTypes
@@ -253,20 +288,32 @@ function AppContent() {
         onClose={() => setShowPrivacy(false)}
         onOpenSettings={() => {
           setShowPrivacy(false)
-          setShowSettings(true)
+          handleOpenSettings()
+        }}
+        onOpenPrivacyPolicy={() => {
+          setShowPrivacy(false)
+          handleOpenPrivacyPolicy()
         }}
       />
+
+      <PrivacyPolicy
+        isOpen={showPrivacyPolicy}
+        onClose={() => setShowPrivacyPolicy(false)}
+      />
+
+      <TermsOfUse isOpen={showTerms} onClose={() => setShowTerms(false)} />
 
       <HelpModal
         isOpen={showHelp}
         onClose={() => setShowHelp(false)}
         onOpenPrivacy={() => {
           setShowHelp(false)
-          setShowPrivacy(true)
+          handleOpenPrivacy()
         }}
       />
 
       <ToastContainer />
+      <ProductionAnalytics />
     </>
   )
 }

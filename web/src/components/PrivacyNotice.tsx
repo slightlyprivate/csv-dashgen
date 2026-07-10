@@ -6,6 +6,7 @@ interface PrivacyNoticeProps {
   isOpen: boolean
   onClose: () => void
   onOpenSettings: () => void
+  onOpenPrivacyPolicy: () => void
 }
 
 const POINTS = [
@@ -27,15 +28,27 @@ const POINTS = [
     description:
       'Optional local storage keeps your dataset and settings between visits. Clear session removes it instantly.',
   },
+  {
+    icon: ShieldIcon,
+    title: 'Analytics, if enabled, stays generic',
+    description:
+      'The production deployment may use privacy-conscious, self-hosted analytics for things like "loaded a sample dataset." It never sees your file contents, filename, column names, or data values, and never runs in local development.',
+  },
 ]
 
 export default function PrivacyNotice({
   isOpen,
   onClose,
   onOpenSettings,
+  onOpenPrivacyPolicy,
 }: PrivacyNoticeProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} titleId="privacy-title">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      titleId="privacy-title"
+      descriptionId="privacy-description"
+    >
       <div className="flex items-center justify-between border-b border-ink-200 p-5 dark:border-ink-800">
         <h2
           id="privacy-title"
@@ -65,7 +78,10 @@ export default function PrivacyNotice({
       </div>
 
       <div className="space-y-4 p-5">
-        <p className="text-sm leading-relaxed text-ink-600 dark:text-ink-400">
+        <p
+          id="privacy-description"
+          className="text-sm leading-relaxed text-ink-600 dark:text-ink-400"
+        >
           Spread Your Sheets is built to keep your data on your device.
           Here&apos;s exactly what that means:
         </p>
@@ -86,10 +102,15 @@ export default function PrivacyNotice({
         ))}
       </div>
 
-      <div className="flex items-center justify-between border-t border-ink-200 p-5 dark:border-ink-800">
-        <Button variant="ghost" size="sm" onClick={onOpenSettings}>
-          Persistence settings
-        </Button>
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-ink-200 p-5 dark:border-ink-800">
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="sm" onClick={onOpenSettings}>
+            Persistence settings
+          </Button>
+          <Button variant="ghost" size="sm" onClick={onOpenPrivacyPolicy}>
+            Full privacy policy
+          </Button>
+        </div>
         <Button variant="primary" size="sm" onClick={onClose}>
           Got it
         </Button>

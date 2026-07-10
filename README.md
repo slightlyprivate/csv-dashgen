@@ -36,6 +36,9 @@ Everything below runs today, client-side, in the app under [`web/`](web):
 - Privacy notice and settings modals — truthful, static info panels with no fake toggles; no modal-first privacy gate on load
 - Sidebar section navigation (Overview/Columns/Charts/Data) with scroll-spy highlighting
 - CI pipeline (lint, build, test) on push/PR
+- Launch-ready SEO metadata (canonical URL, robots, Open Graph, Twitter card, JSON-LD), favicon/app icons, and a web app manifest — see [`docs/SEO.md`](docs/SEO.md)
+- Production-only, privacy-conscious analytics (self-hosted, disabled by default, never runs locally) — see [`docs/ANALYTICS.md`](docs/ANALYTICS.md)
+- In-app Privacy Policy and Terms of Use pages, plus a footer with copyright, app version, and links to Privacy, Terms, and the GitHub repo
 
 All processing happens in the browser. There is no backend in the current build or repo, and no data leaves the device.
 
@@ -127,12 +130,30 @@ csv-dashgen/
 
 ## Configuration
 
-There are no environment variables in the current build — nothing in the app reads `import.meta.env`. All configuration is runtime-only, set through the in-app Settings modal and persisted to `localStorage`:
+Most app behavior (limits, persistence, theme) is runtime-only, set through the in-app Settings modal and persisted to `localStorage`:
 
 - **Limits & Performance** — maximum file size, maximum rows, maximum columns (all actually enforced during upload/validation), and an "Enable Data Persistence" toggle that gates whether the dataset, chart config, and column types are saved/loaded from `localStorage`
-- **Privacy & Data** — a static info panel describing what actually happens (everything local, no server, no analytics/error reporting/tracking of any kind); there are no privacy toggles because there is nothing for them to govern
+- **Privacy & Data** — a static info panel describing what actually happens, including the truthful, opt-in production analytics behavior below
 
 Theme (light/dark/system) is set separately via the theme toggle in the header.
+
+Everything else — SEO metadata, indexability, and analytics — is controlled by **build-time** environment variables (Vite reads `import.meta.env` at build time; there's no runtime toggle in the UI). See [`web/.env.example`](web/.env.example) for the full list, and [`docs/SEO.md`](docs/SEO.md) / [`docs/ANALYTICS.md`](docs/ANALYTICS.md) for details:
+
+| Variable | Purpose | Default |
+| --- | --- | --- |
+| `VITE_PUBLIC_ENV` | `development` or `production`; gates indexability/analytics | `development` |
+| `VITE_INDEXABLE` | Allow search engine indexing when `true` | `false` |
+| `VITE_CANONICAL_URL` | Canonical/OG/JSON-LD URL | `http://localhost:5174` |
+| `VITE_ANALYTICS_ENABLED` | Load the analytics script when `true` (production only) | `false` |
+| `VITE_ANALYTICS_SRC` | Self-hosted analytics script URL | `https://analytics.slightlyprivate.com/fetch.js` |
+| `VITE_ANALYTICS_WEBSITE_ID` | Analytics site identifier | unset |
+| `VITE_APP_VERSION` | Overrides the version shown in the footer | falls back to `package.json` |
+
+Analytics is production-only, disabled by default, and never runs in local development — see [`docs/ANALYTICS.md`](docs/ANALYTICS.md) for exactly what is (and is never) tracked.
+
+## Legal
+
+In-app Privacy Policy and Terms of Use pages are reachable from the footer on every screen.
 
 ## Sample data
 
