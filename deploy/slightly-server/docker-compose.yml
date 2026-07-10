@@ -1,0 +1,20 @@
+# Compose stack for running Spread Your Sheets on slightly-server behind the
+# shared Traefik reverse proxy. See docs/deployment/self-hosted.md for setup.
+
+services:
+  web:
+    image: ghcr.io/slightlyprivate/spread-your-sheets-web:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    networks:
+      - traefik-proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik-proxy"
+      - "traefik.http.routers.spread-your-sheets.rule=Host(`${APP_HOST}`)"
+      - "traefik.http.routers.spread-your-sheets.entrypoints=web"
+      - "traefik.http.routers.spread-your-sheets.service=spread-your-sheets-web"
+      - "traefik.http.services.spread-your-sheets-web.loadbalancer.server.port=80"
+
+networks:
+  traefik-proxy:
+    external: true

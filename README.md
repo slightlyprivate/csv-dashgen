@@ -53,7 +53,6 @@ Not implemented yet — tracked as relaunch roadmap items, not current features:
 - Processed data export (CSV/JSON)
 - Additional chart export formats (for example SVG)
 - Optional backend processing for larger files (no backend scaffolding exists in this repo today — it would be built fresh from a real requirement)
-- Self-host deployment packaging (Docker/Caddy/Nginx config) for the target infrastructure
 - Natural-language data summaries, saved dashboards, and other longer-term ideas (see Roadmap below)
 
 ## Tech stack
@@ -155,7 +154,10 @@ Try these datasets from [`samples/`](samples):
 
 **Current relaunch direction:** frontend-only, browser-local processing. No backend is required or currently used.
 
-**Planned deployment:** The intended relaunch deployment is a static frontend build served from slightly-server behind Cloudflare Tunnel, at `spreadyoursheets.slightlyprivate.com`. Operational artifacts for this (server config, tunnel routing) are not yet part of this repository — see [docs/architecture.md](docs/architecture.md) for status.
+Production deployment is a self-hosted static build (nginx, pre-built GHCR
+Docker image) served from slightly-server behind a shared Traefik and
+Cloudflare Tunnel, at `spreadyoursheets.slightlyprivate.com`. For self-hosting
+instructions, see [docs/deployment/self-hosted.md](docs/deployment/self-hosted.md).
 
 For local production builds:
 

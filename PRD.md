@@ -133,7 +133,7 @@ No backend is implemented, and no backend scaffolding exists in this repository 
 
 Current relaunch direction: frontend-only, browser-local processing, no backend dependency.
 
-The intended relaunch deployment is a static frontend build served from slightly-server behind Cloudflare Tunnel, at `spreadyoursheets.slightlyprivate.com`. Concrete deployment artifacts (Docker/Caddy/Nginx config, health check convention) do not yet exist in this repository — see the roadmap in [docs/relaunch/CODEBASE_AUDIT.md](docs/relaunch/CODEBASE_AUDIT.md).
+The relaunch deployment is a static frontend build packaged into a Docker/nginx image and served from slightly-server behind a shared Traefik proxy and Cloudflare Tunnel, at `spreadyoursheets.slightlyprivate.com`. Deployment artifacts (Dockerfile, nginx config, compose template, health check) exist in this repository — see [docs/deployment/self-hosted.md](docs/deployment/self-hosted.md). The stack has not yet been deployed live on slightly-server.
 
 ## 12. Roadmap phases
 
@@ -143,7 +143,7 @@ The intended relaunch deployment is a static frontend build served from slightly
 | 2 | Rebrand UI/copy to Spread Your Sheets | Done |
 | 3 | Scope cleanup: remove dead files/backend scaffolding, fix placeholder actions and untruthful settings | Done |
 | 4 | Distinctive UI/UX redesign pass | Done |
-| 5 | Self-host deployment artifacts for slightly-server + Cloudflare Tunnel | Not started |
+| 5 | Self-host deployment artifacts for slightly-server + Cloudflare Tunnel | Artifacts done; live deployment pending |
 | 6 | Final QA, docs, and public relaunch | Not started |
 
 ## 13. Conclusion

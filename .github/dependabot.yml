@@ -10,9 +10,9 @@ updates:
       timezone: "UTC"
     open-pull-requests-limit: 10
     reviewers:
-      - "matthall00"
+      - "slightlyprivate"
     assignees:
-      - "matthall00"
+      - "slightlyprivate"
     commit-message:
       prefix: "deps"
       prefix-development: "deps-dev"
@@ -45,9 +45,9 @@ updates:
       timezone: "UTC"
     open-pull-requests-limit: 5
     reviewers:
-      - "matthall00"
+      - "slightlyprivate"
     assignees:
-      - "matthall00"
+      - "slightlyprivate"
     commit-message:
       prefix: "ci"
       include: "scope"

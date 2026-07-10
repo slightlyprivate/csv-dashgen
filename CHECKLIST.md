@@ -124,7 +124,7 @@ This section reflects a **planned, optional** future direction. The current rela
 - [x] `npm run build` verified (from `web/`)
 - [ ] Static frontend build deployed to slightly-server behind Cloudflare Tunnel
 - [ ] Live demo link added to README
-- [ ] Deployment artifacts (Docker/Caddy/Nginx, health check) added to repo
+- [x] Deployment artifacts (Docker/nginx, health check) added to repo
 - [ ] Versioned release tag + CHANGELOG entry
 
 ## 🧾 Documentation
