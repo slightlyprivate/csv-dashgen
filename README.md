@@ -1,347 +1,187 @@
-# CSV DashGen
+# Spread Your Sheets
 
-**Status:** Public portfolio project / relaunch candidate
+> The repository is currently named `csv-dashgen`. **Spread Your Sheets** is the public product name being introduced as part of an active relaunch. Source paths, package names, and storage keys still reference the old name and will be updated in a later branch.
 
-CSV DashGen is a privacy-focused CSV exploration tool that turns uploaded CSV files into quick charts, summary statistics, and field-level insights in the browser.
+**Status:** Active relaunch in progress.
 
-The current repo name is `csv-dashgen`, but the product identity is being reconsidered as part of a polish/relaunch pass.
+**Private CSV exploration with instant summaries, column profiles, and chart ideas.**
 
-## What it demonstrates
+Drop in a CSV or TSV file and quickly understand what's inside. Your data is processed locally in your browser.
 
-- Client-side CSV parsing and validation
-- Automatic field/type detection
-- Basic statistical summaries
-- Interactive chart generation
-- React + TypeScript application architecture
-- Privacy-conscious local data handling
+Planned public URL: `spreadyoursheets.slightlyprivate.com`
 
 ![Dashboard Preview](docs/dashboard.png)
 
-## ✨ Features
+> **Note:** `docs/dashboard.png` and `docs/upload.png` predate the
+> `feature/signature-ux` visual redesign (new sidebar navigation, quick-read
+> summary, chart-idea cards, column checkup, restyled preview table, amber/dark
+> theme). They're kept as historical reference until refreshed screenshots are
+> captured in the release branch — see [`docs/screenshots.md`](docs/screenshots.md).
 
-### Core Functionality
-* **Drag-and-drop CSV upload** with instant parsing and validation
-* **Automatic field type detection** (numeric, categorical, date/time)
-* **Interactive visualizations**: Line charts, bar charts, pie charts, scatter plots
-* **Smart KPI cards**: Sum, mean, median, min/max, standard deviation
-* **Column statistics** with data quality insights
-* **Responsive design** that works on desktop and mobile
+## Current capabilities
 
-### Advanced Features
-* **Privacy controls** with configurable data retention and usage tracking
-* **Configurable limits** for file size, row count, and processing time
-* **Dark/Light theme** with system preference detection
-* **Data persistence** using localStorage for datasets and user preferences
-* **Sample datasets** for quick demos and testing
-* **Export capabilities** for charts and processed data
-* **Real-time validation** with helpful error messages
+Everything below runs today, client-side, in the app under [`web/`](web):
 
-### Developer Experience
-* **Full TypeScript** with strict type checking
-* **Comprehensive testing** with Vitest and React Testing Library
-* **Modern tooling** with Vite, ESLint, and Prettier
-* **Accessibility compliant** (WCAG 2.1 AA)
-* **Modular architecture** with custom hooks and contexts
-* **Optional backend integration** (FastAPI/Python or Hono/Node)
+- Drag-and-drop CSV/TSV upload with validation (file type, size, row count, column count, duplicate headers)
+- Sample dataset loading (see [`samples/`](samples))
+- Automatic column type inference (number, string, date, boolean, unknown) with manual override in the UI
+- A "quick read" dataset overview (row/column counts, type breakdown, missing-value summary, date range, top category, and a data-quality note) shown before the detailed table
+- Ranked chart suggestions (trend, compare, relationship, distribution) with one-click chart creation, alongside manual chart configuration
+- Data preview table with sorting, filtering, pagination, sticky header, and inline type editing
+- Per-column inspector ("Column checkup") with quality stats, a distribution histogram for numeric columns, quartiles, top values for categorical columns, and date range for date columns
+- Chart generation: line, bar, pie, scatter, and a numeric distribution (histogram) view
+- Chart export as a PNG image
+- Light/dark/system theme toggle, including a proper class-based dark mode (previously the `dark:` utility classes only responded to OS-level preference, not the in-app toggle)
+- Local persistence of dataset, chart config, and column types via `localStorage`, gated by a real "Enable Data Persistence" setting
+- Privacy notice and settings modals — truthful, static info panels with no fake toggles; no modal-first privacy gate on load
+- Sidebar section navigation (Overview/Columns/Charts/Data) with scroll-spy highlighting
+- CI pipeline (lint, build, test) on push/PR
 
-## 🧰 Tech Stack
+All processing happens in the browser. There is no backend in the current build or repo, and no data leaves the device.
 
-### Frontend
-* **React 18** with functional components and hooks
-* **TypeScript** for type safety and better DX
-* **Vite** for fast development and optimized builds
-* **Tailwind CSS v4** for utility-first styling
-* **Chart.js** with react-chartjs-2 for data visualization
-* **Papaparse** for robust CSV parsing
-* **React Router** for navigation (if needed)
+## Partial / in-progress capabilities
 
-### Backend (Optional)
-* **FastAPI** (Python) for data processing API
-* **Hono** (Node.js) for lightweight API
-* **Pandas** for advanced data manipulation
+These exist in some form but are not finished:
 
-### Development & Testing
-* **Vitest** for unit and integration testing
-* **React Testing Library** for component testing
-* **ESLint v9** with flat configuration
-* **Prettier** for code formatting
-* **TypeScript** strict mode enabled
+- **Accessibility** — good baseline practices (labeled controls, ARIA attributes, focus-visible styling), plus a focus trap and Escape-to-close on all modals (Settings, Privacy, Help), but still no dedicated accessibility test suite. This is **not** a certified WCAG 2.1 AA-compliant implementation
+- **Test coverage** — unit tests for parsing, statistics, chart suggestion/rendering logic, and a basic uploader render test; no integration or end-to-end coverage of the full upload → preview → chart flow
 
-## 🚀 Quick Start
+## Planned / future capabilities
 
-### Frontend Only (Recommended)
+Not implemented yet — tracked as relaunch roadmap items, not current features:
+
+- Processed data export (CSV/JSON)
+- Additional chart export formats (for example SVG)
+- Optional backend processing for larger files (no backend scaffolding exists in this repo today — it would be built fresh from a real requirement)
+- Self-host deployment packaging (Docker/Caddy/Nginx config) for the target infrastructure
+- Natural-language data summaries, saved dashboards, and other longer-term ideas (see Roadmap below)
+
+## Tech stack
+
+### Frontend (implemented)
+
+- React 18 with functional components and hooks
+- TypeScript (strict mode)
+- Vite for dev server and production builds
+- Tailwind CSS v4
+- Chart.js with react-chartjs-2
+- PapaParse for CSV parsing
+- Vitest + React Testing Library
+
+### Backend (not implemented — planned only)
+
+There is no backend scaffolding in this repository. The current relaunch direction is **frontend-only, browser-local processing**; a backend would only be added later from a concrete requirement.
+
+## Quick start
+
+The runnable app lives entirely under [`web/`](web). There is no root-level `npm` project.
 
 ```bash
-# Clone the repository
 git clone https://github.com/YOURUSER/csv-dashgen
 cd csv-dashgen/web
 
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
 
 # Open http://localhost:5173 in your browser
 ```
 
-### Full-Stack Mode (Python API)
+## Testing and linting
+
+Run these from inside `web/`:
 
 ```bash
-# Frontend
-cd csv-dashgen/web && npm install && npm run build
+cd web
 
-# Backend
-cd ../api-py
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn app:app --reload
+npm test              # run tests once (watch mode by default with vitest)
+npm run test:coverage # run tests with coverage report
+npm run lint          # lint
+npm run lint:fix      # lint with auto-fix
 ```
 
-### Full-Stack Mode (Node API)
+Coverage is real but narrow — see "Partial / in-progress capabilities" above.
 
-```bash
-# Frontend
-cd csv-dashgen/web
-npm install && npm run build
+## Project structure
 
-# Backend (if implemented)
-cd ../api-node
-npm install
-npm run dev
-```
-
-## 📁 Project Structure
-
-```
+```text
 csv-dashgen/
-├── web/                          # Frontend React application
+├── web/                          # The actual application (frontend-only)
 │   ├── src/
-│   │   ├── components/           # Reusable UI components
-│   │   │   ├── Charts.tsx        # Chart rendering component
-│   │   │   ├── FieldPicker.tsx   # Column selection interface
-│   │   │   ├── Stats.tsx         # KPI and statistics display
-│   │   │   ├── Uploader.tsx      # File upload component
-│   │   │   ├── Settings.tsx      # Configuration panel
-│   │   │   ├── PrivacyNotice.tsx # Privacy consent modal
-│   │   │   └── SampleLoader.tsx  # Sample data loader
-│   │   ├── contexts/             # React contexts for state management
-│   │   │   ├── ConfigContext.tsx # App configuration and limits
-│   │   │   └── ThemeContext.tsx  # Theme management
-│   │   ├── hooks/                # Custom React hooks
-│   │   │   ├── useCSVParser.ts   # CSV parsing logic
-│   │   │   ├── useLimits.ts      # Configuration limits
-│   │   │   ├── useLocalStorage.ts # Persistence utilities
-│   │   │   └── useChartGenerator.ts # Chart creation logic
-│   │   ├── utils/                # Utility functions
-│   │   │   ├── csvParser.ts      # CSV processing utilities
-│   │   │   ├── statistics.ts     # Statistical calculations
-│   │   │   ├── typeInference.ts  # Data type detection
-│   │   │   └── chartUtils.ts     # Chart configuration helpers
-│   │   ├── App.tsx               # Main application component
-│   │   └── main.tsx              # Application entry point
-│   ├── public/                   # Static assets
-│   ├── vite.config.ts            # Vite configuration
-│   ├── package.json              # Dependencies and scripts
-│   ├── tsconfig.json             # TypeScript configuration
-│   └── eslint.config.js          # ESLint flat configuration
-├── api-py/                       # Python FastAPI backend
-│   ├── app.py                    # FastAPI application
-│   └── requirements.txt          # Python dependencies
-├── samples/                      # Sample CSV files
-│   ├── sales.csv                 # Sales data sample
-│   ├── expenses.csv              # Expense tracking sample
-│   └── fitness.csv               # Fitness metrics sample
+│   │   ├── components/           # Uploader, DataPreview, ColumnsList, ColumnProfile, Chart, Settings, etc.
+│   │   ├── contexts/              # ConfigContext, ThemeContext, ToastContext
+│   │   ├── hooks/                 # useConfig, useLimits, usePersistentState, useTheme, useToast
+│   │   ├── lib/                   # Data-core: csv, profiling, statistics, charts, storage
+│   │   ├── types/                 # Shared domain types (dataset, charts, config)
+│   │   ├── App.tsx                # Main application component
+│   │   └── main.tsx               # Application entry point
+│   ├── public/                    # Static assets
+│   ├── vite.config.ts
+│   ├── vitest.config.ts
+│   ├── package.json
+│   └── eslint.config.js
+├── samples/                      # Sample CSV files for demos/testing
 ├── docs/                         # Documentation and screenshots
-│   ├── dashboard.png             # Main dashboard screenshot
-│   ├── upload.png                # Upload interface screenshot
-│   └── architecture.md           # Architecture documentation
-├── CHECKLIST.md                  # Development checklist
+├── CHECKLIST.md                  # Build/relaunch checklist
 ├── PRD.md                        # Product requirements document
-├── README.md                     # This file
-└── package.json                  # Root package configuration
+└── README.md                     # This file
 ```
 
-## 🧪 Testing
+## Configuration
 
-The project includes comprehensive testing with high coverage:
+There are no environment variables in the current build — nothing in the app reads `import.meta.env`. All configuration is runtime-only, set through the in-app Settings modal and persisted to `localStorage`:
+
+- **Limits & Performance** — maximum file size, maximum rows, maximum columns (all actually enforced during upload/validation), and an "Enable Data Persistence" toggle that gates whether the dataset, chart config, and column types are saved/loaded from `localStorage`
+- **Privacy & Data** — a static info panel describing what actually happens (everything local, no server, no analytics/error reporting/tracking of any kind); there are no privacy toggles because there is nothing for them to govern
+
+Theme (light/dark/system) is set separately via the theme toggle in the header.
+
+## Sample data
+
+Try these datasets from [`samples/`](samples):
+
+- `samples/sales.csv` — monthly sales data with revenue, costs, and categories
+- `samples/expenses.csv` — personal expense tracking with categories and amounts
+- `samples/fitness.csv` — fitness metrics including workouts, duration, and calories
+- `samples/web-analytics.csv` — website traffic and engagement data
+
+### Demo flow
+
+1. Upload a CSV, or click a sample card to load `samples/sales.csv`
+2. Review automatic field detection and per-column statistics
+3. Pick columns for a chart and choose a chart type
+4. Toggle theme from the header, and review limits/privacy info in Settings
+
+## Deployment
+
+**Current relaunch direction:** frontend-only, browser-local processing. No backend is required or currently used.
+
+**Planned deployment:** The intended relaunch deployment is a static frontend build served from slightly-server behind Cloudflare Tunnel, at `spreadyoursheets.slightlyprivate.com`. Operational artifacts for this (server config, tunnel routing) are not yet part of this repository — see [docs/architecture.md](docs/architecture.md) for status.
+
+For local production builds:
 
 ```bash
-# Run all tests
-npm test
-
-# Run tests with coverage report
-npm run test:coverage
-
-# Run tests in watch mode
-npm run test:watch
-
-# Run linting
-npm run lint
-
-# Run linting with auto-fix
-npm run lint:fix
-```
-
-### Test Coverage
-* **Unit tests** for utilities and hooks
-* **Component tests** for React components
-* **Integration tests** for user workflows
-* **Accessibility tests** for WCAG compliance
-* **Coverage threshold**: 80%+ across all files
-
-## ⚙️ Configuration
-
-### Environment Variables
-
-Create a `.env` file in the `web/` directory:
-
-```env
-# API Configuration (optional)
-VITE_API_URL=http://localhost:8000
-VITE_API_ENABLED=false
-
-# Application Limits
-VITE_MAX_FILE_SIZE_MB=10
-VITE_MAX_ROWS=10000
-VITE_PROCESSING_TIMEOUT_MS=30000
-
-# Privacy Settings
-VITE_ENABLE_ANALYTICS=false
-VITE_DATA_RETENTION_DAYS=30
-VITE_REQUIRE_CONSENT=true
-```
-
-### Runtime Configuration
-
-The app includes a settings panel accessible from the main interface where users can configure:
-
-* **File size limits** (1MB - 50MB)
-* **Row count limits** (1K - 100K rows)
-* **Processing timeout** (5s - 60s)
-* **Privacy preferences** (analytics, data retention)
-* **Theme preferences** (light/dark/auto)
-* **Chart defaults** (colors, animations)
-
-## 🎨 Themes & Accessibility
-
-### Theme Support
-* **Light theme** for bright environments
-* **Dark theme** for low-light conditions
-* **Auto theme** that follows system preferences
-* **High contrast** mode for accessibility
-
-### Accessibility Features
-* **WCAG 2.1 AA compliant** with proper ARIA labels
-* **Keyboard navigation** support for all interactive elements
-* **Screen reader** compatibility with semantic HTML
-* **Focus management** with visible focus indicators
-* **Color contrast** ratios meeting accessibility standards
-* **Responsive design** that works on all screen sizes
-
-## 📊 Sample Data
-
-Try these sample datasets to explore the app's capabilities:
-
-* **`samples/sales.csv`** - Monthly sales data with revenue, costs, and categories
-* **`samples/expenses.csv`** - Personal expense tracking with categories and amounts
-* **`samples/fitness.csv`** - Fitness metrics including workouts, duration, and calories
-
-### Demo Flow
-
-1. **Upload a CSV** - Drag and drop or click to select `samples/sales.csv`
-2. **Explore data** - View automatic field detection and statistics
-3. **Create visualizations** - Select columns for x/y axes and choose chart types
-4. **Customize settings** - Adjust limits, themes, and privacy preferences
-5. **Export results** - Download charts or processed data
-
-## 🔧 Development
-
-### Prerequisites
-* **Node.js** 18+ and npm
-* **Git** for version control
-* **Python 3.8+** (for backend development)
-
-### Development Scripts
-
-```bash
-# Development server with hot reload
-npm run dev
-
-# Production build
+cd web
 npm run build
-
-# Preview production build
-npm run preview
-
-# Type checking
-npm run type-check
-
-# Code formatting
-npm run format
+# Serve the resulting web/dist directory with any static file server
 ```
 
-### Code Quality
-* **ESLint v9** with flat configuration for modern linting
-* **Prettier** for consistent code formatting
-* **TypeScript strict mode** for type safety
-* **Pre-commit hooks** for quality gates
+## Roadmap
 
-## 🚀 Deployment
+Longer-term ideas, not yet started:
 
-### Frontend Only (Recommended)
-Deploy to any static hosting service:
+- Natural-language data summaries
+- Saved dashboards with cloud storage
+- Advanced filtering and derived columns
+- Processed data export (see "Planned / future capabilities" above for the near-term version of this)
 
-```bash
-npm run build
-# Deploy the 'dist' folder to Netlify, Vercel, or Cloudflare Pages
-```
-
-### Full-Stack Deployment
-* **Frontend**: Deploy static build to CDN
-* **Backend**: Deploy API to Heroku, Railway, or AWS
-* **Database**: Optional for saved dashboards
-
-## 📈 Roadmap
-
-### Planned Features
-* **Smart chart suggestions** based on data patterns
-* **LLM-powered insights** with natural language summaries
-* **Dashboard saving** with cloud storage integration
-* **Advanced filtering** and data transformation
-* **Collaborative features** for team dashboards
-* **Mobile app** companion
-
-### Technical Improvements
-* **WebAssembly** for faster data processing
-* **Service workers** for offline functionality
-* **Progressive Web App** (PWA) capabilities
-* **Advanced chart types** (heatmaps, treemaps)
-* **Real-time collaboration** features
-
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/your-feature`
 3. Make your changes with tests
-4. Run the test suite: `npm test`
+4. Run the test suite from `web/`: `npm test`
 5. Submit a pull request
 
-### Development Guidelines
-* Follow the existing code style and conventions
-* Add tests for new features
-* Update documentation for API changes
-* Ensure accessibility compliance
-* Test on multiple browsers and devices
+## License
 
-## 📝 License
-
-MIT License - see [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-* Built with modern web technologies
-* Inspired by the need for simple data exploration tools
-* Thanks to the open-source community for amazing libraries
-
----
+MIT License — see [LICENSE](LICENSE) file for details.

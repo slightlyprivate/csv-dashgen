@@ -1,10 +1,11 @@
 # Sample CSV Files
 
-This directory contains sample CSV files that demonstrate various data types and use cases for the CSV Dashboard Generator. These files are designed to showcase different features of the application and provide realistic data for testing and demonstration purposes.
+This directory contains sample CSV files that demonstrate various data types and use cases for Spread Your Sheets. These files are designed to showcase different features of the application and provide realistic data for testing and demonstration purposes.
 
 ## Available Sample Files
 
 ### 📊 `sales.csv`
+
 **Business sales data with product information**
 - **Rows**: 60+ sales transactions
 - **Columns**: Date, Product, Category, Region, Sales, Units, Profit, Discount
@@ -17,6 +18,7 @@ This directory contains sample CSV files that demonstrate various data types and
   - Regional performance comparisons
 
 ### 💰 `expenses.csv`
+
 **Business expense tracking data**
 - **Rows**: 50+ expense entries
 - **Columns**: Date, Category, Subcategory, Description, Amount, Currency, Payment_Method, Vendor, Tax_Rate, Receipt_Number
@@ -29,6 +31,7 @@ This directory contains sample CSV files that demonstrate various data types and
   - Payment method distribution
 
 ### 🏃 `fitness.csv`
+
 **Personal fitness and workout tracking data**
 - **Rows**: 50+ workout sessions
 - **Columns**: Date, Exercise_Type, Duration_Minutes, Calories_Burned, Heart_Rate_Avg, Heart_Rate_Max, Distance_KM, Steps, Workout_Intensity, Weather_Temp_C, Weather_Condition, Notes
@@ -41,6 +44,7 @@ This directory contains sample CSV files that demonstrate various data types and
   - Time-based progress analysis
 
 ### 🌐 `web-analytics.csv`
+
 **Website traffic and user behavior data**
 - **Rows**: 50+ page view entries
 - **Columns**: Date, Page_URL, Page_Title, Page_Views, Sessions, Unique_Visitors, Bounce_Rate, Avg_Session_Duration, Top_Referrer, Device_Type, Browser, Country, Traffic_Source, Conversion_Rate, Revenue
@@ -55,6 +59,7 @@ This directory contains sample CSV files that demonstrate various data types and
 ## Data Characteristics
 
 ### Column Types Covered
+
 - **Date/Time**: Various date formats and time-based data
 - **Numeric**: Integers, decimals, percentages, currency values
 - **Categorical**: Product categories, regions, exercise types, browsers
@@ -62,6 +67,7 @@ This directory contains sample CSV files that demonstrate various data types and
 - **Boolean/Logical**: Intensity levels, weather conditions
 
 ### Data Quality Features
+
 - **Realistic Values**: Based on actual business scenarios
 - **Missing Data**: Some intentional gaps to test handling
 - **Varied Distributions**: Different data patterns and ranges
@@ -69,7 +75,7 @@ This directory contains sample CSV files that demonstrate various data types and
 
 ## Usage Instructions
 
-1. **Upload to Application**: Use any of these files with the CSV Dashboard Generator
+1. **Upload to Application**: Use any of these files with Spread Your Sheets
 2. **Explore Features**: Try different chart types, field selections, and filters
 3. **Test Functionality**: Verify data parsing, type inference, and visualization
 4. **Demonstration**: Use for showcasing the application's capabilities
@@ -95,6 +101,6 @@ To add more sample files:
 ## Notes
 
 - All data is fictional and generated for demonstration purposes
-- Files are optimized for the CSV Dashboard Generator's features
+- Files are optimized for Spread Your Sheets's features
 - Data includes various edge cases for comprehensive testing
 - Files demonstrate different analytical use cases and chart types

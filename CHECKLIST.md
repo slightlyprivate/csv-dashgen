@@ -1,152 +1,153 @@
-# CSV → Dashboard Generator – Build Checklist
+# Spread Your Sheets – Build Checklist
 
-## 📊 Project Status: Code Quality & Maintenance Complete ✅
+**Status:** Active relaunch in progress. This checklist previously claimed 100% completion; that was inaccurate. It has been corrected against the actual codebase — see [docs/relaunch/CODEBASE_AUDIT.md](docs/relaunch/CODEBASE_AUDIT.md) for the full audit.
 
-**All Major Sections**: ✅ **COMPLETED**
-- Repo & Tooling Setup ✅
-- Project Architecture ✅
-- CSV Ingestion & Validation ✅
-- Column Type Inference ✅
-- KPIs & Stats Panel ✅
-- Charting Engine ✅
-- State & Persistence ✅
-- Testing Suite ✅
-- Accessibility & UX ✅
-- Theming & Layout ✅
-- Samples & Demos ✅
-- Privacy & Limits ✅
-- Documentation ✅
-- Code Quality & Maintenance ✅
+**Next steps:** ~~documentation reality pass~~ → ~~rebrand pass~~ → ~~scope cleanup (dead files, placeholder actions, settings truthfulness)~~ → ~~UI/UX redesign~~ → self-host deployment artifacts → public relaunch.
 
-**Current Status**: 100% Complete - Ready for deployment and portfolio showcase
-**Next Steps**: Deploy to hosting platform, capture screenshots, and share your amazing project!
+The scope-cleanup pass removed dead files (`Charts.tsx`, `FieldPicker.tsx`, `Stats.tsx`, `api-py/`, root `package-lock.json`), implemented real PNG chart export, removed the unimplemented `area` chart type, removed fictional settings/privacy toggles with no backing implementation, wired `Enable Data Persistence` to real behavior, and replaced the session-clear full-page reload with explicit state clearing. It did not redesign the UI, refactor data architecture, or touch deployment.
 
 ---
 
 ## 🔧 Repo & Tooling Setup
-- [x] Create repo `csv-dashgen` with## 🧹 Code Quality & Maintenance
-- [x] Strict TS config (`noImplicitAny`, `strictNullChecks`)
-- [x] ESLint rules for hooks & accessibility
-- [x] Prettier formatting enforced
-- [x] Dependabot or Renovate for deps updates
-- [ ] Tidy commit history; conventional commits (optional)ard Node `.gitignore`
-- [x] Initialize Vite + React + TypeScript (`/web`)
-- [x] Add Tailwind CSS (PostCSS + autoprefixer) and base theme
-- [x] Configure ESLint + Prettier + `lint-staged` + `husky` pre-commit
-- [x] Add Vitest + React Testing Library; set up `test` and `coverage` scripts
-- [x] Add CI (GitHub Actions): lint → build → tests on push/PR
-- [x] Add `LICENSE` (MIT) and basic `CODE_OF_CONDUCT.md`
-- [x] Create `/docs` (screenshots), `/samples` (CSV fixtures)
-- [x] Add issue templates & PR template in `.github/`
+
+- [x] Repo `csv-dashgen` with standard Node `.gitignore`
+- [x] Vite + React + TypeScript initialized (`/web`)
+- [x] Tailwind CSS configured
+- [x] ESLint + Prettier configured
+- [x] Vitest + React Testing Library configured; `test` and `coverage` scripts present
+- [x] CI (GitHub Actions): lint → build → tests on push/PR
+- [x] `LICENSE` (MIT) and `CODE_OF_CONDUCT.md`
+- [x] `/docs` (screenshots) and `/samples` (CSV fixtures) present
+- [x] Issue templates & PR template in `.github/`
 
 ## 🗂️ Project Architecture
-- [x] Define folder structure
-- [x] Define TypeScript types: `ColumnType`, `Dataset`, `Row`, `KPI`, `ChartKind`, `FieldStats`
-- [x] Centralize constants: supported chart types, max file size, CSV delimiters
 
-## 📥 CSV Ingestion & Validation (MVP)
-- [x] Drag-and-drop + file input (accept `.csv`, `.tsv`)
-- [x] Parse with Papaparse (header row, dynamic typing disabled initially)
-- [x] Validation: file type, size limit, row count limit, empty cells handling
-- [x] Error states: invalid headers, mixed-type columns, malformed CSV
-- [x] Data preview table (first 50 rows) with column type badges
+- [x] Folder structure defined
+- [x] Core TypeScript types defined (`ColumnType`, `Dataset`, `Row`, `ChartKind`, etc.)
+- [x] Constants centralized
+- [x] Dead/empty component files removed (`Charts.tsx`, `FieldPicker.tsx`, `Stats.tsx` deleted — they were unused stubs)
+
+## 📥 CSV Ingestion & Validation
+
+- [x] Drag-and-drop + file input (`.csv`, `.tsv`)
+- [x] Parsing via PapaParse
+- [x] Validation: file type, size limit, row count limit, duplicate headers
+- [x] Error states surfaced to the user
+- [x] Data preview table with column type badges
 
 ## 🔎 Column Type Inference
-- [x] Heuristics to classify columns: numeric, categorical, datetime, boolean
-- [x] Configurable sniffing: sample N rows (e.g., 1000) for performance
-- [x] Datetime parsing (ISO, mm/dd/yyyy, dd/mm/yyyy) with fallback
-- [x] Provide manual override UI for column types
 
-## 📊 KPIs & Stats Panel
-- [x] Compute per-numeric-column: count, mean, median, min, max, sum, std dev
-- [x] Per-categorical: unique count, top-k values, frequency
-- [x] Missing values report per column
-- [x] Render KPI cards with compact formatting; copy-to-clipboard
+- [x] Heuristic classification: numeric, categorical, datetime, boolean
+- [x] Configurable sampling for performance
+- [x] Datetime parsing with fallback
+- [x] Manual override UI for column types
+
+## 📊 Stats Panel
+
+- [x] Per-numeric-column stats: count, mean, median, min, max, sum, std dev
+- [x] Per-categorical: unique count, top values, frequency
+- [x] Missing-values awareness in stats
 
 ## 📈 Charting Engine
-- [x] Integrate Chart.js (+ `react-chartjs-2` optional)
-- [x] Supported charts (MVP): line, bar (grouped/stacked), pie, scatter
-- [x] FieldPicker: select X, Y (and optional series/category)
-- [x] Auto-suggest reasonable defaults (e.g., datetime→line, categorical→bar)
-- [x] Chart options: legend toggle, gridlines, value formatters, color palette
-- [x] Interactivity: tooltips, hover, click-to-highlight series
-- [x] Empty-state and loading skeletons
 
-## 🧮 Transformations (Nice-to-have for MVP+)
-- [ ] Aggregations: group by category/date (day/week/month), sum/avg/count
-- [ ] Filters: include/exclude categories, value ranges, date ranges
-- [ ] Derived columns (simple arithmetic): new field = A ± B × C
-- [ ] Sort controls for tables and chart series
+- [x] Chart.js + react-chartjs-2 integrated
+- [x] Chart types: line, bar, pie, scatter
+- [x] Column selection for X/Y (and series where applicable)
+- [x] Auto-suggested defaults based on column types
+- [x] Chart export (downloads a real PNG via canvas; no longer a placeholder alert)
+- [x] Chart type list matches implementation (removed unimplemented `area` chart type from `ChartKind`/constants)
+
+## 🧮 Transformations
+
+- [ ] Aggregations (group by category/date, sum/avg/count) — not implemented
+- [ ] Filters beyond table-level filtering (value ranges, date ranges) — partial, table filters exist; broader query filters not implemented
+- [ ] Derived/computed columns — not implemented
 
 ## 🧰 State & Persistence
-- [x] Keep state minimal (React state or Context)
-- [x] Persist last session (localStorage) for chart config, selected fields
-- [x] Clear session button
+
+- [x] Context + hooks for state management
+- [x] Persist last session (localStorage): dataset, chart config, column types
+- [x] Clear session control (explicit React/localStorage state clearing, no full page reload)
+- [x] All visible settings toggles are truthful: "Enable Data Persistence" actually gates save/load; fictional toggles with no backing implementation (analytics, data collection, error reporting, data retention, max charts) were removed rather than left as decoration
 
 ## 🧪 Testing
-- [x] Unit tests: parsers, type inference, KPI calculators
-- [x] Component tests: `Uploader`, `FieldPicker`, `Charts`, `Stats`
-- [x] Integration tests: upload sample CSV → choose fields → render chart & KPIs
-- [x] (Optional) Playwright e2e for critical flows
-- [x] Snapshot tests for consistent rendering of KPIs/cards
+
+- [x] Focused unit tests for every `lib/` data-core module: CSV/TSV parsing, file/dataset validation, dataset construction, type inference, column quality/profiling, numeric/categorical statistics, chart config suggestion, chart data building, chart export filename, dataset/preferences storage
+- [x] Basic component test for `Uploader`
+- [ ] Broader component tests (`DataPreview`, `Chart`, `ColumnProfile`, `Settings`, etc.)
+- [ ] Integration test: upload → preview → stats → chart → persistence
+- [ ] End-to-end tests
+- [ ] Coverage threshold enforced in CI (tests currently run, but there is no enforced coverage gate)
 
 ## ♿ Accessibility & UX
-- [x] Keyboard-accessible uploader and field selectors
-- [x] Proper labels, roles, and aria attributes on controls
-- [x] Color contrast meets WCAG AA
-- [x] Focus outlines and skip-to-content
-- [x] Reduced motion preference respected in animations
+
+- [x] Keyboard-accessible uploader and controls
+- [x] Labels, roles, and ARIA attributes on most controls
+- [x] Color contrast considered in the design system
+- [x] Focus-visible styling
+- [x] Modal focus trap / escape-key handling (settings, privacy, help — shared `Modal` primitive)
+- [ ] Dedicated accessibility test suite
+- [ ] Formal WCAG 2.1 AA verification (not currently claimed as compliant)
 
 ## 🌙 Theming & Layout
-- [x] Responsive layout: sidebar (stats/fields) + main chart area
-- [x] Dark/light mode with system preference default
-- [x] Tailwind design tokens: spacing, typography scale, radius, shadows
+
+- [x] Responsive layout
+- [x] Dark/light/system theme
+- [x] Tailwind design tokens (spacing, typography, radius, shadows)
 
 ## 💾 Samples & Demos
-- [x] Include 3–5 sample CSVs: `sales.csv`, `expenses.csv`, `fitness.csv`, `web-analytics.csv`
-- [x] Provide tiny (≤50KB) and medium (~1–5MB) samples
+
+- [x] Sample CSVs included (`sales.csv`, `expenses.csv`, `fitness.csv`, `web-analytics.csv`, and others)
 - [x] README demo flow using `sales.csv`
-- [x] Record a short GIF (upload → pick fields → chart)
+- [ ] Demo GIF/video
 
 ## 🔐 Privacy & Limits
-- [x] Clarify in README: data stays client-side in MVP
-- [x] Configurable max file size and row count
-- [x] Clear UI indicator if optional backend is enabled
-- [x] Privacy notice with data handling transparency
-- [x] Configurable privacy settings (data collection, error reporting, analytics)
-- [x] Settings panel for adjusting limits and preferences
 
-## 🌐 Optional Backend (Phase 2)
-- [ ] FastAPI or Hono endpoint for large file processing
-- [ ] Streaming upload and chunked parsing
-- [ ] Server-side aggregations & stats (pandas or node streams)
-- [ ] Rate limiting and basic auth (if deployed)
-- [ ] CORS and content-type validation
+- [x] Client-side-only processing (documented and true)
+- [x] Configurable max file size and row count
+- [x] Privacy notice UI
+- [x] Settings panel for limits/preferences
+- [x] Full enforcement of every configurable privacy/persistence toggle by runtime code (Privacy & Data tab is now a static, accurate info panel with no fake toggles)
+
+## 🌐 Optional Backend
+
+- [ ] FastAPI or Node/Hono endpoint — not implemented; the empty `api-py/` placeholder folder was removed in the scope-cleanup pass rather than left as unused scaffolding
+- [ ] Streaming upload / chunked parsing
+- [ ] Server-side aggregation
+- [ ] Rate limiting / auth
+- [ ] CORS / content-type validation
+
+This section reflects a **planned, optional** future direction. The current relaunch direction is frontend-only. A backend would be added fresh, from a real requirement, not resurrected from this removed scaffolding.
 
 ## 📦 Build & Deploy
-- [x] Environment variables (`.env.example`) and safe defaults
-- [x] `npm run build` verified
-- [ ] Deploy preview to Cloudflare Pages/Netlify
-- [ ] Add link to live demo in README
-- [ ] Versioned release: `v0.1.0` (Git tag + CHANGELOG entry)
+
+- [x] `npm run build` verified (from `web/`)
+- [ ] Static frontend build deployed to slightly-server behind Cloudflare Tunnel
+- [ ] Live demo link added to README
+- [ ] Deployment artifacts (Docker/Caddy/Nginx, health check) added to repo
+- [ ] Versioned release tag + CHANGELOG entry
 
 ## 🧾 Documentation
-- [x] README: feature list, setup, usage, demo GIF, screenshots
-- [x] `PRD.md`, `copilot-instructions.md`, `CHECKLIST.md` kept in sync
-- [x] Architecture notes: data flow diagram (simple Mermaid)
-- [x] Contributing guide (minimal)
-- [x] Screenshot placeholders and capture instructions
+
+- [x] README: accurate feature list, status, setup, usage (this pass)
+- [x] `PRD.md`, `CHECKLIST.md` corrected against actual implementation
+- [x] Architecture doc corrected to match real source tree
+- [ ] Demo GIF/video
+- [ ] Screenshot set completed (settings/mobile/dark-theme screenshots referenced in docs but not yet captured)
 
 ## 🧹 Code Quality & Maintenance
+
 - [x] Strict TS config (`noImplicitAny`, `strictNullChecks`)
 - [x] ESLint rules for hooks & accessibility
 - [x] Prettier formatting enforced
-- [x] Dependabot or Renovate for deps updates
-- [x] Tidy commit history; conventional commits (optional)
+- [x] Dependabot for dependency updates
+- [x] Empty/dead source files removed (`Charts.tsx`, `FieldPicker.tsx`, `Stats.tsx`, `api-py/`, root `package-lock.json`)
 
-## ✅ Portfolio-ready Exit Criteria
-- [ ] Live demo link + screenshots in README
+## ✅ Relaunch exit criteria (not yet met)
+
+- [ ] Live demo link + full screenshot set in README
 - [x] At least 2 sample CSV walkthroughs documented
-- [x] Tests passing in CI with coverage report
-- [ ] Clear roadmap section with next steps
-- [ ] GitHub topics & repo description optimized for discovery
+- [x] Tests passing in CI (coverage not gated)
+- [x] Clear roadmap section with current vs. planned status (this pass)
+- [ ] Rebrand pass complete (UI/copy consistently says Spread Your Sheets)
+- [ ] Self-host deployment live at `spreadyoursheets.slightlyprivate.com`

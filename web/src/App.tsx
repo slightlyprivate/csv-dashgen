@@ -1,48 +1,64 @@
-import { useState, useMemo } from 'react'
-import Uploader from './components/Uploader'
-import SampleLoader from './components/SampleLoader'
-import DataPreview from './components/DataPreview'
-import StatsPanel from './components/StatsPanel'
+import { useState, useMemo, useEffect } from 'react'
+import AppShell from './components/AppShell'
+import TopBar from './components/TopBar'
+import Sidebar, { SectionId } from './components/Sidebar'
+import LandingHero from './components/LandingHero'
+import DatasetHeader from './components/DatasetHeader'
+import QuickReadStats from './components/QuickReadStats'
+import AtAGlance from './components/AtAGlance'
+import ChartIdeaCards from './components/ChartIdeaCards'
 import ChartContainer from './components/ChartContainer'
-import SidebarLayout from './components/SidebarLayout'
+import ColumnsList from './components/ColumnsList'
+import ColumnProfile from './components/ColumnProfile'
+import DataPreview from './components/DataPreview'
 import Settings from './components/Settings'
 import PrivacyNotice from './components/PrivacyNotice'
+import HelpModal from './components/HelpModal'
 import ToastContainer from './components/ToastContainer'
+import Card from './components/ui/Card'
+import SectionHeader from './components/ui/SectionHeader'
 import { Dataset, ColumnType } from './types'
-import { calculateDatasetStats } from './utils/statistics'
+import { calculateDatasetStats, buildDatasetOverview } from './lib/statistics'
+import { suggestChartConfigs } from './lib/charts'
 import {
   usePersistentDataset,
   usePersistentColumnTypes,
+  usePersistentChartConfig,
   useSessionManager,
 } from './hooks/usePersistentState'
+import { useScrollSpy } from './hooks/useScrollSpy'
 import { ToastProvider } from './contexts/ToastContext'
 import { useToast } from './hooks/useToast'
 
+const SECTION_IDS = {
+  overview: 'section-overview',
+  columns: 'section-columns',
+  charts: 'section-charts',
+  data: 'section-data',
+} as const
+
 function AppContent() {
   const [showSettings, setShowSettings] = useState(false)
-  const [showPrivacyNotice, setShowPrivacyNotice] = useState(() => {
-    const privacyAccepted = localStorage.getItem('csv-dashgen-privacy-accepted')
-    return !privacyAccepted
-  })
+  const [showPrivacy, setShowPrivacy] = useState(false)
+  const [showHelp, setShowHelp] = useState(false)
+  const [selectedColumn, setSelectedColumn] = useState<string | null>(null)
+
   const { dataset, updateDataset, clearDataset } = usePersistentDataset()
   const { columnTypes, updateColumnType, clearColumnTypes } =
     usePersistentColumnTypes(dataset?.filename || '')
+  const { chartConfig, updateChartConfig, clearChartConfig } =
+    usePersistentChartConfig()
   const { clearSession, hasSessionData } = useSessionManager()
   const { showError, showSuccess } = useToast()
 
-  // Merge stored column types with dataset
   const datasetWithTypes = useMemo(() => {
     if (!dataset) return null
     return {
       ...dataset,
-      columnTypes: { ...dataset.columnTypes, ...columnTypes } as Record<
-        string,
-        ColumnType
-      >,
+      columnTypes: { ...dataset.columnTypes, ...columnTypes },
     }
   }, [dataset, columnTypes])
 
-  // Calculate statistics when dataset changes
   const stats = useMemo(() => {
     if (!datasetWithTypes) return []
     return calculateDatasetStats(
@@ -51,16 +67,41 @@ function AppContent() {
     )
   }, [datasetWithTypes])
 
+  const overview = useMemo(() => {
+    if (!datasetWithTypes) return null
+    return buildDatasetOverview(datasetWithTypes, stats)
+  }, [datasetWithTypes, stats])
+
+  const suggestions = useMemo(() => {
+    if (!datasetWithTypes) return []
+    return suggestChartConfigs(datasetWithTypes)
+  }, [datasetWithTypes])
+
+  // Reset column selection whenever the loaded dataset changes.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSelectedColumn(null)
+  }, [dataset?.filename])
+
+  const sectionIds = useMemo(
+    () =>
+      datasetWithTypes ? Object.values(SECTION_IDS) : [SECTION_IDS.overview],
+    [datasetWithTypes]
+  )
+  const activeSectionRaw = useScrollSpy(sectionIds)
+  const activeSection = (Object.entries(SECTION_IDS).find(
+    ([, domId]) => domId === activeSectionRaw
+  )?.[0] || 'overview') as SectionId
+
   const handleDatasetLoaded = (newDataset: Dataset) => {
     updateDataset(newDataset)
-    showSuccess('Dataset Loaded', `Successfully loaded ${newDataset.filename}`)
-    // Clear previous column types when loading new dataset
+    showSuccess('Dataset loaded', `Loaded ${newDataset.filename}`)
     clearColumnTypes()
+    updateChartConfig(null)
   }
 
   const handleError = (errorMessage: string) => {
-    showError('Error Loading Dataset', errorMessage)
-    updateDataset(null)
+    showError('Couldn’t load dataset', errorMessage)
   }
 
   const handleColumnTypeChange = (columnName: string, newType: ColumnType) => {
@@ -70,162 +111,158 @@ function AppContent() {
   const handleClearSession = () => {
     clearDataset()
     clearColumnTypes()
+    clearChartConfig()
     clearSession()
+    setSelectedColumn(null)
   }
 
-  // Header content for the sidebar layout
-  const headerContent = (
-    <div className="flex items-center justify-between w-full">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-          CSV Dashboard Generator
-        </h1>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Upload any CSV file and generate interactive charts and statistics
-        </p>
-      </div>
-      <div className="flex items-center space-x-2">
-        <button
-          onClick={() => setShowPrivacyNotice(true)}
-          className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          aria-label="View privacy and data handling information"
-        >
-          Privacy
-        </button>
-        <button
-          onClick={() => setShowSettings(true)}
-          className="px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          aria-label="Open settings to configure limits and preferences"
-        >
-          Settings
-        </button>
-      </div>
-    </div>
+  const handleNavigate = (id: SectionId) => {
+    document.getElementById(SECTION_IDS[id])?.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'auto'
+        : 'smooth',
+      block: 'start',
+    })
+  }
+
+  const header = <TopBar onOpenPrivacy={() => setShowPrivacy(true)} />
+
+  const sidebar = (
+    <Sidebar
+      activeSection={activeSection}
+      hasDataset={!!datasetWithTypes}
+      onNavigate={handleNavigate}
+      onOpenSettings={() => setShowSettings(true)}
+      onOpenHelp={() => setShowHelp(true)}
+    />
   )
 
-  // Sidebar content
-  const sidebarContent = datasetWithTypes ? (
-    <div className="space-y-6">
-      {/* Stats are now shown in main content on larger screens */}
-      <div className="lg:hidden">
-        <StatsPanel stats={stats} />
-      </div>
+  const main = !datasetWithTypes ? (
+    <div id={SECTION_IDS.overview} className="scroll-mt-20">
+      <LandingHero
+        onDatasetLoaded={handleDatasetLoaded}
+        onError={handleError}
+      />
     </div>
-  ) : null
+  ) : (
+    <div className="space-y-14">
+      <div id={SECTION_IDS.overview} className="scroll-mt-20 space-y-6">
+        <DatasetHeader
+          dataset={datasetWithTypes}
+          hasSessionData={hasSessionData}
+          onUploadNew={() => updateDataset(null)}
+          onClearSession={handleClearSession}
+        />
+        {overview && (
+          <>
+            <QuickReadStats overview={overview} />
+            <AtAGlance overview={overview} />
+          </>
+        )}
+      </div>
 
-  // Main content
-  const mainContent = (
-    <div className="space-y-6">
-      {!datasetWithTypes ? (
-        <div className="space-y-6">
-          <Uploader
-            onDatasetLoaded={handleDatasetLoaded}
-            onError={handleError}
+      <div id={SECTION_IDS.charts} className="scroll-mt-20">
+        <SectionHeader
+          eyebrow="Charts"
+          title="Chart ideas"
+          description="Start from a suggestion, then fine-tune it manually."
+          className="mb-5"
+        />
+        <div className="space-y-5">
+          <ChartIdeaCards
+            dataset={datasetWithTypes}
+            suggestions={suggestions}
+            onSelect={updateChartConfig}
+            maxVisible={6}
           />
-
-          <SampleLoader
-            onDatasetLoaded={handleDatasetLoaded}
-            onError={handleError}
+          <ChartContainer
+            dataset={datasetWithTypes}
+            chartConfig={chartConfig}
+            onConfigChange={updateChartConfig}
           />
         </div>
-      ) : (
-        <div className="space-y-6">
-          <section
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6"
-            aria-labelledby="dataset-info"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <h2
-                  id="dataset-info"
-                  className="text-xl font-semibold text-gray-900 dark:text-white"
-                >
-                  Dataset: {datasetWithTypes.filename}
-                </h2>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  {(datasetWithTypes.size / 1024).toFixed(1)} KB •{' '}
-                  {datasetWithTypes.rows.length} rows •{' '}
-                  {datasetWithTypes.headers.length} columns
-                </p>
-              </div>
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => updateDataset(null)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  aria-describedby="upload-new-help"
-                >
-                  Upload New File
-                </button>
-                <div id="upload-new-help" className="sr-only">
-                  Upload a different CSV file to replace the current dataset
-                </div>
-                {hasSessionData && (
-                  <button
-                    onClick={handleClearSession}
-                    className="px-4 py-2 text-sm font-medium text-red-700 dark:text-red-400 bg-white dark:bg-gray-700 border border-red-300 dark:border-red-600 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                    aria-describedby="clear-session-help"
-                  >
-                    Clear Session
-                  </button>
-                )}
-                <div id="clear-session-help" className="sr-only">
-                  Clear all stored data and start fresh
-                </div>
-              </div>
-            </div>
-          </section>
+      </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            <section
-              className="lg:col-span-1 xl:col-span-2"
-              aria-labelledby="data-preview"
-            >
-              <h3 id="data-preview" className="sr-only">
-                Data Preview
-              </h3>
-              <DataPreview
-                dataset={datasetWithTypes}
-                onColumnTypeChange={handleColumnTypeChange}
-              />
-            </section>
-            <section
-              className="lg:col-span-1 xl:col-span-1"
-              aria-labelledby="stats-section"
-            >
-              <h3 id="stats-section" className="sr-only">
-                Statistics Summary
-              </h3>
-              <StatsPanel stats={stats} />
-            </section>
-          </div>
-
-          <section aria-labelledby="chart-section">
-            <h3 id="chart-section" className="sr-only">
-              Chart Visualization
-            </h3>
-            <ChartContainer dataset={datasetWithTypes} />
-          </section>
+      <div id={SECTION_IDS.columns} className="scroll-mt-20">
+        <SectionHeader
+          eyebrow="Columns"
+          title="Column checkup"
+          description="Type, quality, and shape for any column."
+          className="mb-5"
+        />
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[260px_1fr]">
+          <Card padding="sm">
+            <ColumnsList
+              dataset={datasetWithTypes}
+              selectedColumn={selectedColumn}
+              onSelectColumn={setSelectedColumn}
+            />
+          </Card>
+          <Card padding="md">
+            <ColumnProfile
+              dataset={datasetWithTypes}
+              stats={stats}
+              selectedColumn={selectedColumn}
+              onTypeChange={handleColumnTypeChange}
+            />
+          </Card>
         </div>
-      )}
+      </div>
+
+      <div id={SECTION_IDS.data} className="scroll-mt-20">
+        <SectionHeader
+          eyebrow="Data"
+          title="Preview rows"
+          description="Sort, filter, and page through the raw data."
+          className="mb-5"
+        />
+        <Card padding="md">
+          <DataPreview
+            dataset={datasetWithTypes}
+            onColumnTypeChange={handleColumnTypeChange}
+          />
+        </Card>
+      </div>
     </div>
   )
 
   return (
     <>
-      <SidebarLayout
-        header={headerContent}
-        sidebar={sidebarContent}
-        main={mainContent}
+      <AppShell header={header} sidebar={sidebar} main={main} />
+
+      <Settings
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        onOpenPrivacy={() => {
+          setShowSettings(false)
+          setShowPrivacy(true)
+        }}
+        datasetInfo={
+          datasetWithTypes
+            ? {
+                fileSize: datasetWithTypes.size,
+                rowCount: datasetWithTypes.rows.length,
+                columnCount: datasetWithTypes.headers.length,
+              }
+            : null
+        }
       />
 
-      <Settings isOpen={showSettings} onClose={() => setShowSettings(false)} />
-
       <PrivacyNotice
-        isOpen={showPrivacyNotice}
-        onClose={() => setShowPrivacyNotice(false)}
+        isOpen={showPrivacy}
+        onClose={() => setShowPrivacy(false)}
         onOpenSettings={() => {
-          setShowPrivacyNotice(false)
+          setShowPrivacy(false)
           setShowSettings(true)
+        }}
+      />
+
+      <HelpModal
+        isOpen={showHelp}
+        onClose={() => setShowHelp(false)}
+        onOpenPrivacy={() => {
+          setShowHelp(false)
+          setShowPrivacy(true)
         }}
       />
 
