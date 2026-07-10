@@ -68,5 +68,12 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.sha_tag }}
+          build-args: |
+            VITE_PUBLIC_ENV=production
+            VITE_INDEXABLE=true
+            VITE_CANONICAL_URL=https://app.example.com
+            VITE_ANALYTICS_ENABLED=${{ vars.VITE_ANALYTICS_ENABLED || 'false' }}
+            VITE_ANALYTICS_SRC=${{ vars.VITE_ANALYTICS_SRC || 'https://analytics.example.com/fetch.js' }}
+            VITE_ANALYTICS_WEBSITE_ID=${{ vars.VITE_ANALYTICS_WEBSITE_ID }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

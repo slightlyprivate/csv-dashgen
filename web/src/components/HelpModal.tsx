@@ -25,6 +25,7 @@ export default function HelpModal({
       isOpen={isOpen}
       onClose={onClose}
       titleId="help-title"
+      descriptionId="help-description"
       maxWidthClassName="max-w-lg"
     >
       <div className="flex items-center justify-between border-b border-ink-200 p-5 dark:border-ink-800">
@@ -56,7 +57,10 @@ export default function HelpModal({
       </div>
 
       <div className="space-y-4 p-5">
-        <p className="text-sm leading-relaxed text-ink-600 dark:text-ink-400">
+        <p
+          id="help-description"
+          className="text-sm leading-relaxed text-ink-600 dark:text-ink-400"
+        >
           Spread Your Sheets is a private, browser-based CSV/TSV explorer: drop
           in a file and get instant summaries, column profiles, and chart ideas
           — all processed locally.

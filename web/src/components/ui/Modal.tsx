@@ -4,6 +4,7 @@ export interface ModalProps {
   isOpen: boolean
   onClose: () => void
   titleId: string
+  descriptionId?: string
   children: React.ReactNode
   maxWidthClassName?: string
 }
@@ -20,6 +21,7 @@ export default function Modal({
   isOpen,
   onClose,
   titleId,
+  descriptionId,
   children,
   maxWidthClassName = 'max-w-2xl',
 }: ModalProps) {
@@ -81,6 +83,7 @@ export default function Modal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        aria-describedby={descriptionId}
       >
         {children}
       </div>

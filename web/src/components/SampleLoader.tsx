@@ -3,6 +3,7 @@ import { Dataset } from '../types'
 import { useLimits } from '../hooks/useLimits'
 import { parseCSVText, createDataset, validateDataset } from '../lib/csv'
 import { ChartIcon, GridIcon, ActivityIcon, SparkIcon } from './icons'
+import { trackAnalyticsEvent } from '../lib/analytics'
 
 interface SampleLoaderProps {
   onDatasetLoaded: (dataset: Dataset) => void
@@ -76,6 +77,7 @@ export function SampleLoader({ onDatasetLoaded, onError }: SampleLoaderProps) {
       }
 
       const dataset = createDataset(parsedData, filename, csvText.length)
+      trackAnalyticsEvent('load_sample_dataset')
       onDatasetLoaded(dataset)
     } catch (error) {
       const errorMessage =

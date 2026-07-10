@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { suggestChartConfig } from '../lib/charts'
 import { Dataset, ChartKind, ChartConfig } from '../types'
 import Card from './ui/Card'
+import { trackAnalyticsEvent } from '../lib/analytics'
 
 interface ChartSelectorProps {
   dataset: Dataset
@@ -66,6 +67,7 @@ export function ChartSelector({
         : { ...config, type }
     setConfig(newConfig)
     onConfigChange(newConfig)
+    trackAnalyticsEvent('create_manual_chart', { chartType: type })
   }
 
   const handleFieldChange = (

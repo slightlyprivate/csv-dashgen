@@ -33,6 +33,12 @@ fronted by a reverse proxy that already runs on the target host.
   ```
 
   Pull requests do not publish images.
+- This is independent of semantic versioning: `docker-build.yml` runs on
+  every `main` push and tags images by commit sha, while
+  [`.github/workflows/release-please.yml`](../../.github/workflows/release-please.yml)
+  separately manages `version.txt`, `CHANGELOG.md`, and GitHub releases from
+  conventional commits — see [Versioning & releases](../../README.md#versioning--releases)
+  in the README. Neither workflow currently triggers the other.
 
 ## Directory layout
 
