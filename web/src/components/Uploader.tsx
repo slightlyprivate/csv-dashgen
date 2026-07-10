@@ -1,12 +1,13 @@
 import { useState, useCallback, DragEvent, ChangeEvent } from 'react'
 import {
   validateFile,
-  parseCSV,
-  validateCSVData,
+  parseFile,
+  validateDataset,
   createDataset,
-} from '../utils/csvParser'
+} from '../lib/csv'
 import { Dataset } from '../types'
 import { useLimits } from '../hooks/useLimits'
+import InlineNotice from './ui/InlineNotice'
 
 interface UploaderProps {
   onDatasetLoaded: (dataset: Dataset) => void
@@ -17,6 +18,49 @@ interface UploadState {
   isDragOver: boolean
   isProcessing: boolean
   error: string | null
+}
+
+function UploadIcon({ processing }: { processing: boolean }) {
+  if (processing) {
+    return (
+      <svg
+        className="h-7 w-7 animate-spin text-brand-600 dark:text-brand-400"
+        fill="none"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="3"
+        />
+        <path
+          className="opacity-80"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        />
+      </svg>
+    )
+  }
+  return (
+    <svg
+      className="h-7 w-7 text-brand-600 dark:text-brand-400"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={1.6}
+      aria-hidden="true"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 16V4m0 0L7 9m5-5l5 5M5 16v2a2 2 0 002 2h10a2 2 0 002-2v-2"
+      />
+    </svg>
+  )
 }
 
 export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
@@ -44,19 +88,16 @@ export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
       setState((prev) => ({ ...prev, isProcessing: true, error: null }))
 
       try {
-        // Validate file
         const validation = validateFile(file, limits.MAX_FILE_SIZE)
         if (!validation.isValid) {
           throw new Error(validation.error)
         }
 
-        // Parse CSV
-        const parsedData = await parseCSV(file)
+        const parsedData = await parseFile(file)
 
-        // Validate parsed data
         const headers = parsedData.data[0] || []
-        const dataRows = parsedData.data.slice(1) // Exclude header row
-        const dataValidation = validateCSVData(
+        const dataRows = parsedData.data.slice(1)
+        const dataValidation = validateDataset(
           dataRows,
           headers,
           limits.MAX_ROWS,
@@ -66,7 +107,6 @@ export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
           throw new Error(dataValidation.error)
         }
 
-        // Create dataset
         const dataset = createDataset(parsedData, file.name, file.size)
 
         onDatasetLoaded(dataset)
@@ -105,21 +145,23 @@ export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
       if (files && files.length > 0) {
         processFile(files[0])
       }
+      // Allow re-selecting the same filename after an error/clear.
+      e.target.value = ''
     },
     [processFile]
   )
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full">
       <div
         className={`
-          relative border-2 border-dashed rounded-lg p-8 text-center transition-colors
+          relative rounded-2xl border-2 border-dashed p-8 text-center backdrop-blur-sm transition-colors sm:p-12
           ${
             state.isDragOver
-              ? 'border-blue-500 bg-blue-50'
-              : 'border-gray-300 hover:border-gray-400'
+              ? 'border-brand-500 bg-brand-50 dark:bg-brand-950/40'
+              : 'border-ink-300 bg-white/70 hover:border-brand-400 dark:border-ink-700 dark:bg-ink-900/50 dark:hover:border-brand-600'
           }
-          ${state.isProcessing ? 'opacity-50 pointer-events-none' : ''}
+          ${state.isProcessing ? 'pointer-events-none opacity-70' : ''}
         `}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -132,72 +174,56 @@ export default function Uploader({ onDatasetLoaded, onError }: UploaderProps) {
           type="file"
           accept=".csv,.tsv"
           onChange={handleFileInput}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
           disabled={state.isProcessing}
           aria-label="Select CSV or TSV file"
           id="file-input"
         />
 
-        <div className="space-y-4">
-          <div className="text-6xl text-gray-400" aria-hidden="true">
-            {state.isProcessing ? '⏳' : '📁'}
+        <div className="flex flex-col items-center gap-3">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-100 dark:bg-brand-900/40">
+            <UploadIcon processing={state.isProcessing} />
           </div>
 
           <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              {state.isProcessing ? 'Processing CSV...' : 'Upload CSV File'}
+            <h3 className="font-display text-lg font-semibold text-ink-900 dark:text-ink-50">
+              {state.isProcessing ? 'Reading your file…' : 'Drop in a file'}
             </h3>
-            <p className="text-gray-600" id="upload-instructions">
+            <p
+              className="mt-1 text-sm text-ink-600 dark:text-ink-400"
+              id="upload-instructions"
+            >
               {state.isProcessing
-                ? 'Please wait while we analyze your data...'
-                : 'Drag and drop your CSV or TSV file here, or click to browse'}
+                ? 'Parsing and profiling your data locally.'
+                : 'Drag a CSV or TSV here, or click to browse'}
             </p>
           </div>
 
           {!state.isProcessing && (
-            <div
-              className="text-sm text-gray-500"
-              aria-label="File requirements"
-            >
-              <p>Supported formats: .csv, .tsv</p>
-              <p>
-                Maximum file size:{' '}
-                {(limits.MAX_FILE_SIZE / (1024 * 1024)).toFixed(1)}MB
-              </p>
-              <p>Maximum rows: {limits.MAX_ROWS.toLocaleString()}</p>
-              <p>Maximum columns: {limits.MAX_COLUMNS}</p>
-            </div>
+            <p className="text-xs text-ink-400 dark:text-ink-500">
+              Up to {(limits.MAX_FILE_SIZE / (1024 * 1024)).toFixed(0)} MB ·{' '}
+              {limits.MAX_ROWS.toLocaleString()} rows · {limits.MAX_COLUMNS}{' '}
+              columns
+            </p>
           )}
         </div>
 
-        {/* Keyboard accessible button for screen readers */}
         <button
           type="button"
           onClick={() => document.getElementById('file-input')?.click()}
-          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:right-2 focus:px-3 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-md focus:text-sm"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:right-2 focus:rounded-md focus:bg-brand-700 focus:px-3 focus:py-2 focus:text-sm focus:text-white"
           disabled={state.isProcessing}
           aria-describedby="upload-instructions"
         >
-          Browse Files
+          Browse files
         </button>
       </div>
 
       {state.error && (
-        <div
-          className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md"
-          role="alert"
-          aria-live="polite"
-        >
-          <div className="flex">
-            <div className="text-red-400" aria-hidden="true">
-              ⚠️
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">Upload Error</h3>
-              <p className="text-sm text-red-700 mt-1">{state.error}</p>
-            </div>
-          </div>
-        </div>
+        <InlineNotice tone="danger" className="mt-4" role="alert">
+          <span className="font-medium">Couldn&apos;t load that file. </span>
+          {state.error}
+        </InlineNotice>
       )}
     </div>
   )

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { ThemeContext, Theme } from './ThemeContext.context'
+import { loadRawPreference, saveRawPreference } from '../lib/storage'
 
 interface ThemeProviderProps {
   children: React.ReactNode
@@ -13,13 +14,9 @@ export function ThemeProvider({
   storageKey = 'csv-dashgen-theme',
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
-    try {
-      const stored = localStorage.getItem(storageKey)
-      if (stored && ['light', 'dark', 'system'].includes(stored)) {
-        return stored as Theme
-      }
-    } catch (error) {
-      console.warn('Failed to load theme from localStorage:', error)
+    const stored = loadRawPreference(storageKey)
+    if (stored && ['light', 'dark', 'system'].includes(stored)) {
+      return stored as Theme
     }
     return defaultTheme
   })
@@ -61,11 +58,7 @@ export function ThemeProvider({
 
   // Save theme to localStorage
   const handleSetTheme = (newTheme: Theme) => {
-    try {
-      localStorage.setItem(storageKey, newTheme)
-    } catch (error) {
-      console.warn('Failed to save theme to localStorage:', error)
-    }
+    saveRawPreference(storageKey, newTheme)
     setTheme(newTheme)
   }
 

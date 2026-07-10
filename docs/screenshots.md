@@ -1,36 +1,65 @@
 # Screenshots & Visual Documentation
 
-This directory contains screenshots and visual documentation for the CSV → Dashboard Generator application.
+This directory contains screenshots and visual documentation for Spread Your Sheets (repository: `csv-dashgen`).
+
+**Status:** Active relaunch in progress.
+
+## Current status
+
+Only two screenshots currently exist in `docs/`:
+
+- `docs/dashboard.png` — main dashboard view
+- `docs/upload.png` — upload interface
+
+`docs/dashboard-placeholder.txt` and `docs/upload-placeholder.txt` are leftover placeholder files from before real screenshots were captured; they can be removed once confirmed unnecessary.
+
+**These two screenshots are now stale.** They were captured before the
+`feature/signature-ux` visual redesign and show the old generic-dashboard
+styling (default Tailwind grays, sidebar drawer, single-suggestion chart
+picker). The current app has: a sidebar section nav (Overview/Columns/Charts/Data),
+an amber/dark visual identity, a two-column empty-state hero, a "quick read"
+summary row, ranked chart-idea cards, and a restyled column inspector with a
+distribution histogram. Treat `dashboard.png`/`upload.png` as historical
+reference only — do not use them in any relaunch marketing material. Refresh
+them (plus add real `settings.png`, `mobile.png`, and `dark-theme.png`
+captures of the current UI) in the release branch.
+
+The settings, mobile, and dark-theme screenshots referenced in the guidelines below **do not exist yet**. They are planned, not current. Do not reference `settings.png`, `mobile.png`, or `dark-theme.png` from README or other public docs until they are actually captured and committed.
 
 ## Screenshot Guidelines
 
 ### Required Screenshots
 
 #### 1. Main Dashboard (`dashboard.png`)
+
 - **Purpose**: Show the main application interface with sample data loaded
 - **Content**: Full dashboard view with charts, statistics, and data preview
 - **Resolution**: 1920x1080 (recommended)
 - **Format**: PNG with transparent background if possible
 
 #### 2. Upload Interface (`upload.png`)
+
 - **Purpose**: Demonstrate the drag-and-drop upload functionality
 - **Content**: Upload area with drag-and-drop zone and file selection
 - **Resolution**: 1200x800 (recommended)
 - **Format**: PNG
 
 #### 3. Settings Panel (`settings.png`)
+
 - **Purpose**: Show configuration options and privacy controls
 - **Content**: Settings panel with sliders, toggles, and theme options
 - **Resolution**: 1000x800 (recommended)
 - **Format**: PNG
 
 #### 4. Mobile View (`mobile.png`)
+
 - **Purpose**: Demonstrate responsive design on mobile devices
 - **Content**: Dashboard view on mobile/tablet screen
 - **Resolution**: 375x667 (iPhone SE) or 414x896 (iPhone 11)
 - **Format**: PNG
 
 #### 5. Dark Theme (`dark-theme.png`)
+
 - **Purpose**: Show dark mode interface
 - **Content**: Dashboard in dark theme
 - **Resolution**: 1920x1080 (recommended)
@@ -39,6 +68,7 @@ This directory contains screenshots and visual documentation for the CSV → Das
 ### How to Capture Screenshots
 
 #### Browser Developer Tools
+
 1. Open the application in Chrome/Edge/Firefox
 2. Press `F12` to open Developer Tools
 3. Go to the desired page/section
@@ -49,11 +79,13 @@ This directory contains screenshots and visual documentation for the CSV → Das
    - "Capture area screenshot" for selected regions
 
 #### Browser Extensions
+
 - **Lightshot**: Simple screenshot tool with annotation
 - **Awesome Screenshot**: Advanced screenshot and annotation
 - **Fireshot**: Full page screenshots with editing
 
 #### Operating System Tools
+
 - **Windows**: Snip & Sketch (Win+Shift+S)
 - **macOS**: Cmd+Shift+4 for area, Cmd+Shift+5 for advanced capture
 - **Linux**: Flameshot, Shutter, or built-in screenshot tools
@@ -61,6 +93,7 @@ This directory contains screenshots and visual documentation for the CSV → Das
 ### Screenshot Best Practices
 
 #### Technical
+
 - **High Resolution**: At least 1920x1080 for desktop screenshots
 - **Consistent Browser**: Use the same browser for all screenshots
 - **Clean State**: Ensure no browser UI elements are visible
@@ -68,6 +101,7 @@ This directory contains screenshots and visual documentation for the CSV → Das
 - **Optimized Size**: Compress images without quality loss
 
 #### Visual
+
 - **Consistent Theme**: Use light theme for main screenshots, show dark theme separately
 - **Sample Data**: Use realistic but anonymized data
 - **Clear Focus**: Ensure the main content is clearly visible
@@ -89,12 +123,14 @@ Examples:
 ### Image Optimization
 
 #### Tools
+
 - **TinyPNG**: Lossless compression for PNG files
 - **JPEGmini**: JPEG optimization
 - **ImageOptim**: Mac optimization tool
 - **Squoosh**: Web-based image optimization
 
 #### Settings
+
 - **PNG**: Lossless compression, best for screenshots with text
 - **JPEG**: 80-90% quality for photos/charts
 - **WebP**: Modern format with better compression (if supported)
@@ -111,6 +147,7 @@ Examples:
 For a more comprehensive demonstration, consider creating a short video:
 
 ### Video Content
+
 1. **Introduction** (10s): App overview and key features
 2. **Upload Demo** (20s): File upload and parsing process
 3. **Data Exploration** (30s): Statistics, charts, and interactions
@@ -118,6 +155,7 @@ For a more comprehensive demonstration, consider creating a short video:
 5. **Export Features** (10s): Data and chart export capabilities
 
 ### Video Specifications
+
 - **Duration**: 1-2 minutes
 - **Resolution**: 1920x1080 (Full HD)
 - **Format**: MP4 with H.264 codec
@@ -125,6 +163,7 @@ For a more comprehensive demonstration, consider creating a short video:
 - **Audio**: Optional narration or background music
 
 ### Video Tools
+
 - **OBS Studio**: Free screen recording software
 - **Camtasia**: Professional screen recording
 - **Loom**: Web-based screen recording
@@ -150,6 +189,7 @@ For a more comprehensive demonstration, consider creating a short video:
 ```
 
 ### GitHub Integration
+
 - Add screenshots to repository for automatic display in README
 - Use GitHub's image optimization for faster loading
 - Consider creating a `screenshots` branch for larger files
@@ -157,12 +197,14 @@ For a more comprehensive demonstration, consider creating a short video:
 ## Maintenance
 
 ### Update Schedule
+
 - **Major Releases**: Update all screenshots
 - **UI Changes**: Update affected screenshots
 - **New Features**: Add screenshots for new functionality
 - **Quarterly**: Review and refresh existing screenshots
 
 ### Version Control
+
 - Store screenshots in `docs/` directory
 - Use descriptive commit messages for screenshot updates
 - Consider using Git LFS for large video files
@@ -170,18 +212,21 @@ For a more comprehensive demonstration, consider creating a short video:
 ## Tools & Resources
 
 ### Design Tools
+
 - **Figma**: Create mockups and prototypes
 - **Adobe XD**: Design and prototyping
 - **Sketch**: Mac-based design tool
 
 ### Image Editing
+
 - **GIMP**: Free image editor
 - **Photoshop**: Professional image editing
 - **Pixelmator**: Mac image editor
 
 ### Color & Contrast
+
 - **WebAIM Contrast Checker**: Verify color contrast
 - **Stark**: Accessibility testing for design
 - **Color Contrast Analyzer**: Browser extension
 
-This documentation ensures consistent, professional visual presentation of the CSV → Dashboard Generator application across all platforms and use cases.
+This documentation ensures consistent, professional visual presentation of Spread Your Sheets across all platforms and use cases.
