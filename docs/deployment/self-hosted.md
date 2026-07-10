@@ -108,6 +108,27 @@ The nginx image exposes `GET /health`, returning HTTP 200 with the plain-text
 body `ok`. Use it for manual verification, uptime checks, or container
 health checks.
 
+## Security headers
+
+Security headers (`Content-Security-Policy`, `Strict-Transport-Security`,
+`Referrer-Policy`, `X-Content-Type-Options`, `X-Frame-Options`,
+`Cross-Origin-Resource-Policy`, `Permissions-Policy`) are applied by nginx
+inside the image — see
+[`deploy/nginx/security-headers.conf`](../../deploy/nginx/security-headers.conf),
+included at the server level and again in any location (`/assets/`,
+`/index.html`) that sets its own `add_header`, since nginx doesn't inherit
+`add_header` into a location that defines one of its own.
+
+- `Strict-Transport-Security` is sent on every response from this origin;
+  **Cloudflare still terminates public TLS** in front of Traefik, and
+  browsers only act on HSTS when the page was actually loaded over HTTPS, so
+  this only takes effect for the public hostname, not local/plain-HTTP
+  testing. HSTS `preload` is intentionally not set yet.
+- The `Content-Security-Policy` only allows `script-src`/`connect-src` from
+  `https://analytics.slightlyprivate.com` in addition to `'self'` — see
+  [ANALYTICS.md](../ANALYTICS.md#csp--nginx) if the analytics host ever
+  changes.
+
 ## Reverse proxy / Traefik labels
 
 The `web` service is not published on a host port; Traefik reaches it over

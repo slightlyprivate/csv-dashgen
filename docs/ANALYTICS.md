@@ -68,9 +68,10 @@ conditions, script injection/dedup, and no-op behavior.
 
 ## CSP / nginx
 
-If the production analytics script is enabled, the deployed nginx config
-must allow script/connect requests to `https://analytics.example.com`.
-See [`deploy/nginx/default.conf`](../deploy/nginx/default.conf) — there is
-currently no `Content-Security-Policy` header, so no changes are required
-for analytics to load. If a CSP is added later, it needs a `script-src` and
-`connect-src` entry for that host.
+The production nginx image sets a `Content-Security-Policy` header (see
+[`deploy/nginx/security-headers.conf`](../deploy/nginx/security-headers.conf))
+that allows `script-src` and `connect-src` from
+`https://analytics.slightlyprivate.com` specifically, so the self-hosted
+analytics script can load and send events when enabled. If the analytics
+deployment ever moves to a different host, `script-src`/`connect-src` in
+that file need a matching update or the script will be blocked.
