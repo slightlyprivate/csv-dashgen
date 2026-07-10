@@ -1,0 +1,18 @@
+# Keeps the Docker build context (repo root) small and prevents local-only
+# files — especially anything under web/ that isn't checked in, like a
+# local .env — from being sent to the daemon or copied into a build stage.
+
+.git
+.github
+
+docs
+samples
+*.md
+
+web/node_modules
+web/dist
+web/coverage
+web/.env
+web/.env.*
+web/.husky
+web/.vscode
