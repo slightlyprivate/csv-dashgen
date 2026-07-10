@@ -188,6 +188,39 @@ npm run build
 # Serve the resulting web/dist directory with any static file server
 ```
 
+Docker images are built and published to GHCR on every push to `main` by
+[`.github/workflows/docker-build.yml`](.github/workflows/docker-build.yml),
+independently of the release process below — a release PR merging doesn't
+trigger a separate image build, and a normal `main` push doesn't create a
+release. A future workflow may choose to build/tag images from release-please
+version tags instead, but that isn't wired up yet.
+
+## Versioning & releases
+
+Spread Your Sheets uses [Semantic Versioning](https://semver.org), managed by
+[release-please](https://github.com/googleapis/release-please) from
+[Conventional Commits](https://www.conventionalcommits.org/) merged to
+`main`:
+
+- **[`version.txt`](version.txt)** — the current version, at the repo root.
+  release-please updates it automatically; don't hand-edit it.
+- **[`CHANGELOG.md`](CHANGELOG.md)** — generated from conventional commit
+  messages (`feat:`, `fix:`, `deps:`, etc.) by release-please, not
+  hand-written.
+- **[`release-please-config.json`](release-please-config.json)** /
+  **[`.release-please-manifest.json`](.release-please-manifest.json)** —
+  release-please's configuration and current-version manifest for this
+  single-package repo.
+- **[`.github/workflows/release-please.yml`](.github/workflows/release-please.yml)**
+  — on every push to `main`, opens/updates a "release PR" that bumps
+  `version.txt` and `CHANGELOG.md`; merging that PR cuts a GitHub release and
+  tag.
+
+The app's footer shows a version number from the `VITE_APP_VERSION` build
+arg when one is supplied (see [`web/.env.example`](web/.env.example)); if
+it's unset, the footer falls back to `web/package.json`'s `version` field
+instead, so the footer never breaks without it.
+
 ## Roadmap
 
 Longer-term ideas, not yet started:
