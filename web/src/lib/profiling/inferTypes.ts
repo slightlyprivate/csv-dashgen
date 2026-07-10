@@ -131,6 +131,28 @@ export function parseDate(value: string): Date | null {
 
   const cleanValue = value.trim()
 
+  // Bare YYYY-MM-DD (no time component) is spec'd to parse as UTC midnight,
+  // which shifts the calendar date by a day once read back with local-time
+  // accessors (toLocaleDateString, getDate(), etc.) in any timezone west of
+  // UTC. Build it from local components instead so displayed dates match
+  // what the string actually says. Datetime strings (which do carry a time
+  // component) are unaffected by this and still go through native parsing
+  // below, which treats them as local time per spec.
+  const isoDateOnly = cleanValue.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+  if (isoDateOnly) {
+    const year = parseInt(isoDateOnly[1])
+    const month = parseInt(isoDateOnly[2]) - 1
+    const day = parseInt(isoDateOnly[3])
+    const localDate = new Date(year, month, day)
+    if (
+      localDate.getFullYear() === year &&
+      localDate.getMonth() === month &&
+      localDate.getDate() === day
+    ) {
+      return localDate
+    }
+  }
+
   // Try native Date.parse first (handles ISO and some common formats)
   const nativeParse = new Date(cleanValue)
   if (!isNaN(nativeParse.getTime())) {

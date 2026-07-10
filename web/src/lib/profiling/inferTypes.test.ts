@@ -52,7 +52,10 @@ describe('inferColumnType', () => {
 
 describe('parseDate', () => {
   it('parses ISO dates', () => {
-    expect(parseDate('2023-01-15')?.getFullYear()).toBe(2023)
+    const date = parseDate('2023-01-15')
+    expect(date?.getFullYear()).toBe(2023)
+    expect(date?.getMonth()).toBe(0)
+    expect(date?.getDate()).toBe(15)
   })
 
   it('parses US-style dates', () => {

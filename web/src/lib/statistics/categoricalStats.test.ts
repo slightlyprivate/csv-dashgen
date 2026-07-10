@@ -20,10 +20,29 @@ describe('calculateCategoricalStats', () => {
     expect(stats.uniqueCount).toBe(1)
   })
 
-  it('limits top values to 10 entries', () => {
-    const values = Array.from({ length: 15 }, (_, i) => `value-${i}`)
+  it('limits top values to 10 entries, keeping the highest-frequency ones', () => {
+    // 12 distinct values with descending counts (12..1) so the top-10 cutoff
+    // actually has to pick winners rather than an arbitrary 10 of 12 ties.
+    const counts = [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+    const values = counts.flatMap((count, i) =>
+      Array.from({ length: count }, () => `value-${i}`)
+    )
+
     const stats = calculateCategoricalStats(values)
+
     expect(stats.topValues).toHaveLength(10)
+    expect(stats.topValues.map((v) => v.value)).toEqual([
+      'value-0',
+      'value-1',
+      'value-2',
+      'value-3',
+      'value-4',
+      'value-5',
+      'value-6',
+      'value-7',
+      'value-8',
+      'value-9',
+    ])
   })
 
   it('coerces numeric-looking string values to numbers in top values', () => {

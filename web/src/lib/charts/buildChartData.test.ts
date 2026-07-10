@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest'
-import { generateChartData } from './buildChartData'
+import {
+  generateChartData,
+  getDefaultChartOptions,
+  LIGHT_CHART_COLORS,
+} from './buildChartData'
 import { Dataset, ChartConfig } from '../../types'
 
 function makeDataset(overrides: Partial<Dataset>): Dataset {
@@ -75,7 +79,23 @@ describe('generateChartData', () => {
 
     const data = generateChartData(dataset, config)
 
-    expect(data?.datasets).toHaveLength(2)
+    expect(data?.labels).toEqual(['2023-01-01'])
+    expect(data?.datasets).toEqual([
+      {
+        label: 'East',
+        data: [{ x: '2023-01-01', y: 10 }],
+        backgroundColor: LIGHT_CHART_COLORS[0],
+        borderColor: LIGHT_CHART_COLORS[0],
+        borderWidth: 2,
+      },
+      {
+        label: 'West',
+        data: [{ x: '2023-01-01', y: 20 }],
+        backgroundColor: LIGHT_CHART_COLORS[1],
+        borderColor: LIGHT_CHART_COLORS[1],
+        borderWidth: 2,
+      },
+    ])
   })
 
   it('builds pie chart data by summing y-values, using count fallback when y is non-numeric', () => {
@@ -123,6 +143,43 @@ describe('generateChartData', () => {
     ])
   })
 
+  it('builds grouped scatter chart data when a series field is set', () => {
+    const dataset = makeDataset({
+      headers: ['width', 'height', 'region'],
+      columnTypes: { width: 'number', height: 'number', region: 'string' },
+      rows: [
+        { width: 1, height: 2, region: 'East' },
+        { width: 3, height: 4, region: 'West' },
+      ],
+    })
+    const config: ChartConfig = {
+      type: 'scatter',
+      xField: 'width',
+      yField: 'height',
+      seriesField: 'region',
+    }
+
+    const data = generateChartData(dataset, config)
+
+    expect(data?.labels).toEqual([])
+    expect(data?.datasets).toEqual([
+      {
+        label: 'East',
+        data: [{ x: 1, y: 2 }],
+        backgroundColor: LIGHT_CHART_COLORS[0],
+        borderColor: LIGHT_CHART_COLORS[0],
+        borderWidth: 2,
+      },
+      {
+        label: 'West',
+        data: [{ x: 3, y: 4 }],
+        backgroundColor: LIGHT_CHART_COLORS[1],
+        borderColor: LIGHT_CHART_COLORS[1],
+        borderWidth: 2,
+      },
+    ])
+  })
+
   it('builds histogram data by binning a single numeric column', () => {
     const dataset = makeDataset({
       headers: ['amount'],
@@ -160,5 +217,52 @@ describe('generateChartData', () => {
     expect(
       (data?.datasets[0] as { backgroundColor: string }).backgroundColor
     ).toBe('#000000')
+  })
+})
+
+describe('getDefaultChartOptions', () => {
+  it('shows legend, tooltip, and axis titles by default', () => {
+    const options = getDefaultChartOptions('bar', 'My Title')
+
+    expect(options.plugins.legend.display).toBe(true)
+    expect(options.plugins.tooltip.enabled).toBe(true)
+    expect(options.plugins.title).toEqual({ display: true, text: 'My Title' })
+    expect(options.scales?.x).toMatchObject({
+      display: true,
+      title: { display: true, text: 'X-Axis' },
+    })
+    expect(options.scales?.y).toMatchObject({
+      display: true,
+      title: { display: true, text: 'Y-Axis' },
+    })
+  })
+
+  it('hides legend, tooltip, title, and axes in minimal mode', () => {
+    const options = getDefaultChartOptions('bar', 'My Title', true)
+
+    expect(options.animation).toBe(false)
+    expect(options.plugins.legend.display).toBe(false)
+    expect(options.plugins.tooltip.enabled).toBe(false)
+    expect(options.plugins.title.display).toBe(false)
+    expect(options.scales?.x.display).toBe(false)
+    expect(options.scales?.y.display).toBe(false)
+  })
+
+  it('omits scales entirely for pie charts', () => {
+    const options = getDefaultChartOptions('pie')
+
+    expect(options.scales).toBeUndefined()
+    expect(options.plugins.legend.display).toBe(true)
+  })
+
+  it('hides the legend and axis grid, using range/count axis titles for histograms', () => {
+    const options = getDefaultChartOptions('histogram')
+
+    expect(options.plugins.legend.display).toBe(false)
+    expect(options.scales?.x).toMatchObject({
+      title: { text: 'Range' },
+      grid: { display: false },
+    })
+    expect(options.scales?.y).toMatchObject({ title: { text: 'Count' } })
   })
 })

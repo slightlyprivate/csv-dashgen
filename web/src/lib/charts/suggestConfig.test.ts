@@ -77,6 +77,7 @@ describe('suggestChartConfig', () => {
 
     expect(config?.type).toBe('pie')
     expect(config?.xField).toBe('category')
+    expect(config?.yField).toBe('label')
   })
 
   it('returns null when nothing usable is present', () => {
@@ -107,11 +108,29 @@ describe('suggestChartConfigs', () => {
 
     const suggestions = suggestChartConfigs(dataset)
     const intents = suggestions.map((s) => s.intent)
+    const byIntent = (intent: string) =>
+      suggestions.find((s) => s.intent === intent)?.config
 
     expect(intents[0]).toBe('trend')
     expect(intents).toContain('compare')
     expect(intents).toContain('relationship')
     expect(intents).toContain('distribution')
+
+    expect(byIntent('trend')).toMatchObject({ xField: 'date', yField: 'sales' })
+    expect(byIntent('compare')).toMatchObject({
+      xField: 'region',
+      yField: 'sales',
+    })
+    expect(byIntent('relationship')).toMatchObject({
+      xField: 'sales',
+      yField: 'profit',
+    })
+    // Distribution should prefer the numeric column not already used as the
+    // primary "compare"/"relationship" y-field (profit, not sales).
+    expect(byIntent('distribution')).toMatchObject({
+      xField: 'profit',
+      yField: 'profit',
+    })
   })
 
   it('offers a histogram distribution idea for numeric-only data', () => {

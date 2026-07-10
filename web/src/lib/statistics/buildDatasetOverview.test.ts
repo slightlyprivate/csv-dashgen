@@ -69,8 +69,50 @@ describe('buildDatasetOverview', () => {
     const overview = buildDatasetOverview(dataset, stats)
 
     expect(overview.missingCellCount).toBe(1)
+    expect(overview.missingCellPercentage).toBe(50)
     expect(overview.columnsWithMissing).toBe(1)
-    expect(overview.qualityNote).toMatch(/missing/i)
+    expect(overview.qualityNote).toBe(
+      '50.0% of cells are missing, across 1 of 1 column.'
+    )
+  })
+
+  it('reports "no rows to analyze" for an empty dataset', () => {
+    const dataset = makeDataset({
+      headers: ['value'],
+      columnTypes: { value: 'number' },
+    })
+    const stats = calculateDatasetStats(dataset.rows, dataset.columnTypes)
+
+    const overview = buildDatasetOverview(dataset, stats)
+
+    expect(overview.rowCount).toBe(0)
+    expect(overview.qualityNote).toBe('No rows to analyze yet.')
+  })
+
+  it('surfaces the top category and numeric highlight when present', () => {
+    const dataset = makeDataset({
+      headers: ['category', 'amount'],
+      columnTypes: { category: 'string', amount: 'number' },
+      rows: [
+        { category: 'A', amount: 10 },
+        { category: 'A', amount: 20 },
+        { category: 'B', amount: 5 },
+      ],
+    })
+    const stats = calculateDatasetStats(dataset.rows, dataset.columnTypes)
+
+    const overview = buildDatasetOverview(dataset, stats)
+
+    expect(overview.topCategory).toMatchObject({
+      columnName: 'category',
+      value: 'A',
+      count: 2,
+    })
+    expect(overview.topCategory?.percentage).toBeCloseTo(66.667, 2)
+    expect(overview.numericHighlight).toEqual({
+      columnName: 'amount',
+      sum: 35,
+    })
   })
 
   it('computes the date range for the first date column', () => {

@@ -8,14 +8,15 @@ describe('computeColumnQuality', () => {
       { value: 10 },
       { value: null },
       { value: '' },
+      {}, // 'value' key absent -> reads as undefined
       { value: 20 },
     ]
 
     const quality = computeColumnQuality(rows, 'value')
 
-    expect(quality.totalCount).toBe(4)
-    expect(quality.missingCount).toBe(2)
-    expect(quality.missingPercentage).toBe(50)
+    expect(quality.totalCount).toBe(5)
+    expect(quality.missingCount).toBe(3)
+    expect(quality.missingPercentage).toBe(60)
   })
 
   it('counts unique present values only', () => {

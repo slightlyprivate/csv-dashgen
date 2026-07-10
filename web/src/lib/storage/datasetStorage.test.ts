@@ -49,20 +49,28 @@ describe('dataset storage roundtrip', () => {
 
   it('records a last-updated timestamp on save', () => {
     expect(getLastUpdated()).toBeNull()
+    const before = Date.now()
     saveDataset(dataset)
-    expect(getLastUpdated()).toBeInstanceOf(Date)
+    const updated = getLastUpdated()
+
+    expect(updated).toBeInstanceOf(Date)
+    expect(updated && !isNaN(updated.getTime())).toBe(true)
+    expect(updated!.getTime()).toBeGreaterThanOrEqual(before)
+    expect(updated!.getTime()).toBeLessThanOrEqual(Date.now())
   })
 
   it('clears the dataset, chart config, and every per-file column-types entry', () => {
     saveDataset(dataset)
     saveChartConfig({ type: 'bar', xField: 'a', yField: 'b' })
     saveColumnTypes('a.csv', { col: 'number' })
+    saveColumnTypes('b.csv', { col: 'string' })
 
     clearStoredData()
 
     expect(loadDataset()).toBeNull()
     expect(loadChartConfig()).toBeNull()
     expect(loadColumnTypes('a.csv')).toBeNull()
+    expect(loadColumnTypes('b.csv')).toBeNull()
     expect(getLastUpdated()).toBeNull()
   })
 })
