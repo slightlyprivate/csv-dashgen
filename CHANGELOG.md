@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/slightlyprivate/csv-dashgen/compare/v0.2.0...v0.2.1) (2026-07-10)
+
+
+### Bug Fixes
+
+* security headers ([#108](https://github.com/slightlyprivate/csv-dashgen/issues/108)) ([789cf83](https://github.com/slightlyprivate/csv-dashgen/commit/789cf83825d416340cbaff60fed0093ea25fa4fa))
+
 ## [0.2.0](https://github.com/slightlyprivate/csv-dashgen/compare/v0.1.0...v0.2.0) (2026-07-10)
 
 
