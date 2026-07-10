@@ -76,6 +76,25 @@ describe('buildDatasetOverview', () => {
     )
   })
 
+  it('pluralizes "columns" based on the total column count, not the affected count', () => {
+    const dataset = makeDataset({
+      headers: ['value', 'region', 'active'],
+      columnTypes: { value: 'number', region: 'string', active: 'boolean' },
+      rows: [
+        { value: 1, region: 'East', active: true },
+        { value: null, region: 'West', active: false },
+      ],
+    })
+    const stats = calculateDatasetStats(dataset.rows, dataset.columnTypes)
+
+    const overview = buildDatasetOverview(dataset, stats)
+
+    expect(overview.columnsWithMissing).toBe(1)
+    expect(overview.qualityNote).toBe(
+      '16.7% of cells are missing, across 1 of 3 columns.'
+    )
+  })
+
   it('reports "no rows to analyze" for an empty dataset', () => {
     const dataset = makeDataset({
       headers: ['value'],

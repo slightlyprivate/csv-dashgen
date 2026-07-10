@@ -11,6 +11,7 @@ import {
   clearStoredData,
   isStorageAvailable,
   getLastUpdated,
+  STORAGE_KEYS,
 } from '../lib/storage'
 
 interface UsePersistentStateOptions {
@@ -96,7 +97,7 @@ export function usePersistentChartConfig(
   const clearChartConfig = useCallback(() => {
     setChartConfig(null)
     if (isStorageAvailable()) {
-      localStorage.removeItem('csv-dashgen-chart-config')
+      localStorage.removeItem(STORAGE_KEYS.CHART_CONFIG)
     }
   }, [])
 
@@ -169,7 +170,7 @@ export function usePersistentColumnTypes(
   const clearColumnTypes = useCallback(() => {
     setColumnTypes({})
     if (filename && isStorageAvailable()) {
-      localStorage.removeItem(`csv-dashgen-column-types-${filename}`)
+      localStorage.removeItem(`${STORAGE_KEYS.COLUMN_TYPES}-${filename}`)
     }
   }, [filename])
 

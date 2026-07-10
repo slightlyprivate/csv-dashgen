@@ -6,7 +6,7 @@ import {
   saveJSONPreference,
 } from './preferencesStorage'
 
-const STORAGE_KEYS = {
+export const STORAGE_KEYS = {
   DATASET: 'csv-dashgen-dataset',
   CHART_CONFIG: 'csv-dashgen-chart-config',
   COLUMN_TYPES: 'csv-dashgen-column-types',

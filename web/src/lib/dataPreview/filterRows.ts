@@ -1,4 +1,4 @@
-import { DatasetRow, ColumnType } from '../../types'
+import { DatasetRow } from '../../types'
 
 export type RowFilter =
   | { kind: 'string'; text: string }
@@ -10,18 +10,15 @@ export type RowFilters = Record<string, RowFilter>
 
 export function filterRows(
   rows: DatasetRow[],
-  columnTypes: Record<string, ColumnType>,
   filters: RowFilters
 ): DatasetRow[] {
   const activeKeys = Object.keys(filters)
   if (activeKeys.length === 0) return rows
-  const getType = (h: string): ColumnType => columnTypes[h] || 'unknown'
 
   return rows.filter((row) => {
     for (const key of activeKeys) {
       const f = filters[key]
       const value = row[key]
-      const type = getType(key)
       // Treat null/undefined as empty for filtering; if filter set, usually exclude
       if (f?.kind === 'string') {
         const text = f.text?.trim().toLowerCase()
@@ -65,16 +62,6 @@ export function filterRows(
               ? value
               : String(value).toLowerCase() === 'true'
           if (String(bv) !== f.value) return false
-        }
-      } else {
-        // For unknown types, default to string contains if a filter object exists
-        if (type === 'unknown') {
-          const filter = filters[key]
-          if (filter && 'text' in filter && typeof filter.text === 'string') {
-            const text = filter.text.trim().toLowerCase()
-            const s = value === null || value === undefined ? '' : String(value)
-            if (!s.toLowerCase().includes(text)) return false
-          }
         }
       }
     }

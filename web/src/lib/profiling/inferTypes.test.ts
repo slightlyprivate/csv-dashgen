@@ -67,4 +67,19 @@ describe('parseDate', () => {
   it('returns null for non-date strings', () => {
     expect(parseDate('not a date')).toBeNull()
   })
+
+  it('falls back to DD/MM/YYYY when the day component exceeds 12', () => {
+    // "25/12/2023" can't be MM/DD (month 25 is invalid), so it must be
+    // read as European day-first.
+    const date = parseDate('25/12/2023')
+    expect(date?.getMonth()).toBe(11)
+    expect(date?.getDate()).toBe(25)
+  })
+
+  it('parses YYYY/MM/DD dates', () => {
+    const date = parseDate('2023/06/15')
+    expect(date?.getFullYear()).toBe(2023)
+    expect(date?.getMonth()).toBe(5)
+    expect(date?.getDate()).toBe(15)
+  })
 })

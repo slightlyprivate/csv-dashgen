@@ -14,4 +14,5 @@ export {
   clearStoredData,
   getLastUpdated,
   isStorageAvailable,
+  STORAGE_KEYS,
 } from './datasetStorage'

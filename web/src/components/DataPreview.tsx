@@ -40,8 +40,8 @@ export default function DataPreview({
   }, [dataset])
 
   const filteredRows = useMemo(
-    () => filterRows(dataset.rows, dataset.columnTypes, filters),
-    [dataset.rows, dataset.columnTypes, filters]
+    () => filterRows(dataset.rows, filters),
+    [dataset.rows, filters]
   )
 
   const sortedRows = useMemo(

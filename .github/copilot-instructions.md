@@ -21,8 +21,8 @@ These are the guidelines for GitHub Copilot (and other AI assistants) when gener
 
   ```
   /web/src
-    components/   # UI components
-    utils/        # parsing, chart helpers
+    components/   # UI components (see components/ui/ for shared primitives)
+    lib/          # Data-core: csv, profiling, statistics, charts, storage
     hooks/        # custom React hooks
     contexts/     # ConfigContext, ThemeContext, ToastContext
   /docs          # screenshots + docs
@@ -52,8 +52,9 @@ These are the guidelines for GitHub Copilot (and other AI assistants) when gener
 1. `Uploader` – drag-and-drop or file input for CSVs.
 2. `ChartSelector` – let users choose chart type and x/y/series columns.
 3. `Chart` / `ChartContainer` – render and export chart types based on fields.
-4. `StatsPanel` – summary statistics (sum, mean, min/max, etc).
-5. `App` – main layout and state manager.
+4. `ColumnsList` / `ColumnProfile` – per-column summary statistics (sum, mean, min/max, etc).
+5. `AppShell` / `Sidebar` / `TopBar` – page shell and nav.
+6. `App` – main layout and state manager.
 
 Do not recreate `FieldPicker.tsx`, `Charts.tsx`, or `Stats.tsx` — these were
 empty, unused stub files removed during the scope-cleanup pass. Their

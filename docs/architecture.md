@@ -66,6 +66,7 @@ web/src/
 │   ├── ColumnsList.tsx          # Searchable column list (left pane of Column checkup)
 │   ├── ColumnProfile.tsx        # Selected-column detail: stats, histogram, top values
 │   ├── DataPreview.tsx          # Sortable/filterable/paginated table + type editor
+│   │   (composed from DataPreviewToolbar/Table/Pagination/FilterInput)
 │   ├── ColumnTypeEditor.tsx     # Column type override control
 │   ├── ChartContainer.tsx       # Chart configuration + rendering wrapper
 │   ├── Chart.tsx                # Chart.js rendering (incl. histogram/distribution)
@@ -91,6 +92,7 @@ web/src/
 │   ├── profiling/
 │   ├── statistics/
 │   ├── charts/
+│   ├── dataPreview/
 │   └── storage/
 ├── types/                     # Shared domain types (dataset, charts, config)
 ├── App.tsx                    # Main application component
@@ -133,6 +135,11 @@ web/src/lib/
     ├── preferencesStorage.ts  # Generic typed localStorage get/set (raw + JSON)
     ├── datasetStorage.ts      # Dataset/chart-config/column-types persistence, built on preferencesStorage
     └── index.ts
+
+web/src/lib/dataPreview/
+├── filterRows.ts               # filterRows(): per-column string/number/date/boolean filtering
+├── sortRows.ts                 # sortRows(): type-aware comparator, used by the preview table
+└── index.ts
 ```
 
 Shared domain types live in `web/src/types/`, split by area (`dataset.ts`, `charts.ts`, `config.ts`) with a barrel `index.ts` so existing `from '../types'` imports keep working. Notably:

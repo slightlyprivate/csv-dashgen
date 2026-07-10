@@ -35,7 +35,7 @@ These may become goals in a later phase, but are explicitly out of scope right n
 - Automatic column type inference: number, string, date, boolean, unknown, with manual override in the UI
 - Data preview table with sorting, filtering, pagination, and inline type editing
 - Per-column statistics (numeric: mean/median/min/max/std dev; categorical: unique count, top values)
-- Chart generation: line, bar, pie, scatter
+- Chart generation: line, bar, pie, scatter, histogram
 - Chart export as a PNG image
 - Sample dataset loading from `samples/`
 - Light/dark/system theme with persistence
@@ -45,7 +45,7 @@ These may become goals in a later phase, but are explicitly out of scope right n
 
 ## 5. Partial / in-progress capabilities
 
-- **Accessibility** — solid baseline (labels, ARIA attributes, focus-visible styles) but no modal focus trap/escape handling and no dedicated accessibility test suite; this is not a certified WCAG 2.1 AA implementation
+- **Accessibility** — solid baseline (labels, ARIA attributes, focus-visible styles, modal focus trap and Escape-to-close) but no dedicated accessibility test suite; this is not a certified WCAG 2.1 AA implementation
 - **Test coverage** — narrow: unit tests for CSV parsing plus a basic uploader render test; no integration or end-to-end coverage of the full upload → preview → stats → chart → persistence flow
 
 ## 6. Planned / future capabilities
@@ -142,7 +142,7 @@ The intended relaunch deployment is a static frontend build served from slightly
 | 1 | Documentation reality pass | Done |
 | 2 | Rebrand UI/copy to Spread Your Sheets | Done |
 | 3 | Scope cleanup: remove dead files/backend scaffolding, fix placeholder actions and untruthful settings | Done |
-| 4 | Distinctive UI/UX redesign pass | Not started |
+| 4 | Distinctive UI/UX redesign pass | Done |
 | 5 | Self-host deployment artifacts for slightly-server + Cloudflare Tunnel | Not started |
 | 6 | Final QA, docs, and public relaunch | Not started |
 

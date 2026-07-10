@@ -143,8 +143,9 @@ function generateLineBarData(
       }
     })
 
-    const labels = Array.from(dataMap.keys()).sort()
-    const data = labels.map((label) => dataMap.get(label))
+    const rawLabels = Array.from(dataMap.keys()).sort()
+    const labels = rawLabels.map((label) => String(label ?? 'Unknown'))
+    const data = rawLabels.map((label) => dataMap.get(label))
 
     return {
       labels,

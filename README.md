@@ -107,7 +107,7 @@ Coverage is real but narrow — see "Partial / in-progress capabilities" above.
 csv-dashgen/
 ├── web/                          # The actual application (frontend-only)
 │   ├── src/
-│   │   ├── components/           # Uploader, DataPreview, StatsPanel, Chart, Settings, etc.
+│   │   ├── components/           # Uploader, DataPreview, ColumnsList, ColumnProfile, Chart, Settings, etc.
 │   │   ├── contexts/              # ConfigContext, ThemeContext, ToastContext
 │   │   ├── hooks/                 # useConfig, useLimits, usePersistentState, useTheme, useToast
 │   │   ├── lib/                   # Data-core: csv, profiling, statistics, charts, storage

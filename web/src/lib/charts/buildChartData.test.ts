@@ -61,6 +61,23 @@ describe('generateChartData', () => {
     expect((data?.datasets[0] as { data: number[] }).data).toEqual([15, 20])
   })
 
+  it('coerces bar chart labels to strings when the x-field is numeric', () => {
+    const dataset = makeDataset({
+      headers: ['year', 'sales'],
+      columnTypes: { year: 'number', sales: 'number' },
+      rows: [
+        { year: 2020, sales: 10 },
+        { year: 2021, sales: 20 },
+      ],
+    })
+    const config: ChartConfig = { type: 'bar', xField: 'year', yField: 'sales' }
+
+    const data = generateChartData(dataset, config)
+
+    expect(data?.labels).toEqual(['2020', '2021'])
+    data?.labels.forEach((label) => expect(typeof label).toBe('string'))
+  })
+
   it('builds grouped line chart data when a series field is set', () => {
     const dataset = makeDataset({
       headers: ['date', 'sales', 'region'],

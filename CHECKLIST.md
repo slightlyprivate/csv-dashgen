@@ -2,7 +2,7 @@
 
 **Status:** Active relaunch in progress. This checklist previously claimed 100% completion; that was inaccurate. It has been corrected against the actual codebase — see [docs/relaunch/CODEBASE_AUDIT.md](docs/relaunch/CODEBASE_AUDIT.md) for the full audit.
 
-**Next steps:** ~~documentation reality pass~~ → ~~rebrand pass~~ → ~~scope cleanup (dead files, placeholder actions, settings truthfulness)~~ → UI/UX redesign → self-host deployment artifacts → public relaunch.
+**Next steps:** ~~documentation reality pass~~ → ~~rebrand pass~~ → ~~scope cleanup (dead files, placeholder actions, settings truthfulness)~~ → ~~UI/UX redesign~~ → self-host deployment artifacts → public relaunch.
 
 The scope-cleanup pass removed dead files (`Charts.tsx`, `FieldPicker.tsx`, `Stats.tsx`, `api-py/`, root `package-lock.json`), implemented real PNG chart export, removed the unimplemented `area` chart type, removed fictional settings/privacy toggles with no backing implementation, wired `Enable Data Persistence` to real behavior, and replaced the session-clear full-page reload with explicit state clearing. It did not redesign the UI, refactor data architecture, or touch deployment.
 

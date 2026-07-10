@@ -3,8 +3,9 @@ import { DatasetRow, ColumnType } from '../../types'
 export type SortDirection = 'asc' | 'desc'
 
 /**
- * Type-aware comparison for sorting. Nulls/undefined always sort last,
- * regardless of direction (the caller negates the result for 'desc').
+ * Type-aware comparison for sorting. Nulls/undefined sort last for 'asc'
+ * (the return value here is fixed, but sortRows negates it for 'desc',
+ * which flips nulls to sort first).
  */
 export function compareValues(
   a: unknown,

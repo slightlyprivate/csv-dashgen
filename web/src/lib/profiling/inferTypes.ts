@@ -169,10 +169,13 @@ export function parseDate(value: string): Date | null {
     /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/, // MM/DD/YYYY or M/D/YYYY
     /^(\d{1,2})-(\d{1,2})-(\d{4})$/, // MM-DD-YYYY or M-D-YYYY
 
-    // European formats
+    // European formats. The DD/MM/YYYY slash pattern below is intentionally
+    // identical to the US M/D/YYYY pattern above: this loop retries every
+    // format on an invalid date rather than stopping at the first regex
+    // match, so this entry is the fallback that catches slash-dates the US
+    // interpretation rejected (e.g. "25/12/2023", where month=25 is invalid).
     /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/, // DD.MM.YYYY
     /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/, // DD/MM/YYYY
-    /^(\d{2})\/(\d{2})\/(\d{4})$/, // DD/MM/YYYY
 
     // Other common formats
     /^(\d{4})\/(\d{2})\/(\d{2})$/, // YYYY/MM/DD
@@ -208,7 +211,7 @@ export function parseDate(value: string): Date | null {
           }
           year = parseInt(match[3])
         } else if (format === dateFormats[6]) {
-          // YYYY/MM/DD
+          // YYYY/MM/DD (4-digit year, 2-digit month, 2-digit day)
           year = parseInt(match[1])
           month = parseInt(match[2]) - 1
           day = parseInt(match[3])

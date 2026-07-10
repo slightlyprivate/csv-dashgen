@@ -99,7 +99,7 @@ export function buildDatasetOverview(
   } else if (missingCellCount === 0) {
     qualityNote = 'Looks clean: no missing values detected.'
   } else {
-    qualityNote = `${formatNumber(missingCellPercentage, 1)}% of cells are missing, across ${columnsWithMissing} of ${columnCount} column${columnsWithMissing === 1 ? '' : 's'}.`
+    qualityNote = `${formatNumber(missingCellPercentage, 1)}% of cells are missing, across ${columnsWithMissing} of ${columnCount} column${columnCount === 1 ? '' : 's'}.`
   }
 
   return {
