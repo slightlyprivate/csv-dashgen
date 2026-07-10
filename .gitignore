@@ -41,6 +41,3 @@ coverage/
 # Build artifacts
 build/
 out/
-
-# Documentation
-docs/screenshots/
