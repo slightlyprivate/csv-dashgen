@@ -6,6 +6,25 @@
 FROM node:22-alpine AS build
 WORKDIR /app
 
+# Build-time Vite env vars (see web/.env.example and docs/SEO.md /
+# docs/ANALYTICS.md). Defaults here are safe for a local/manual build;
+# .github/workflows/docker-build.yml overrides them for the published
+# production image.
+ARG VITE_PUBLIC_ENV=development
+ARG VITE_INDEXABLE=false
+ARG VITE_CANONICAL_URL=http://localhost:5174
+ARG VITE_ANALYTICS_ENABLED=false
+ARG VITE_ANALYTICS_SRC=https://analytics.slightlyprivate.com/fetch.js
+ARG VITE_ANALYTICS_WEBSITE_ID=
+ARG VITE_APP_VERSION=
+ENV VITE_PUBLIC_ENV=$VITE_PUBLIC_ENV \
+    VITE_INDEXABLE=$VITE_INDEXABLE \
+    VITE_CANONICAL_URL=$VITE_CANONICAL_URL \
+    VITE_ANALYTICS_ENABLED=$VITE_ANALYTICS_ENABLED \
+    VITE_ANALYTICS_SRC=$VITE_ANALYTICS_SRC \
+    VITE_ANALYTICS_WEBSITE_ID=$VITE_ANALYTICS_WEBSITE_ID \
+    VITE_APP_VERSION=$VITE_APP_VERSION
+
 COPY web/package.json web/package-lock.json ./
 RUN npm ci
 

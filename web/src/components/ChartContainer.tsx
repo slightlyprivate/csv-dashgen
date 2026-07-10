@@ -4,6 +4,7 @@ import { ChartSelector } from './ChartSelector'
 import { Dataset, ChartConfig } from '../types'
 import { buildChartExportFilename, downloadCanvasAsPng } from '../lib/charts'
 import { useToast } from '../hooks/useToast'
+import { trackAnalyticsEvent } from '../lib/analytics'
 import Card from './ui/Card'
 import Button from './ui/Button'
 import EmptyState from './ui/EmptyState'
@@ -36,6 +37,7 @@ export function ChartContainer({
 
     const filename = buildChartExportFilename(chartConfig)
     downloadCanvasAsPng(canvas, filename)
+    trackAnalyticsEvent('export_chart', { chartType: chartConfig.type })
     showSuccess('Chart exported', `Saved as ${filename}`)
   }
 

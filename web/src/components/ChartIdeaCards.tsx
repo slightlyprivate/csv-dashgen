@@ -4,6 +4,7 @@ import Chart from './Chart'
 import Card from './ui/Card'
 import Button from './ui/Button'
 import { SparkIcon } from './icons'
+import { trackAnalyticsEvent } from '../lib/analytics'
 
 const CHART_TYPE_LABEL: Record<ChartConfig['type'], string> = {
   line: 'Line chart',
@@ -62,7 +63,12 @@ export default function ChartIdeaCards({
               variant="secondary"
               size="sm"
               className="mt-3 w-full justify-center"
-              onClick={() => onSelect(suggestion.config)}
+              onClick={() => {
+                trackAnalyticsEvent('create_chart_from_suggestion', {
+                  chartType: suggestion.config.type,
+                })
+                onSelect(suggestion.config)
+              }}
             >
               Create this chart
             </Button>
