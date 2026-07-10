@@ -1,12 +1,7 @@
 import React from 'react'
 
 export type StatCardTone =
-  | 'brand'
-  | 'blue'
-  | 'violet'
-  | 'rose'
-  | 'green'
-  | 'neutral'
+  'brand' | 'blue' | 'violet' | 'rose' | 'green' | 'neutral'
 
 const TONE_CLASSES: Record<StatCardTone, string> = {
   brand: 'bg-brand-100 text-brand-700 dark:bg-brand-900/40 dark:text-brand-400',
