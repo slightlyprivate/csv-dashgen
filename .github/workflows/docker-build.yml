@@ -2,7 +2,7 @@ name: Docker Build and Publish
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 env:
   REGISTRY: ghcr.io
@@ -19,8 +19,8 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: "22"
+          cache: "npm"
           cache-dependency-path: web/package-lock.json
       - name: Install dependencies
         run: |
@@ -75,7 +75,7 @@ jobs:
           build-args: |
             VITE_PUBLIC_ENV=production
             VITE_INDEXABLE=true
-            VITE_CANONICAL_URL=https://app.example.com
+            VITE_CANONICAL_URL=${{ vars.VITE_CANONICAL_URL || 'https://app.example.com' }}
             VITE_ANALYTICS_ENABLED=${{ vars.VITE_ANALYTICS_ENABLED || 'false' }}
             VITE_ANALYTICS_SRC=${{ vars.VITE_ANALYTICS_SRC || 'https://analytics.example.com/fetch.js' }}
             VITE_ANALYTICS_WEBSITE_ID=${{ vars.VITE_ANALYTICS_WEBSITE_ID }}
