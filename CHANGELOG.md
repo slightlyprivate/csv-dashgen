@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/slightlyprivate/csv-dashgen/compare/v0.2.1...v0.2.2) (2026-08-20)
+
+
+### Bug Fixes
+
+* update Docker build configuration for consistency and default values ([8dfc62b](https://github.com/slightlyprivate/csv-dashgen/commit/8dfc62b8f3c79f9088165fd39c3a13b7ab7213cc))
+
 ## [0.2.1](https://github.com/slightlyprivate/csv-dashgen/compare/v0.2.0...v0.2.1) (2026-07-10)
 
 
