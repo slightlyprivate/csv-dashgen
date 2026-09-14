@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/slightlyprivate/csv-dashgen/compare/v0.2.2...v0.3.0) (2026-09-14)
+
+
+### Features
+
+* add engines field to package-lock.json for Node.js version compatibility ([5add8db](https://github.com/slightlyprivate/csv-dashgen/commit/5add8db9c7b35091f374c3a720ff4f5b222864ec))
+
 ## [0.2.2](https://github.com/slightlyprivate/csv-dashgen/compare/v0.2.1...v0.2.2) (2026-09-14)
 
 
