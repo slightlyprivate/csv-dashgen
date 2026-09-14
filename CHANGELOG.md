@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.2](https://github.com/slightlyprivate/csv-dashgen/compare/v0.2.1...v0.2.2) (2026-09-14)
+
+
+### Bug Fixes
+
+* update Docker build configuration for consistency and default values ([8dfc62b](https://github.com/slightlyprivate/csv-dashgen/commit/8dfc62b8f3c79f9088165fd39c3a13b7ab7213cc))
+
+
+### Dependencies
+
+* **deps:** bump papaparse from 5.5.4 to 5.7.0 in /web ([#116](https://github.com/slightlyprivate/csv-dashgen/issues/116)) ([858501c](https://github.com/slightlyprivate/csv-dashgen/commit/858501ca62327b948b86b50231edbde6ec5bb981))
+
 ## [0.2.1](https://github.com/slightlyprivate/csv-dashgen/compare/v0.2.0...v0.2.1) (2026-07-10)
 
 
