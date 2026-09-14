@@ -4,6 +4,9 @@
   "type": "module",
   "private": true,
   "description": "Upload any CSV and auto-generate charts and summary stats.",
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
